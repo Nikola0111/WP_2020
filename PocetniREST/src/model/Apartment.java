@@ -39,8 +39,7 @@ public class Apartment {
 			float pricePerNight, Date checkInTime, Date checkOutTime, boolean activityStatus,
 			ArrayList<Amenity> amenities, ArrayList<Reservation> reservations, boolean deleted) {
 		super();
-		UUID uuid = UUID.randomUUID();
-		this.id = uuid.toString();
+		 
 		this.apartmentType = apartmentType;
 		this.numberOfRooms = numberOfRooms;
 		this.numberOfGuests = numberOfGuests;

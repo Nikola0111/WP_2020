@@ -20,8 +20,8 @@ public class CommentService {
 	
 	@PostConstruct
 	public void init() {
-		if (context.getAttribute("commentDAO") == null) {
-			context.setAttribute("commentDAO", new CommentDAO(context.getRealPath("")));
+		if (context.getAttribute("comments") == null) {
+			context.setAttribute("comments", new CommentDAO(context.getRealPath("")));
 		}
 	}
 }

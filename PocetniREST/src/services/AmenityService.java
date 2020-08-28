@@ -21,8 +21,8 @@ public class AmenityService {
 	
 	@PostConstruct
 	public void init() {	
-			if (context.getAttribute("amenityDAO") == null) {
-				context.setAttribute("amenityDAO", new AmenityDAO(context.getRealPath("")));
+			if (context.getAttribute("amenities") == null) {
+				context.setAttribute("amenities", new AmenityDAO(context.getRealPath("")));
 			}
 	}
 }

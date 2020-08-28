@@ -20,8 +20,8 @@ public class ApartmentService {
 	
 	@PostConstruct
 	public void init() {
-		if (context.getAttribute("aparmentDAO") == null) {
-			context.setAttribute("aparmentDAO", new ApartmentDAO(context.getRealPath("")));
+		if (context.getAttribute("apartments") == null) {
+			context.setAttribute("apartments", new ApartmentDAO(context.getRealPath("")));
 		}
 	}
 	

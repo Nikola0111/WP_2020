@@ -20,8 +20,8 @@ public class ReservationService {
 	
 	@PostConstruct
 	public void init() {
-		if (context.getAttribute("reservationDAO") == null) {
-			context.setAttribute("reservationDAO", new ReservationDAO(context.getRealPath("")));
+		if (context.getAttribute("reservations") == null) {
+			context.setAttribute("reservations", new ReservationDAO(context.getRealPath("")));
 		}
 	}
 }

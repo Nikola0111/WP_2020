@@ -95,8 +95,8 @@ public class CommentDAO {
 		}
 	}
 	
-	public void saveAmenities(String path) {
-		String filePath = path + "/JSON/amenities.json";
+	public void SaveComments(String path) {
+		String filePath = path + "/JSON/comments.json";
 		File f = new File(filePath);
 		FileWriter fileWriter = null;
 		try {

@@ -11,6 +11,7 @@ public class ReservationDTO {
 	private int numberOfRooms;
 	private Location location;
 	private String hostUserName;
+	private String guestUserName;
 	private Date startingDate;
 	private int rentalDuration;
 	private float fullPrice;
@@ -20,6 +21,15 @@ public class ReservationDTO {
 	public ReservationDTO() {
 		
 	}
+	
+	public String getGuestUserName() {
+		return guestUserName;
+	}
+
+	public void setGuestUserName(String guestUserName) {
+		this.guestUserName = guestUserName;
+	}
+
 
 	public String getId() {
 		return id;

@@ -46,7 +46,7 @@ public class ApartmentService {
 		apartment.setId((apartments.getApartments().size() + 1) + "");
 		System.out.println(loggedUser);
 		
-		apartment.setHostID(loggedUser == null ? "1" : loggedUser.getId());
+		apartment.setHostId(loggedUser == null ? "1" : loggedUser.getId());
 		
 		apartments.getApartments().put(apartment.getId(), apartment);
 		saveApartments(apartments);

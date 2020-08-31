@@ -14,8 +14,8 @@ public class Apartment {
 	private int numberOfGuests;
 	private Location location;
 	private ArrayList<Date> datesForRent;
-	private String hostID;
-	private ArrayList<String> commentIDs;
+	private String hostId;
+	private ArrayList<String> commentIds;
 	private ArrayList<String> photos;
 	private float pricePerNight;
 	private Date checkInTime;
@@ -29,7 +29,7 @@ public class Apartment {
 	public Apartment() {
 		super();
 		this.datesForRent = new ArrayList<Date>();
-		this.commentIDs = new ArrayList<String>();
+		this.commentIds = new ArrayList<String>();
 		this.photos = new ArrayList<String>();
 		this.amenities = new ArrayList<Amenity>();
 		this.reservations = new ArrayList<Reservation>();
@@ -37,7 +37,8 @@ public class Apartment {
 	}
 
 	public Apartment(ApartmentType apartmentType, int numberOfRooms, int numberOfGuests, Location location,
-			ArrayList<Date> datesForRent, String host, ArrayList<String> comments, ArrayList<String> photos,
+			ArrayList<Date> datesForRent, String hostId,
+			String host, ArrayList<String> comments, ArrayList<String> photos,
 			float pricePerNight, Date checkInTime, Date checkOutTime, boolean activityStatus,
 			ArrayList<Amenity> amenities, ArrayList<Reservation> reservations, boolean deleted, ArrayList<Double> grades) {
 		super();
@@ -47,8 +48,8 @@ public class Apartment {
 		this.numberOfGuests = numberOfGuests;
 		this.location = location;
 		this.datesForRent = datesForRent;
-		this.hostID = host;
-		this.commentIDs = comments;
+		this.hostId = hostId;
+		this.commentIds = comments;
 		this.photos = photos;
 		this.pricePerNight = pricePerNight;
 		this.checkInTime = checkInTime;
@@ -108,20 +109,20 @@ public class Apartment {
 		this.datesForRent = datesForRent;
 	}
 
-	public String getHostID() {
-		return hostID;
+	public String getHostId() {
+		return hostId;
 	}
 
-	public void setHostID(String host) {
-		this.hostID = host;
+	public void setHostId(String hostId) {
+		this.hostId = hostId;
 	}
-
+	
 	public ArrayList<String> getComments() {
-		return commentIDs;
+		return commentIds;
 	}
 
 	public void setComments(ArrayList<String> comments) {
-		this.commentIDs = comments;
+		this.commentIds = comments;
 	}
 
 	public ArrayList<String> getPhotos() {

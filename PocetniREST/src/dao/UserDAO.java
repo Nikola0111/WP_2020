@@ -6,17 +6,18 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.introspect.VisibilityChecker;
-import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.databind.type.MapType;
-import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 
 import model.User;
 
@@ -40,15 +41,29 @@ public class UserDAO {
 		this.users = users;
 	}
 	
-	public User find(String userName, String password) {
-		if (!users.containsKey(userName)) {
+	public User findById(String id) {
+		if (!users.containsKey(id)) {
 			return null;
 		}
-		User user = users.get(userName);
-		if (!user.getPassword().equals(password)) {
-			return null;
-		}
+		User user = users.get(id);
 		return user;
+	}
+	
+	public User findByUsernameAndPassword(String userName, String password) {
+		if (users.values().size() == 0) {
+			return null;
+		}
+		ArrayList<User> usersList = new ArrayList<User>(users.values());
+		for (User currentUser : usersList) {
+			if (currentUser.getUserName().equals(userName)) {
+				if (!currentUser.getPassword().equals(password)) {
+					return null;
+				} else {
+					return currentUser;
+				}
+			}
+		}
+		return null;
 	}
 	
 	public Collection<User> findAll() {

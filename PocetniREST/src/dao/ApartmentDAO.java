@@ -35,7 +35,7 @@ public class ApartmentDAO {
 		return apartments;
 	}
 	
-	public void setUsers(Map<String, Apartment> apartments) {
+	public void setApartments(Map<String, Apartment> apartments) {
 		this.apartments = apartments;
 	}
 	

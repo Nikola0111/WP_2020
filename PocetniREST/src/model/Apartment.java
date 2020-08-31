@@ -15,7 +15,7 @@ public class Apartment {
 	private Location location;
 	private ArrayList<Date> datesForRent;
 	private String hostId;
-	private ArrayList<Comment> comments;
+	private ArrayList<String> commentIds;
 	private ArrayList<String> photos;
 	private float pricePerNight;
 	private Date checkInTime;
@@ -24,20 +24,23 @@ public class Apartment {
 	private ArrayList<Amenity> amenities;
 	private ArrayList<Reservation> reservations;
 	private boolean deleted;
+	private ArrayList<Double> grades;
 	
 	public Apartment() {
 		super();
 		this.datesForRent = new ArrayList<Date>();
-		this.comments = new ArrayList<Comment>();
+		this.commentIds = new ArrayList<String>();
 		this.photos = new ArrayList<String>();
 		this.amenities = new ArrayList<Amenity>();
 		this.reservations = new ArrayList<Reservation>();
+		this.grades = new ArrayList<Double>();
 	}
 
 	public Apartment(ApartmentType apartmentType, int numberOfRooms, int numberOfGuests, Location location,
-			ArrayList<Date> datesForRent, String hostId, ArrayList<Comment> comments, ArrayList<String> photos,
+			ArrayList<Date> datesForRent, String hostId,
+			String host, ArrayList<String> comments, ArrayList<String> photos,
 			float pricePerNight, Date checkInTime, Date checkOutTime, boolean activityStatus,
-			ArrayList<Amenity> amenities, ArrayList<Reservation> reservations, boolean deleted) {
+			ArrayList<Amenity> amenities, ArrayList<Reservation> reservations, boolean deleted, ArrayList<Double> grades) {
 		super();
 		 
 		this.apartmentType = apartmentType;
@@ -46,7 +49,7 @@ public class Apartment {
 		this.location = location;
 		this.datesForRent = datesForRent;
 		this.hostId = hostId;
-		this.comments = comments;
+		this.commentIds = comments;
 		this.photos = photos;
 		this.pricePerNight = pricePerNight;
 		this.checkInTime = checkInTime;
@@ -55,6 +58,7 @@ public class Apartment {
 		this.amenities = amenities;
 		this.reservations = reservations;
 		this.deleted = deleted;
+		this.grades = grades;
 	}
 
 	public String getId() {
@@ -112,13 +116,13 @@ public class Apartment {
 	public void setHostId(String hostId) {
 		this.hostId = hostId;
 	}
-
-	public ArrayList<Comment> getComments() {
-		return comments;
+	
+	public ArrayList<String> getComments() {
+		return commentIds;
 	}
 
-	public void setComments(ArrayList<Comment> comments) {
-		this.comments = comments;
+	public void setComments(ArrayList<String> comments) {
+		this.commentIds = comments;
 	}
 
 	public ArrayList<String> getPhotos() {
@@ -185,7 +189,19 @@ public class Apartment {
 		this.deleted = deleted;
 	}
 	
+	public ArrayList<Double> getGrades() {
+		return grades;
+	}
+
+	public void setGrades(ArrayList<Double> grades) {
+		this.grades = grades;
+	}
 	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return "NumberOfRomms:" + numberOfRooms;
+	}
 	
 	
 	

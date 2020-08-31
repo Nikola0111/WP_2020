@@ -7,9 +7,10 @@ public class Comment {
 	private String id;
 	private String caption;
 	private String content;
-	private User user;
+	private String userId;
 	private String apartmentId;
-	private int rating;
+	private String reservationId;
+	private Double rating;
 	private boolean showed;
 	private boolean deleted;
 	
@@ -17,15 +18,16 @@ public class Comment {
 		super();
 	}
 
-	public Comment(String caption, String content, User user, String apartmentId, int rating, boolean showed,
+	public Comment(String caption, String content, String user, String apartmentId, String reservationId, Double rating, boolean showed,
 			boolean deleted) {
 		super();
 		UUID uuid = UUID.randomUUID();
 		this.id = uuid.toString();
 		this.caption = caption;
 		this.content = content;
-		this.user = user;
+		this.userId = user;
 		this.apartmentId = apartmentId;
+		this.reservationId = reservationId;
 		this.rating = rating;
 		this.showed = showed;
 		this.deleted = deleted;
@@ -55,12 +57,20 @@ public class Comment {
 		this.content = content;
 	}
 
-	public User getUser() {
-		return user;
+	public String getUserID() {
+		return userId;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserID(String user) {
+		this.userId = user;
+	}
+	
+	public String getReservationId() {
+		return reservationId;
+	}
+
+	public void setReservationId(String reservationId) {
+		this.reservationId = reservationId;
 	}
 
 	public String getApartmentId() {
@@ -71,11 +81,11 @@ public class Comment {
 		this.apartmentId = apartmentId;
 	}
 
-	public int getRating() {
+	public Double getRating() {
 		return rating;
 	}
 
-	public void setRating(int rating) {
+	public void setRating(Double rating) {
 		this.rating = rating;
 	}
 

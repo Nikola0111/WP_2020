@@ -14,7 +14,7 @@ public class Apartment {
 	private int numberOfGuests;
 	private Location location;
 	private ArrayList<Date> datesForRent;
-	private User host;
+	private String hostId;
 	private ArrayList<Comment> comments;
 	private ArrayList<String> photos;
 	private float pricePerNight;
@@ -35,7 +35,7 @@ public class Apartment {
 	}
 
 	public Apartment(ApartmentType apartmentType, int numberOfRooms, int numberOfGuests, Location location,
-			ArrayList<Date> datesForRent, User host, ArrayList<Comment> comments, ArrayList<String> photos,
+			ArrayList<Date> datesForRent, String hostId, ArrayList<Comment> comments, ArrayList<String> photos,
 			float pricePerNight, Date checkInTime, Date checkOutTime, boolean activityStatus,
 			ArrayList<Amenity> amenities, ArrayList<Reservation> reservations, boolean deleted) {
 		super();
@@ -45,7 +45,7 @@ public class Apartment {
 		this.numberOfGuests = numberOfGuests;
 		this.location = location;
 		this.datesForRent = datesForRent;
-		this.host = host;
+		this.hostId = hostId;
 		this.comments = comments;
 		this.photos = photos;
 		this.pricePerNight = pricePerNight;
@@ -105,12 +105,12 @@ public class Apartment {
 		this.datesForRent = datesForRent;
 	}
 
-	public User getHost() {
-		return host;
+	public String getHostId() {
+		return hostId;
 	}
 
-	public void setHost(User host) {
-		this.host = host;
+	public void setHostId(String hostId) {
+		this.hostId = hostId;
 	}
 
 	public ArrayList<Comment> getComments() {

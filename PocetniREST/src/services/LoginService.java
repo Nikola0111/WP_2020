@@ -35,7 +35,7 @@ public class LoginService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public User login(User user, @Context HttpServletRequest request) {
 		UserDAO users = (UserDAO) context.getAttribute("users");
-		User loggedUser = users.find(user.getUserName(), user.getPassword());
+		User loggedUser = users.findByUsernameAndPassword(user.getUserName(), user.getPassword());
 		if (loggedUser == null) {
 			return null;
 		}

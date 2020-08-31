@@ -55,7 +55,7 @@ public class CommentService {
 	        comment.setUserID(loggedUser == null ? "1" : loggedUser.getId());
 	        
 	        current.getGrades().add(comment.getRating());
-	        current.getComments().add(comment.getId());
+	        current.getCommentIds().add(comment.getId());
 	        
 	        comments.getComments().put(comment.getId(), comment);
 	        apartments.getApartments().put(current.getId(), current);

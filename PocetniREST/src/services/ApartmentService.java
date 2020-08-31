@@ -7,13 +7,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import dao.AmenityDAO;
 import dao.ApartmentDAO;
-import dao.UserDAO;
+import dto.ApartmentDTO;
+import model.Amenity;
 import model.Apartment;
 import model.User;
-
-import java.nio.file.Paths;
-import java.util.ArrayList;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
@@ -40,13 +39,29 @@ public class ApartmentService {
 	@Path("registerApartment")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public void registerApartment(@Context HttpServletRequest request, Apartment apartment) {
+	public void registerApartment(@Context HttpServletRequest request, ApartmentDTO apartmentDTO) {
 		ApartmentDAO apartments = getApartments();
 		User loggedUser = (User) request.getSession().getAttribute("loggedUser");
-		apartment.setId((apartments.getApartments().size() + 1) + "");
 		System.out.println(loggedUser);
 		
-		apartment.setHostID(loggedUser == null ? "1" : loggedUser.getId());
+		apartmentDTO.setHostId(loggedUser == null ? "1" : loggedUser.getId());
+		
+		AmenityDAO amenities = getAmenities();
+		int amenityId = amenities.getAmenities().size();
+		
+		Apartment apartment = new Apartment(apartmentDTO.getApartmentType(), apartmentDTO.getNumberOfRooms(), apartmentDTO.getNumberOfGuests(),
+				apartmentDTO.getLocation(), apartmentDTO.getDatesForRent(), apartmentDTO.getPhotos(), apartmentDTO.getPricePerNight(),
+				apartmentDTO.getCheckInTime(), apartmentDTO.getCheckOutTime());
+		
+		for (Amenity temp: apartmentDTO.getAmenities()) {
+			temp.setId(amenityId + 1 + "");
+			amenities.getAmenities().put(temp.getId(), temp);
+			apartment.getAmenityIds().add(temp.getId());
+			amenityId++;
+		}
+		
+		apartmentDTO.setId(apartments.getApartments().size() + "");
+		apartment.setHostId(loggedUser == null ? "1" : loggedUser.getId());
 		
 		apartments.getApartments().put(apartment.getId(), apartment);
 		saveApartments(apartments);
@@ -59,5 +74,14 @@ public class ApartmentService {
 	
 	public void saveApartments(ApartmentDAO apartments) {
 		apartments.saveApartments(context.getRealPath(""));
+    }
+	
+	public AmenityDAO getAmenities() {
+		AmenityDAO amenities = (AmenityDAO) context.getAttribute("amenities");
+        return amenities;
+    }
+	
+	public void saveAmenities(AmenityDAO amenities) {
+		amenities.saveAmenities(context.getRealPath(""));
     }
 }

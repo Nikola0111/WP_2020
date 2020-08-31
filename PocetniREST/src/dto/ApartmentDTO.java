@@ -1,13 +1,14 @@
-package model;
+package dto;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.UUID;
 
 import enumeration.ApartmentType;
+import model.Amenity;
+import model.Location;
+import model.Reservation;
 
-public class Apartment {
-
+public class ApartmentDTO {
 	private String id;
 	private ApartmentType apartmentType;
 	private int numberOfRooms;
@@ -21,25 +22,25 @@ public class Apartment {
 	private Date checkInTime;
 	private Date checkOutTime;
 	private boolean activityStatus;
-	private ArrayList<String> amenityIds;
+	private ArrayList<Amenity> amenities;
 	private ArrayList<Reservation> reservations;
 	private boolean deleted;
 	private ArrayList<Double> grades;
 	
-	public Apartment() {
+	public ApartmentDTO() {
 		super();
 		this.datesForRent = new ArrayList<Date>();
 		this.commentIds = new ArrayList<String>();
 		this.photos = new ArrayList<String>();
-		this.amenityIds = new ArrayList<String>();
+		this.amenities = new ArrayList<Amenity>();
 		this.reservations = new ArrayList<Reservation>();
 		this.grades = new ArrayList<Double>();
 	}
 
-	public Apartment(ApartmentType apartmentType, int numberOfRooms, int numberOfGuests, Location location,
+	public ApartmentDTO(ApartmentType apartmentType, int numberOfRooms, int numberOfGuests, Location location,
 			ArrayList<Date> datesForRent, String host, ArrayList<String> comments, ArrayList<String> photos,
 			float pricePerNight, Date checkInTime, Date checkOutTime, boolean activityStatus,
-			ArrayList<String> amenities, ArrayList<Reservation> reservations, boolean deleted, ArrayList<Double> grades) {
+			ArrayList<Amenity> amenities, ArrayList<Reservation> reservations, boolean deleted, ArrayList<Double> grades) {
 		super();
 		 
 		this.apartmentType = apartmentType;
@@ -54,34 +55,10 @@ public class Apartment {
 		this.checkInTime = checkInTime;
 		this.checkOutTime = checkOutTime;
 		this.activityStatus = activityStatus;
-		this.amenityIds = amenities;
+		this.amenities = amenities;
 		this.reservations = reservations;
 		this.deleted = deleted;
 		this.grades = grades;
-	}
-	
-	public Apartment(ApartmentType apartmentType, int numberOfRooms, int numberOfGuests, Location location,
-			ArrayList<Date> datesForRent, ArrayList<String> photos,
-			float pricePerNight, Date checkInTime, Date checkOutTime) {
-		super();
-		 
-		this.apartmentType = apartmentType;
-		this.numberOfRooms = numberOfRooms;
-		this.numberOfGuests = numberOfGuests;
-		this.location = location;
-		this.datesForRent = datesForRent;
-		this.photos = photos;
-		this.pricePerNight = pricePerNight;
-		this.checkInTime = checkInTime;
-		this.checkOutTime = checkOutTime;
-
-		this.commentIds = new ArrayList<String>();
-		this.amenityIds = new ArrayList<String>();
-		this.reservations = new ArrayList<Reservation>();
-		this.grades = new ArrayList<Double>();
-		
-		this.deleted = false;
-		this.activityStatus = true;
 	}
 
 	public String getId() {
@@ -188,12 +165,12 @@ public class Apartment {
 		this.activityStatus = activityStatus;
 	}
 
-	public ArrayList<String> getAmenityIds() {
-		return amenityIds;
+	public ArrayList<Amenity> getAmenities() {
+		return amenities;
 	}
 
-	public void setAmenityIds(ArrayList<String> amenities) {
-		this.amenityIds = amenities;
+	public void setAmenities(ArrayList<Amenity> amenities) {
+		this.amenities = amenities;
 	}
 
 	public ArrayList<Reservation> getReservations() {

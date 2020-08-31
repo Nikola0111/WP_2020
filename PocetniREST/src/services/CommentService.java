@@ -55,7 +55,7 @@ public class CommentService {
 	        comment.setUserID(loggedUser == null ? "1" : loggedUser.getId());
 	        
 	        current.getGrades().add(comment.getRating());
-	        current.getComments().add(comment.getId());
+	        current.getCommentIds().add(comment.getId());
 	        
 	        comments.getComments().put(comment.getId(), comment);
 	        apartments.getApartments().put(current.getId(), current);
@@ -89,8 +89,8 @@ public class CommentService {
 		
 		List<Apartment> hostsApartments = new ArrayList<Apartment>();
 		for(Map.Entry<String, Apartment> temp : apartments.getApartments().entrySet()) {
-			System.out.println("Porede se: " + temp.getValue().getHostID() + " i 1");
-			if(temp.getValue().getHostID().equals("1")) {
+			System.out.println("Porede se: " + temp.getValue().getHostId() + " i 1");
+			if(temp.getValue().getHostId().equals("1")) {
 				
 				hostsApartments.add(temp.getValue());
 			}

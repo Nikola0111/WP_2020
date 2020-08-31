@@ -14,8 +14,8 @@ public class Apartment {
 	private int numberOfGuests;
 	private Location location;
 	private ArrayList<Date> datesForRent;
-	private User host;
-	private ArrayList<Comment> comments;
+	private String hostID;
+	private ArrayList<String> commentIDs;
 	private ArrayList<String> photos;
 	private float pricePerNight;
 	private Date checkInTime;
@@ -24,20 +24,22 @@ public class Apartment {
 	private ArrayList<Amenity> amenities;
 	private ArrayList<Reservation> reservations;
 	private boolean deleted;
+	private ArrayList<Double> grades;
 	
 	public Apartment() {
 		super();
 		this.datesForRent = new ArrayList<Date>();
-		this.comments = new ArrayList<Comment>();
+		this.commentIDs = new ArrayList<String>();
 		this.photos = new ArrayList<String>();
 		this.amenities = new ArrayList<Amenity>();
 		this.reservations = new ArrayList<Reservation>();
+		this.grades = new ArrayList<Double>();
 	}
 
 	public Apartment(ApartmentType apartmentType, int numberOfRooms, int numberOfGuests, Location location,
-			ArrayList<Date> datesForRent, User host, ArrayList<Comment> comments, ArrayList<String> photos,
+			ArrayList<Date> datesForRent, String host, ArrayList<String> comments, ArrayList<String> photos,
 			float pricePerNight, Date checkInTime, Date checkOutTime, boolean activityStatus,
-			ArrayList<Amenity> amenities, ArrayList<Reservation> reservations, boolean deleted) {
+			ArrayList<Amenity> amenities, ArrayList<Reservation> reservations, boolean deleted, ArrayList<Double> grades) {
 		super();
 		 
 		this.apartmentType = apartmentType;
@@ -45,8 +47,8 @@ public class Apartment {
 		this.numberOfGuests = numberOfGuests;
 		this.location = location;
 		this.datesForRent = datesForRent;
-		this.host = host;
-		this.comments = comments;
+		this.hostID = host;
+		this.commentIDs = comments;
 		this.photos = photos;
 		this.pricePerNight = pricePerNight;
 		this.checkInTime = checkInTime;
@@ -55,6 +57,7 @@ public class Apartment {
 		this.amenities = amenities;
 		this.reservations = reservations;
 		this.deleted = deleted;
+		this.grades = grades;
 	}
 
 	public String getId() {
@@ -105,20 +108,20 @@ public class Apartment {
 		this.datesForRent = datesForRent;
 	}
 
-	public User getHost() {
-		return host;
+	public String getHostID() {
+		return hostID;
 	}
 
-	public void setHost(User host) {
-		this.host = host;
+	public void setHostID(String host) {
+		this.hostID = host;
 	}
 
-	public ArrayList<Comment> getComments() {
-		return comments;
+	public ArrayList<String> getComments() {
+		return commentIDs;
 	}
 
-	public void setComments(ArrayList<Comment> comments) {
-		this.comments = comments;
+	public void setComments(ArrayList<String> comments) {
+		this.commentIDs = comments;
 	}
 
 	public ArrayList<String> getPhotos() {
@@ -185,7 +188,19 @@ public class Apartment {
 		this.deleted = deleted;
 	}
 	
+	public ArrayList<Double> getGrades() {
+		return grades;
+	}
+
+	public void setGrades(ArrayList<Double> grades) {
+		this.grades = grades;
+	}
 	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return "NumberOfRomms:" + numberOfRooms;
+	}
 	
 	
 	

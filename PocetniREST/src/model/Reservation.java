@@ -13,7 +13,7 @@ public class Reservation {
 	private int rentalDuration;
 	private float fullPrice;
 	private String optionalMessage;
-	private User guest;
+	private String guestId;
 	private ReservationStatus reservationStatus;
 	
 	public Reservation() {
@@ -21,7 +21,7 @@ public class Reservation {
 	}
 
 	public Reservation(String apartmentId, Date startingDate, int rentalDuration, float fullPrice,
-			String optionalMessage, User guest, ReservationStatus reservationStatus) {
+			String optionalMessage, String guestId, ReservationStatus reservationStatus) {
 		super();
 		UUID uuid = UUID.randomUUID();
 		this.id = uuid.toString();
@@ -30,7 +30,7 @@ public class Reservation {
 		this.rentalDuration = rentalDuration;
 		this.fullPrice = fullPrice;
 		this.optionalMessage = optionalMessage;
-		this.guest = guest;
+		this.guestId = guestId;
 		this.reservationStatus = reservationStatus;
 	}
 
@@ -82,12 +82,12 @@ public class Reservation {
 		this.optionalMessage = optionalMessage;
 	}
 
-	public User getGuest() {
-		return guest;
+	public String getGuestId() {
+		return guestId;
 	}
 
-	public void setGuest(User guest) {
-		this.guest = guest;
+	public void setGuestId(String guestId) {
+		this.guestId = guestId;
 	}
 
 	public ReservationStatus getReservationStatus() {

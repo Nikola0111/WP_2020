@@ -43,9 +43,7 @@ public class ApartmentService {
 		ApartmentDAO apartments = getApartments();
 		User loggedUser = (User) request.getSession().getAttribute("loggedUser");
 		System.out.println(loggedUser);
-		
-		apartmentDTO.setHostId(loggedUser == null ? "1" : loggedUser.getId());
-		
+
 		AmenityDAO amenities = getAmenities();
 		int amenityId = amenities.getAmenities().size();
 		
@@ -59,9 +57,9 @@ public class ApartmentService {
 			apartment.getAmenityIds().add(temp.getId());
 			amenityId++;
 		}
-		
-		apartmentDTO.setId(apartments.getApartments().size() + "");
+
 		apartment.setHostId(loggedUser == null ? "1" : loggedUser.getId());
+		apartment.setId(apartments.getApartments().size() + "");
 		
 		apartments.getApartments().put(apartment.getId(), apartment);
 		saveApartments(apartments);

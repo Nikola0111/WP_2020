@@ -44,7 +44,7 @@ public class UserService {
 	public boolean changePassword(ChangePasswordDTO userInfo, @Context HttpServletRequest request) {
 		
 		UserDAO users = getUsers();
-		User currentUser = users.find(userInfo.getUserName(), userInfo.getPassword());
+		User currentUser = users.findByUsernameAndPassword(userInfo.getUserName(), userInfo.getPassword());
 		if (currentUser != null) {
 			currentUser.setPassword(userInfo.getNewPassword());
 			saveUsers(users);
@@ -62,7 +62,7 @@ public class UserService {
 	public boolean changeUser(ChangeUserDTO userDTO, @Context HttpServletRequest request) {
 		
 		UserDAO users = getUsers();
-		User currentUser = users.find(userDTO.getPreviousUserName(), userDTO.getPassword());
+		User currentUser = users.findByUsernameAndPassword(userDTO.getPreviousUserName(), userDTO.getPassword());
 		if (currentUser != null) {
 			currentUser.setName(userDTO.getName());
 			currentUser.setUserName(userDTO.getNewUserName());

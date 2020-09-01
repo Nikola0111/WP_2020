@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,6 +46,19 @@ public class ApartmentDAO {
 		}
 		Apartment apartment = apartments.get(id);
 		return apartment;
+		
+	}
+	
+	public ArrayList<Apartment> findAllByHostIdAndActivityStatus(String hostId, boolean activityStatus) {
+		ArrayList<Apartment> allApartments = new ArrayList<Apartment>(apartments.values());
+		ArrayList<Apartment> apartmentsByHost = new ArrayList<Apartment>();
+		
+		for (Apartment apartment : allApartments) {
+			if (apartment.getHostId().equals(hostId) && apartment.isActivityStatus() == activityStatus) {
+				apartmentsByHost.add(apartment);
+			}
+		}
+		return apartmentsByHost;
 		
 	}
 	

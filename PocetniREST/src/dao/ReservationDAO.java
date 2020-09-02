@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,6 +44,20 @@ public class ReservationDAO {
 	
 	public Collection<Reservation> findAll() {
 		return reservations.values();
+	}
+	
+	public ArrayList<Reservation> findAllByGuestId(String guestId) {
+		ArrayList<Reservation> allReservations = new ArrayList<Reservation>(reservations.values());
+		ArrayList<Reservation> reservationsToSend = new ArrayList<Reservation>();
+		
+		for (Reservation reservation : allReservations) {
+			if (reservation.getGuestId().equals(guestId) && reservation.isDeleted() == false) {
+				reservationsToSend.add(reservation);
+			}
+		}
+		
+		return reservationsToSend;
+		
 	}
 	
 	@SuppressWarnings("unchecked")

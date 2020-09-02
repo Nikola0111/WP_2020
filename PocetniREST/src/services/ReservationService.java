@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -68,6 +69,52 @@ public class ReservationService {
 		}
 		return reservationsToSend;
 	}
+	
+	@GET
+	@Path("GuestReservations/{guestId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<ReservationDTO> getAllGuestReservations(@PathParam("guestId") String guestId, @Context HttpServletRequest request) {
+		
+		ArrayList<ReservationDTO> reservationsToSend = new ArrayList<ReservationDTO>();
+		ReservationDAO reservations = getReservations();
+		UserDAO users = getUsers();
+		ApartmentDAO apartments = getApartments();
+		ArrayList<Reservation> reservationsByGuestId = reservations.findAllByGuestId(guestId);
+		
+		for (Reservation reservation : reservationsByGuestId) {
+			Apartment apartment = apartments.find(reservation.getApartmentId());
+			ReservationDTO dto = convertReservationToDTO(reservation, apartment, users.findById(apartment.getHostId()), users.findById(reservation.getGuestId()));
+			reservationsToSend.add(dto);
+		}
+		
+		return reservationsToSend;
+	}
+	
+	@GET
+	@Path("HostReservations/{hostId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<ReservationDTO> getAllHostReservations(@PathParam("hostId") String hostId, @Context HttpServletRequest request) {
+		
+		ArrayList<ReservationDTO> reservationsToSend = new ArrayList<ReservationDTO>();
+		ReservationDAO reservations = getReservations();
+		UserDAO users = getUsers();
+		ApartmentDAO apartments = getApartments();
+		ArrayList<Reservation> allReservations = new ArrayList<Reservation>(reservations.findAll());
+		
+		for (Reservation reservation : allReservations) {
+			Apartment apartment = apartments.find(reservation.getApartmentId());
+			User host = users.findById(apartment.getHostId());
+			if (host.getId().equals(hostId) && reservation.isDeleted() == false) {
+				ReservationDTO dto = convertReservationToDTO(reservation, apartment, host, users.findById(reservation.getGuestId()));
+				reservationsToSend.add(dto);
+			}
+		}
+		
+		return reservationsToSend;
+	}
+	
 	
 	public ReservationDAO getReservations() {
 		ReservationDAO reservations = (ReservationDAO) context.getAttribute("reservations");

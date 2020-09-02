@@ -1,13 +1,17 @@
 package services;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -18,6 +22,7 @@ import dao.UserDAO;
 import dto.ReservationDTO;
 import enumeration.ApartmentType;
 import enumeration.ReservationStatus;
+import enumeration.UserRole;
 import model.Apartment;
 import model.Reservation;
 import model.User;
@@ -67,6 +72,75 @@ public class ReservationService {
 			reservationsToSend.add(dto);
 		}
 		return reservationsToSend;
+	}
+	
+	@POST
+	@Path("registerReservation")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public void registerReservations(@Context HttpServletRequest request, Reservation reservation) {
+		ReservationDAO reservations = getReservations();
+		
+		int reservationId = reservations.getReservations().size();
+		reservation.setId(reservationId + "");
+		
+		ApartmentDAO apartments = getApartments();
+		Apartment apartment = apartments.find(reservation.getApartmentId());
+		
+		apartment.getReservations().add(reservation.getId());
+		
+		apartments.getApartments().put(apartment.getId(), apartment);
+		saveApartments(apartments);
+		
+		reservations.getReservations().put(reservation.getId(), reservation);
+		saveReservations(reservations);
+	}
+	
+	@GET
+	@Path("searchReservations/{username}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Reservation> findReservationByGuestUsername(@Context HttpServletRequest request, @PathParam("username") String username) {
+		User loggedUser = (User) request.getSession().getAttribute("loggedUser");
+		UserDAO users = getUsers();
+		
+		ReservationDAO reservations = getReservations();
+		List<Reservation> ret = reservations.findReservationsByUsername(username, users);
+		 
+		if(loggedUser.getUserRole() == UserRole.HOST) {
+			ApartmentDAO apartments = getApartments();
+			List<String> hostsApartmentIds = new ArrayList<String>();
+			for(Map.Entry<String, Apartment> entry : apartments.getApartments().entrySet()) {
+				if(entry.getValue().getHostId().equals(loggedUser.getId())) {
+					hostsApartmentIds.add(entry.getValue().getId());
+				}
+			}
+			
+			for(Reservation temp: ret) {
+				if(!hostsApartmentIds.contains(temp.getApartmentId())) {
+					ret.remove(temp);
+				}
+			}
+		}
+		
+		return ret;
+	}
+	
+	@GET
+	@Path("filterReservationsByStatus/{status}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Reservation> filterReservationsByStatus(@Context HttpServletRequest request, @PathParam("status") ReservationStatus status) {
+		ReservationDAO reservations = getReservations();
+		
+		List<Reservation> ret = new ArrayList<Reservation>();
+		for(Map.Entry<String, Reservation> entry: reservations.getReservations().entrySet()) {
+			if(entry.getValue().getReservationStatus() == status) {
+				ret.add(entry.getValue());
+			}
+		}
+		
+		return ret;
 	}
 	
 	public ReservationDAO getReservations() {
@@ -143,4 +217,7 @@ public class ReservationService {
 		return convertedStatus;
 	}
 	
+	public void saveApartments(ApartmentDAO apartments) {
+		apartments.saveApartments(context.getRealPath(""));
+    }
 }

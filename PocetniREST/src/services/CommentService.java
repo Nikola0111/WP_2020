@@ -1,6 +1,7 @@
 package services;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -74,7 +75,7 @@ public class CommentService {
 	//proverava se da li je id neke rezervacije iz lista rezervacija korisnika
 	//jednak id-ju rezervacije kojoj pripada komentar
 	
-	@POST
+	@GET
 	@Path("getHostsApartmentsComments")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -112,7 +113,7 @@ public class CommentService {
 		return hostsComments;
     }  
 	
-	@POST
+	@GET
 	@Path("getComments")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)

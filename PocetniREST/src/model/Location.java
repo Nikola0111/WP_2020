@@ -6,7 +6,6 @@ public class Location {
 	private float longitude;
 	private Address address;
 	
-	
 	public Location() {
 		super();
 	}
@@ -47,7 +46,5 @@ public class Location {
 	public void setAddress(Address address) {
 		this.address = address;
 	}
-	
-	
-	
+		
 }

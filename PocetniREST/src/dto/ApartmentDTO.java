@@ -196,10 +196,18 @@ public class ApartmentDTO {
 	public void setGrades(ArrayList<Double> grades) {
 		this.grades = grades;
 	}
-	
+
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return "NumberOfRomms:" + numberOfRooms;
+		return "ApartmentDTO [id=" + id + ", apartmentType=" + apartmentType + ", numberOfRooms=" + numberOfRooms
+				+ ", numberOfGuests=" + numberOfGuests + ", location=" + location + ", datesForRent=" + datesForRent
+				+ ", hostId=" + hostId + ", commentIds=" + commentIds + ", photos=" + photos + ", pricePerNight="
+				+ pricePerNight + ", checkInTime=" + checkInTime + ", checkOutTime=" + checkOutTime
+				+ ", activityStatus=" + activityStatus + ", amenities=" + amenities + ", reservations=" + reservations
+				+ ", deleted=" + deleted + ", grades=" + grades + "]";
 	}
+	
+	
+	
+	
 }

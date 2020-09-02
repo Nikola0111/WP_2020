@@ -54,6 +54,19 @@ public class ApartmentDAO {
 		
 	}
 	
+	public ArrayList<Apartment> findAllByHostIdAndActivityStatus(String hostId, boolean activityStatus) {
+		ArrayList<Apartment> allApartments = new ArrayList<Apartment>(apartments.values());
+		ArrayList<Apartment> apartmentsByHost = new ArrayList<Apartment>();
+		
+		for (Apartment apartment : allApartments) {
+			if (apartment.getHostId().equals(hostId) && apartment.isActivityStatus() == activityStatus) {
+				apartmentsByHost.add(apartment);
+			}
+		}
+		return apartmentsByHost;
+		
+	}
+	
 	public Collection<Apartment> findAll() {
 		return apartments.values();
 	}

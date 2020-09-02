@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,6 +43,18 @@ public class CommentDAO {
 	
 	public Collection<Comment> findAll() {
 		return comments.values();
+	}
+	
+	public ArrayList<Comment> findAllByApartmentId(String apartmentId) {
+		ArrayList<Comment> commentsByApartmentId = new ArrayList<Comment>();
+		ArrayList<Comment> allComents = new ArrayList<Comment>(comments.values());
+		
+		for (Comment comment : allComents) {
+			if (comment.getApartmentId().equals(apartmentId) && comment.isDeleted() == false) {
+				commentsByApartmentId.add(comment);
+			}
+		}
+		return commentsByApartmentId;
 	}
 	
 	@SuppressWarnings("unchecked")

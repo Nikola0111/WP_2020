@@ -66,6 +66,19 @@ public class UserDAO {
 		return null;
 	}
 	
+	public User findByUsername(String userName) {
+		if (users.values().size() == 0) {
+			return null;
+		}
+		ArrayList<User> usersList = new ArrayList<User>(users.values());
+		for (User currentUser : usersList) {
+			if (currentUser.getUserName().equals(userName)) {
+				return currentUser;
+			}
+		}
+		return null;
+	}
+	
 	public Collection<User> findAll() {
 		return users.values();
 	}

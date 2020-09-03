@@ -9,6 +9,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -16,6 +17,8 @@ import javax.ws.rs.core.MediaType;
 import dao.UserDAO;
 import dto.ChangePasswordDTO;
 import dto.ChangeUserDTO;
+import dto.UserDetailsDTO;
+import enumeration.UserGender;
 import model.User;
 
 @Path("User")
@@ -83,6 +86,38 @@ public class UserService {
 		UserDAO users = getUsers();
 		ArrayList<User> usersToSend = new ArrayList<User>(users.findAll());
 		return usersToSend;
+	}
+	
+	@GET
+	@Path("UserDetails/{userName}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public UserDetailsDTO getUserDetails(@PathParam("userName") String userName, @Context HttpServletRequest request) {
+		
+		UserDAO users = getUsers();
+		User user = users.findByUsername(userName);
+		UserDetailsDTO dto = convertUserToUserDetails(user);
+		return dto;
+		
+	}
+	
+	public UserDetailsDTO convertUserToUserDetails(User user) {
+		UserDetailsDTO dto = new UserDetailsDTO();
+		
+		dto.setId(user.getId());
+		dto.setName(user.getName());
+		dto.setSurname(user.getSurname());
+		dto.setUserName(user.getUserName());
+		dto.setAvailableApartments(user.getAvailableApartments());
+		dto.setNumberOfReservationsMade(user.getReservations().size());
+		dto.setRentedApartments(user.getRentedApartments());
+		if (user.getUserGender().equals(UserGender.MALE)) {
+			dto.setUserGender("MALE");
+		} else {
+			dto.setUserGender("FEMALE");
+		}
+		return dto;
+		
 	}
 	
 	public UserDAO getUsers() {

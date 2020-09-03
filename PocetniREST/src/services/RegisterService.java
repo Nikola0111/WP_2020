@@ -66,7 +66,7 @@ public class RegisterService {
 			}
 			newUser.setUserRole(UserRole.GUEST);
 			newUser.setAvailableApartments(0);
-			newUser.setRentedApartmaets(0);
+			newUser.setRentedApartments(0);
 			users.getUsers().put(newUser.getId(), newUser);
 			saveUsers(users);
 			System.out.println("Uspesna registracija");

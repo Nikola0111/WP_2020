@@ -16,7 +16,7 @@ public class User {
 	private UserRole userRole;
 	private UserGender userGender;
 	private int availableApartments;
-	private int rentedApartmaets;
+	private int rentedApartments;
 	private ArrayList<Reservation> reservations;
 	private boolean deleted;
 	private boolean blocked;
@@ -41,7 +41,7 @@ public class User {
 		this.userRole = userRole;
 		this.userGender = userGender;
 		this.availableApartments = availableApartments;
-		this.rentedApartmaets = rentedApartmaets;
+		this.rentedApartments = rentedApartmaets;
 		this.reservations = reservations;
 		this.deleted = deleted;
 		this.blocked = blocked;
@@ -97,12 +97,12 @@ public class User {
 		this.availableApartments = availableApartments;
 	}
 
-	public int getRentedApartmaets() {
-		return rentedApartmaets;
+	public int getRentedApartments() {
+		return rentedApartments;
 	}
 
-	public void setRentedApartmaets(int rentedApartmaets) {
-		this.rentedApartmaets = rentedApartmaets;
+	public void setRentedApartments(int rentedApartments) {
+		this.rentedApartments = rentedApartments;
 	}
 
 	public boolean isDeleted() {

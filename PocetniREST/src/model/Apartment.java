@@ -2,8 +2,6 @@ package model;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.UUID;
-
 import enumeration.ApartmentType;
 
 public class Apartment {
@@ -22,7 +20,7 @@ public class Apartment {
 	private Date checkOutTime;
 	private boolean activityStatus;
 	private ArrayList<String> amenityIds;
-	private ArrayList<Reservation> reservations;
+	private ArrayList<String> reservationsIds;
 	private boolean deleted;
 	private ArrayList<Double> grades;
 	
@@ -32,7 +30,7 @@ public class Apartment {
 		this.commentIds = new ArrayList<String>();
 		this.photos = new ArrayList<String>();
 		this.amenityIds = new ArrayList<String>();
-		this.reservations = new ArrayList<Reservation>();
+		this.reservationsIds = new ArrayList<String>();
 		this.grades = new ArrayList<Double>();
 	}
 
@@ -40,7 +38,7 @@ public class Apartment {
 			ArrayList<Date> datesForRent, String hostId,
 			String host, ArrayList<String> comments, ArrayList<String> photos,
 			float pricePerNight, Date checkInTime, Date checkOutTime, boolean activityStatus,
-			ArrayList<String> amenities, ArrayList<Reservation> reservations, boolean deleted, ArrayList<Double> grades) {
+			ArrayList<String> amenities, ArrayList<String> reservations, boolean deleted, ArrayList<Double> grades) {
 		super();
 		 
 		this.apartmentType = apartmentType;
@@ -56,7 +54,7 @@ public class Apartment {
 		this.checkOutTime = checkOutTime;
 		this.activityStatus = activityStatus;
 		this.amenityIds = amenities;
-		this.reservations = reservations;
+		this.reservationsIds = reservations;
 		this.deleted = deleted;
 		this.grades = grades;
 	}
@@ -78,7 +76,7 @@ public class Apartment {
 
 		this.commentIds = new ArrayList<String>();
 		this.amenityIds = new ArrayList<String>();
-		this.reservations = new ArrayList<Reservation>();
+		this.reservationsIds = new ArrayList<String>();
 		this.grades = new ArrayList<Double>();
 		
 		this.deleted = false;
@@ -197,12 +195,12 @@ public class Apartment {
 		this.amenityIds = amenities;
 	}
 
-	public ArrayList<Reservation> getReservations() {
-		return reservations;
+	public ArrayList<String> getReservations() {
+		return reservationsIds;
 	}
 
-	public void setReservations(ArrayList<Reservation> reservations) {
-		this.reservations = reservations;
+	public void setReservations(ArrayList<String> reservations) {
+		this.reservationsIds = reservations;
 	}
 
 	public boolean isDeleted() {

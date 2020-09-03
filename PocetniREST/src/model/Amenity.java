@@ -53,6 +53,11 @@ public class Amenity {
 	public void setType(String type) {
 		this.type = type;
 	}
+
+	@Override
+	public String toString() {
+		return "\nAmenity [id=" + id + ", caption=" + caption + ", description=" + description + ", type=" + type + "]";
+	}
 	
 	
 }

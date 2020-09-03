@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -19,7 +20,10 @@ import com.fasterxml.jackson.databind.introspect.VisibilityChecker;
 import com.fasterxml.jackson.databind.type.MapType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 
+import enumeration.UserRole;
+import model.Apartment;
 import model.Reservation;
+import model.User;
 
 public class ReservationDAO {
 	
@@ -46,6 +50,7 @@ public class ReservationDAO {
 		return reservations.values();
 	}
 	
+
 	public ArrayList<Reservation> findAllByGuestId(String guestId) {
 		ArrayList<Reservation> allReservations = new ArrayList<Reservation>(reservations.values());
 		ArrayList<Reservation> reservationsToSend = new ArrayList<Reservation>();
@@ -57,7 +62,20 @@ public class ReservationDAO {
 		}
 		
 		return reservationsToSend;
+	}
+	
+	public List<Reservation> findReservationsByUsername(String username, UserDAO userDAO) {
+		List<Reservation> ret = new ArrayList<Reservation>();
 		
+		User user = userDAO.findByUsername(username);
+		
+		for(Map.Entry<String, Reservation> entry : getReservations().entrySet()) {
+			if(entry.getValue().getGuestId() == user.getId()) {
+				ret.add(entry.getValue());
+			}
+		}
+		
+		return ret;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -112,7 +130,7 @@ public class ReservationDAO {
 	}
 	
 	public void saveReservations(String path) {
-		String filePath = path + "/JSON/amenities.json";
+		String filePath = path + "/JSON/reservations.json";
 		File f = new File(filePath);
 		FileWriter fileWriter = null;
 		try {

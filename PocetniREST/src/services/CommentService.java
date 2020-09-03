@@ -12,7 +12,9 @@ import javax.ws.rs.core.MediaType;
 import dao.ApartmentDAO;
 import dao.CommentDAO;
 import dao.UserDAO;
+
 import dto.CommentForOneApartmentDTO;
+
 import model.Apartment;
 import model.Comment;
 import model.User;
@@ -84,7 +86,7 @@ public class CommentService {
 	//proverava se da li je id neke rezervacije iz lista rezervacija korisnika
 	//jednak id-ju rezervacije kojoj pripada komentar
 	
-	@POST
+	@GET
 	@Path("getHostsApartmentsComments")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -122,7 +124,7 @@ public class CommentService {
 		return hostsComments;
     }  
 	
-	@POST
+	@GET
 	@Path("getComments")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)

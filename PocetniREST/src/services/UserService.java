@@ -1,12 +1,15 @@
 package services;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -19,6 +22,7 @@ import dto.ChangePasswordDTO;
 import dto.ChangeUserDTO;
 import dto.UserDetailsDTO;
 import enumeration.UserGender;
+import dto.SearchUserDTO;
 import model.User;
 
 @Path("User")
@@ -88,6 +92,7 @@ public class UserService {
 		return usersToSend;
 	}
 	
+
 	@GET
 	@Path("UserDetails/{userName}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -118,6 +123,48 @@ public class UserService {
 		}
 		return dto;
 		
+	}
+	@POST
+	@Path("findUsersBySearchUserDTO")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<User> findUsersBySearchUserDTO(@Context HttpServletRequest request, SearchUserDTO userDTO) {
+		UserDAO users = getUsers();
+		List<User> ret = new ArrayList<User>();		
+		
+		for(Map.Entry<String, User> entry : users.getUsers().entrySet()) {
+			boolean condition = false;
+			boolean initialized = false;
+			
+			if(userDTO.getUserRole() != null) {
+				condition = entry.getValue().getUserRole() == userDTO.getUserRole();
+				initialized = true;
+			}
+			
+			if(userDTO.getUserGender() != null) {
+				if(initialized) {
+					condition = condition && (entry.getValue().getUserGender() == userDTO.getUserGender());
+				}else {
+					condition = entry.getValue().getUserGender() == userDTO.getUserGender();
+					initialized = true;
+				}
+			}
+			
+			if(userDTO.getUsername() != "" || userDTO.getUsername() != null) {
+				if(initialized) {
+					condition = condition && (entry.getValue().getUserName().equals(userDTO.getUsername()));
+				}else {
+					condition = entry.getValue().getUserName().equals(userDTO.getUsername());
+					initialized = true;
+				}
+			}
+			
+			if(condition) {
+				ret.add(entry.getValue());
+			}
+		}
+		
+		return ret;
 	}
 	
 	public UserDAO getUsers() {

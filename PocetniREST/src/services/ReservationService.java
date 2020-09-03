@@ -20,8 +20,10 @@ import dao.ApartmentDAO;
 import dao.ReservationDAO;
 import dao.UserDAO;
 import dto.ReservationDTO;
+import dto.UserDetailsDTO;
 import enumeration.ApartmentType;
 import enumeration.ReservationStatus;
+import enumeration.UserGender;
 import enumeration.UserRole;
 import model.Apartment;
 import model.Reservation;
@@ -72,6 +74,81 @@ public class ReservationService {
 			reservationsToSend.add(dto);
 		}
 		return reservationsToSend;
+	}
+
+	@GET
+	@Path("GuestReservations/{guestId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<ReservationDTO> getAllGuestReservations(@PathParam("guestId") String guestId, @Context HttpServletRequest request) {
+		
+		ArrayList<ReservationDTO> reservationsToSend = new ArrayList<ReservationDTO>();
+		ReservationDAO reservations = getReservations();
+		UserDAO users = getUsers();
+		ApartmentDAO apartments = getApartments();
+		ArrayList<Reservation> reservationsByGuestId = reservations.findAllByGuestId(guestId);
+		
+		for (Reservation reservation : reservationsByGuestId) {
+			Apartment apartment = apartments.find(reservation.getApartmentId());
+			ReservationDTO dto = convertReservationToDTO(reservation, apartment, users.findById(apartment.getHostId()), users.findById(reservation.getGuestId()));
+			reservationsToSend.add(dto);
+		}
+		
+		return reservationsToSend;
+	}
+	
+	@GET
+	@Path("HostReservations/{hostId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<ReservationDTO> getAllHostReservations(@PathParam("hostId") String hostId, @Context HttpServletRequest request) {
+		
+		ArrayList<ReservationDTO> reservationsToSend = new ArrayList<ReservationDTO>();
+		ReservationDAO reservations = getReservations();
+		UserDAO users = getUsers();
+		ApartmentDAO apartments = getApartments();
+		ArrayList<Reservation> allReservations = new ArrayList<Reservation>(reservations.findAll());
+		
+		for (Reservation reservation : allReservations) {
+			Apartment apartment = apartments.find(reservation.getApartmentId());
+			User host = users.findById(apartment.getHostId());
+			if (host.getId().equals(hostId) && reservation.isDeleted() == false) {
+				ReservationDTO dto = convertReservationToDTO(reservation, apartment, host, users.findById(reservation.getGuestId()));
+				reservationsToSend.add(dto);
+			}
+		}
+		
+		return reservationsToSend;
+	}
+	
+	@GET
+	@Path("UsersMadeReservations/{hostId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<UserDetailsDTO> getAllUsersThatMadeReservations(@PathParam("hostId") String hostId, @Context HttpServletRequest request) {
+		
+		ArrayList<UserDetailsDTO> usersToSend = new ArrayList<UserDetailsDTO>();
+		ReservationDAO reservations = getReservations();
+		UserDAO users = getUsers();
+		ApartmentDAO apartments = getApartments();
+		ArrayList<Reservation> allReservations = new ArrayList<Reservation>(reservations.findAll());
+		
+		for (Reservation reservation : allReservations) {
+			if (!reservation.isDeleted()) {
+				
+				Apartment apartment = apartments.find(reservation.getApartmentId());
+				User host = users.findById(apartment.getHostId());
+				
+				if (host.getId().equals(hostId)) {
+					User guest = users.findById(reservation.getGuestId());
+					UserDetailsDTO dto = convertUserToUserDetails(guest);
+					usersToSend.add(dto);
+				}
+				
+				
+			}
+		}
+		return usersToSend;
 	}
 	
 	@POST
@@ -141,6 +218,7 @@ public class ReservationService {
 		}
 		
 		return ret;
+
 	}
 	
 	public ReservationDAO getReservations() {
@@ -160,6 +238,25 @@ public class ReservationService {
 	
 	public void saveReservations(ReservationDAO reservations) {
 		reservations.saveReservations(context.getRealPath(""));
+	}
+	
+	public UserDetailsDTO convertUserToUserDetails(User user) {
+		UserDetailsDTO dto = new UserDetailsDTO();
+		
+		dto.setId(user.getId());
+		dto.setName(user.getName());
+		dto.setSurname(user.getSurname());
+		dto.setUserName(user.getUserName());
+		dto.setAvailableApartments(user.getAvailableApartments());
+		dto.setNumberOfReservationsMade(user.getReservations().size());
+		dto.setRentedApartments(user.getRentedApartments());
+		if (user.getUserGender().equals(UserGender.MALE)) {
+			dto.setUserGender("MALE");
+		} else {
+			dto.setUserGender("FEMALE");
+		}
+		return dto;
+		
 	}
 	
 	public ReservationDTO convertReservationToDTO(Reservation reservation, Apartment apartment, User host, User guest) {

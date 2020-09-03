@@ -50,6 +50,20 @@ public class ReservationDAO {
 		return reservations.values();
 	}
 	
+
+	public ArrayList<Reservation> findAllByGuestId(String guestId) {
+		ArrayList<Reservation> allReservations = new ArrayList<Reservation>(reservations.values());
+		ArrayList<Reservation> reservationsToSend = new ArrayList<Reservation>();
+		
+		for (Reservation reservation : allReservations) {
+			if (reservation.getGuestId().equals(guestId) && reservation.isDeleted() == false) {
+				reservationsToSend.add(reservation);
+			}
+		}
+		
+		return reservationsToSend;
+	}
+	
 	public List<Reservation> findReservationsByUsername(String username, UserDAO userDAO) {
 		List<Reservation> ret = new ArrayList<Reservation>();
 		

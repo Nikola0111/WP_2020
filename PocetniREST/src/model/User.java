@@ -29,7 +29,7 @@ public class User {
 	
 
 	public User(String userName, String password, String name, String surname, UserRole userRole,
-			UserGender userGender, int availableApartments, int rentedApartmaets, ArrayList<Reservation> reservations,
+			UserGender userGender, int availableApartments, int rentedApartments, ArrayList<Reservation> reservations,
 			boolean deleted, boolean blocked) {
 		super();
 		UUID uuid = UUID.randomUUID();
@@ -41,7 +41,7 @@ public class User {
 		this.userRole = userRole;
 		this.userGender = userGender;
 		this.availableApartments = availableApartments;
-		this.rentedApartments = rentedApartmaets;
+		this.rentedApartments = rentedApartments;
 		this.reservations = reservations;
 		this.deleted = deleted;
 		this.blocked = blocked;

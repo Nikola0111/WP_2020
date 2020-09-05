@@ -49,6 +49,9 @@ public class RegisterService {
 		if (users.getUsers().size() != 0) {
 			usersList.addAll(users.findAll());
 		}
+		
+		System.out.println(userDTO);
+		
 		if (users.getUsers().size() == 0 ||CheckNameAvailabity(userDTO.getUserName(), usersList)) {
 			User newUser = new User();
 			newUser.setId(createId(usersList));
@@ -59,11 +62,11 @@ public class RegisterService {
 			newUser.setName(userDTO.getName());
 			newUser.setSurname(userDTO.getSurname());
 			
-			if (userDTO.getUserGender().equals("MALE")) {
-				newUser.setUserGender(UserGender.MALE);
-			} else {
-				newUser.setUserGender(UserGender.FEMALE);
-			}
+//			if (userDTO.getUserGender().equals("MALE")) {
+//				newUser.setUserGender(UserGender.MALE);
+//			} else {
+//				newUser.setUserGender(UserGender.FEMALE);
+//			}
 			newUser.setUserRole(UserRole.GUEST);
 			newUser.setAvailableApartments(0);
 			newUser.setRentedApartments(0);

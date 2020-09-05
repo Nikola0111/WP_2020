@@ -3,9 +3,12 @@ package model;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import enumeration.UserGender;
 import enumeration.UserRole;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
 
 	private String id;
@@ -29,7 +32,8 @@ public class User {
 	
 
 	public User(String userName, String password, String name, String surname, UserRole userRole,
-			UserGender userGender, int availableApartments, int rentedApartmaets, ArrayList<String> reservationsIds,
+			UserGender userGender, int availableApartments, 
+			ArrayList<String> reservationsIds,int rentedApartments,
 			boolean deleted, boolean blocked) {
 		super();
 		UUID uuid = UUID.randomUUID();
@@ -41,8 +45,9 @@ public class User {
 		this.userRole = userRole;
 		this.userGender = userGender;
 		this.availableApartments = availableApartments;
-		this.rentedApartments = rentedApartmaets;
+		this.rentedApartments = rentedApartments;
 		this.reservationsIds = reservationsIds;
+		this.rentedApartments = rentedApartments;
 		this.deleted = deleted;
 		this.blocked = blocked;
 	}

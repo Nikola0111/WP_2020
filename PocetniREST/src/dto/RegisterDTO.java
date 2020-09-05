@@ -1,5 +1,8 @@
 package dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RegisterDTO {
 
 	private String userName;
@@ -50,6 +53,12 @@ public class RegisterDTO {
 
 	public void setUserGender(String userGender) {
 		this.userGender = userGender;
+	}
+
+	@Override
+	public String toString() {
+		return "RegisterDTO [userName=" + userName + ", password=" + password + ", name=" + name + ", surname="
+				+ surname + ", userGender=" + userGender + "]";
 	}
 	
 	

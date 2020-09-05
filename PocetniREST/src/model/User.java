@@ -17,19 +17,19 @@ public class User {
 	private UserGender userGender;
 	private int availableApartments;
 	private int rentedApartments;
-	private ArrayList<Reservation> reservations;
+	private ArrayList<String> reservationsIds;
 	private boolean deleted;
 	private boolean blocked;
 	
 	public User() {
 		super();
-		this.reservations = new ArrayList<Reservation>();
+		this.reservationsIds = new ArrayList<String>();
 	}
 	
 	
 
 	public User(String userName, String password, String name, String surname, UserRole userRole,
-			UserGender userGender, int availableApartments, int rentedApartmaets, ArrayList<Reservation> reservations,
+			UserGender userGender, int availableApartments, int rentedApartmaets, ArrayList<String> reservationsIds,
 			boolean deleted, boolean blocked) {
 		super();
 		UUID uuid = UUID.randomUUID();
@@ -42,7 +42,7 @@ public class User {
 		this.userGender = userGender;
 		this.availableApartments = availableApartments;
 		this.rentedApartments = rentedApartmaets;
-		this.reservations = reservations;
+		this.reservationsIds = reservationsIds;
 		this.deleted = deleted;
 		this.blocked = blocked;
 	}
@@ -139,14 +139,14 @@ public class User {
 
 
 
-	public ArrayList<Reservation> getReservations() {
-		return reservations;
+	public ArrayList<String> getReservationsIds() {
+		return reservationsIds;
 	}
 
 
 
-	public void setReservations(ArrayList<Reservation> reservations) {
-		this.reservations = reservations;
+	public void setReservations(ArrayList<String> reservationsIds) {
+		this.reservationsIds = reservationsIds;
 	}
 	
 	

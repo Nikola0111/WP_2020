@@ -19,8 +19,8 @@ public class ApartmentDTO {
 	private ArrayList<String> commentIds;
 	private ArrayList<String> photos;
 	private float pricePerNight;
-	private Date checkInTime;
-	private Date checkOutTime;
+	private String checkInTime;
+	private String checkOutTime;
 	private boolean activityStatus;
 	private ArrayList<Amenity> amenities;
 	private ArrayList<Reservation> reservations;
@@ -39,7 +39,7 @@ public class ApartmentDTO {
 
 	public ApartmentDTO(ApartmentType apartmentType, int numberOfRooms, int numberOfGuests, Location location,
 			ArrayList<Date> datesForRent, String host, ArrayList<String> comments, ArrayList<String> photos,
-			float pricePerNight, Date checkInTime, Date checkOutTime, boolean activityStatus,
+			float pricePerNight, String checkInTime, String checkOutTime, boolean activityStatus,
 			ArrayList<Amenity> amenities, ArrayList<Reservation> reservations, boolean deleted, ArrayList<Double> grades) {
 		super();
 		 
@@ -141,19 +141,19 @@ public class ApartmentDTO {
 		this.pricePerNight = pricePerNight;
 	}
 
-	public Date getCheckInTime() {
+	public String getCheckInTime() {
 		return checkInTime;
 	}
 
-	public void setCheckInTime(Date checkInTime) {
+	public void setCheckInTime(String checkInTime) {
 		this.checkInTime = checkInTime;
 	}
 
-	public Date getCheckOutTime() {
+	public String getCheckOutTime() {
 		return checkOutTime;
 	}
 
-	public void setCheckOutTime(Date checkOutTime) {
+	public void setCheckOutTime(String checkOutTime) {
 		this.checkOutTime = checkOutTime;
 	}
 

@@ -78,19 +78,18 @@ public class ApartmentDAO {
 			boolean condition = false;
 			boolean initialized = false;
 			
-			if(apartment.getStartDate() != null) {
-				condition = entry.getValue().getCheckInTime().before(apartment.getStartDate());
-				initialized = true;
-			}
+			/*
+			 * if(apartment.getStartDate() != null) { condition =
+			 * entry.getValue().getCheckInTime().before(apartment.getStartDate());
+			 * initialized = true; }
+			 */
 			
-			if(apartment.getEndDate() != null) {
-				if(initialized) {
-					condition = condition && entry.getValue().getCheckOutTime().after(apartment.getEndDate());
-				} else {
-					condition = entry.getValue().getCheckOutTime().after(apartment.getEndDate());
-					initialized = true;
-				}
-			}
+			/*
+			 * if(apartment.getEndDate() != null) { if(initialized) { condition = condition
+			 * && entry.getValue().getCheckOutTime().after(apartment.getEndDate()); } else {
+			 * condition = entry.getValue().getCheckOutTime().after(apartment.getEndDate());
+			 * initialized = true; } }
+			 */
 			
 			if(apartment.getNumberOfPeople() != -1) {
 				if(initialized) {

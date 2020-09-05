@@ -114,7 +114,7 @@ public class UserService {
 		dto.setSurname(user.getSurname());
 		dto.setUserName(user.getUserName());
 		dto.setAvailableApartments(user.getAvailableApartments());
-		dto.setNumberOfReservationsMade(user.getReservations().size());
+		dto.setNumberOfReservationsMade(user.getReservationsIds().size());
 		dto.setRentedApartments(user.getRentedApartments());
 		if (user.getUserGender().equals(UserGender.MALE)) {
 			dto.setUserGender("MALE");

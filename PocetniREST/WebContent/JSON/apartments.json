@@ -1,0 +1,60 @@
+{
+  "1" : {
+    "id" : "1",
+    "apartmentType" : "ONE_ROOM",
+    "numberOfRooms" : 1,
+    "numberOfGuests" : 1,
+    "location" : {
+    	"latitude" : 44.7830,
+    	"longitude" : 20.4926,
+    	"address" : {
+    		"street" : "Ljermontova",
+    		"number" : "22",
+    		"city" : "Belgrade",
+    		"postalCode" : "11000",
+    		"country" : "Serbia"
+    	}
+    	},
+    "datesForRent" : [],
+    "hostId" : "3",
+    "commentIds" : [],
+    "photos" : [],
+    "pricePerNight" : 20,
+    "checkInTime" : "8:00",
+    "checkOutTime" : "14:00",
+    "activityStatus" : true,
+    "amenityIds" :["1"] ,
+    "reservationsIds" :[] ,
+    "deleted" : false,
+    "grades" : []
+    },
+  "2" : {
+    "id" : "2",
+    "apartmentType" : "TWO_ROOMS",
+    "numberOfRooms" : 2,
+    "numberOfGuests" : 3,
+    "location" : {
+    	"latitude" : 44.8018,
+    	"longitude" : 20.4618,
+    	"address" : {
+    		"street" : "Svetozara Markovica",
+    		"number" : "80",
+    		"city" : "Belgrade",
+    		"postalCode" : "11000",
+    		"country" : "Serbia"
+    	}
+    	},
+    "datesForRent" : [],
+    "hostId" : "4",
+    "commentIds" : [],
+    "photos" : [],
+    "pricePerNight" : 35,
+    "checkInTime" : "8:00",
+    "checkOutTime" : "22:00",
+    "activityStatus" : true,
+    "amenityIds" :["1", "2"] ,
+    "reservationsIds" :[] ,
+    "deleted" : false,
+    "grades" : []
+    }
+}

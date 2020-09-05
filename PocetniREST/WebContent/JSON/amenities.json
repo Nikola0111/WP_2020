@@ -1,0 +1,14 @@
+{
+	"1" : {
+		"id" : "1",
+		"caption" : "TV",
+		"description" : "50 channels",
+		"type" : "Basic"	
+	},
+	"2" : {
+		"id" : "2",
+		"caption" : "Internet",
+		"description" : "50/10 mbit/s internet connection",
+		"type" : "Basic"	
+	}
+}

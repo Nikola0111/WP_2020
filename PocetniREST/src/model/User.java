@@ -3,9 +3,12 @@ package model;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import enumeration.UserGender;
 import enumeration.UserRole;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
 
 	private String id;

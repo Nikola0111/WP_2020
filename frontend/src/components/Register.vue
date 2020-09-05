@@ -21,9 +21,9 @@
         <li>
           <div class="rb-group">
             <label>Gender:</label>
-            <input class="rb-male" style="alignment: left" type="radio" id="one" value="Male" v-model="gender">
+            <input class="rb-male" style="alignment: left" type="radio" id="one" value="MALE" v-model="gender">
             <label class="rb-label" for="one">Male</label>
-            <input type="radio" id="two" value="Female" v-model="gender">
+            <input type="radio" id="two" value="FEMALE" v-model="gender">
             <label class="rb-label" for="two">Female</label>
           </div>
         </li>
@@ -41,23 +41,37 @@ export default {
   name: "Register.vue",
   data() {
     return {
-      name: null,
-      surname: null,
-      username: null,
-      password: null,
-      gender: null
+      username: "",
+      password: "",
+      name: "",
+      surname: "",
+      gender: ""
     }
   },
   methods: {
     showData(){
-      http.post('/Register', {
-        data: JSON.stringify({
+      if(this.username === "" || this.password === "" || this.name === "" || this.surname === ""){
+        alert("None of the fields can remain empty")
+        return
+      }
+
+      if(this.gender === ""){
+        alert("A gender must be selected")
+        return
+      }
+
+      http.post('/Register',
+        JSON.stringify({
           userName: this.username,
           name: this.name,
           surname: this.surname,
           password: this.password,
-          userGender: "MALE"
+          userGender: this.gender
         })
+      ).then(response => {
+        if(!response.data){
+          alert("Username is taken!")
+        }
       })
     }
   }

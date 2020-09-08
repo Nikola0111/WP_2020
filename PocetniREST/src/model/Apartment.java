@@ -1,10 +1,12 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import enumeration.ApartmentType;
 
-public class Apartment {
+@SuppressWarnings("serial")
+public class Apartment implements Serializable{
 
 	private String id;
 	private ApartmentType apartmentType;

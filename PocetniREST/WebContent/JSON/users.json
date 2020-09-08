@@ -5,10 +5,10 @@
     "password" : "1234",
     "name" : "Vladimir",
     "surname" : "Popovic",
-    "userRole" : "ADMIN",
+    "userRole" : "ADMINISTRATOR",
     "userGender" : "MALE",
     "availableApartments" : 0,
-    "rentedApartmaets" : 0,
+    "rentedApartments" : 0,
     "reservations" : [ ],
     "deleted" : false,
     "blocked" : false
@@ -19,10 +19,10 @@
     "password" : "1234",
     "name" : "Nikola",
     "surname" : "Milosevic",
-    "userRole" : "ADMIN",
+    "userRole" : "ADMINISTRATOR",
     "userGender" : "MALE",
     "availableApartments" : 0,
-    "rentedApartmaets" : 0,
+    "rentedApartments" : 0,
     "reservations" : [ ],
     "deleted" : false,
     "blocked" : false
@@ -36,7 +36,7 @@
     "userRole" : "HOST",
     "userGender" : "FEMALE",
     "availableApartments" : 0,
-    "rentedApartmaets" : 0,
+    "rentedApartments" : 0,
     "reservations" : [ ],
     "deleted" : false,
     "blocked" : false
@@ -50,7 +50,7 @@
     "userRole" : "HOST",
     "userGender" : "FEMALE",
     "availableApartments" : 0,
-    "rentedApartmaets" : 0,
+    "rentedApartments" : 0,
     "reservations" : [ ],
     "deleted" : false,
     "blocked" : false
@@ -64,7 +64,7 @@
     "userRole" : "GUEST",
     "userGender" : "MALE",
     "availableApartments" : 0,
-    "rentedApartmaets" : 0,
+    "rentedApartments" : 0,
     "reservations" : [ ],
     "deleted" : false,
     "blocked" : false
@@ -78,7 +78,7 @@
     "userRole" : "GUEST",
     "userGender" : "MALE",
     "availableApartments" : 0,
-    "rentedApartmaets" : 0,
+    "rentedApartments" : 0,
     "reservations" : [ ],
     "deleted" : false,
     "blocked" : false

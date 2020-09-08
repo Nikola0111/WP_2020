@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -20,12 +21,11 @@ import com.fasterxml.jackson.databind.introspect.VisibilityChecker;
 import com.fasterxml.jackson.databind.type.MapType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 
-import enumeration.UserRole;
-import model.Apartment;
 import model.Reservation;
 import model.User;
 
-public class ReservationDAO {
+@SuppressWarnings("serial")
+public class ReservationDAO implements Serializable{
 	
 	private Map<String, Reservation> reservations = new HashMap<String, Reservation>();
 	

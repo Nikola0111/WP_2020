@@ -1,5 +1,6 @@
 package dto;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -8,7 +9,8 @@ import model.Amenity;
 import model.Location;
 import model.Reservation;
 
-public class ApartmentDTO {
+@SuppressWarnings("serial")
+public class ApartmentDTO implements Serializable{
 	private String id;
 	private ApartmentType apartmentType;
 	private int numberOfRooms;

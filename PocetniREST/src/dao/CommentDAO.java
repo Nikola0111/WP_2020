@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -21,7 +22,8 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 
 import model.Comment;
 
-public class CommentDAO {
+@SuppressWarnings("serial")
+public class CommentDAO implements Serializable{
 
 	private Map<String, Comment> comments = new HashMap<String, Comment>();
 

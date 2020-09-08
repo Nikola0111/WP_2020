@@ -1,6 +1,9 @@
 package dto;
 
-public class ChangeUserDTO {
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class ChangeUserDTO implements Serializable{
 
 	private String previousUserName;
 	private String newUserName;

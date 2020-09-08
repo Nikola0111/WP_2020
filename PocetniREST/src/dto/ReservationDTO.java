@@ -1,10 +1,12 @@
 package dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import model.Location;
 
-public class ReservationDTO {
+@SuppressWarnings("serial")
+public class ReservationDTO implements Serializable{
 
 	private String id;
 	private String apartmentType;

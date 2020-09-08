@@ -1,15 +1,13 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import enumeration.UserGender;
 import enumeration.UserRole;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class User {
+public class User implements Serializable{
 
 	private String id;
 	private String userName;
@@ -110,7 +108,7 @@ public class User {
 		this.rentedApartments = rentedApartments;
 	}
 
-	public boolean isDeleted() {
+	public boolean getDeleted() {
 		return deleted;
 	}
 
@@ -118,7 +116,7 @@ public class User {
 		this.deleted = deleted;
 	}
 
-	public boolean isBlocked() {
+	public boolean getBlocked() {
 		return blocked;
 	}
 
@@ -126,6 +124,7 @@ public class User {
 		this.blocked = blocked;
 	}
 
+	
 	public UserRole getUserRole() {
 		return userRole;
 	}
@@ -143,15 +142,23 @@ public class User {
 	}
 
 
-
 	public ArrayList<String> getReservationsIds() {
 		return reservationsIds;
 	}
 
 
-
 	public void setReservations(ArrayList<String> reservationsIds) {
 		this.reservationsIds = reservationsIds;
+	}
+
+
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", userName=" + userName + ", password=" + password + ", name=" + name + ", surname="
+				+ surname + ", userRole=" + userRole + ", userGender=" + userGender + ", availableApartments="
+				+ availableApartments + ", rentedApartments=" + rentedApartments + ", reservationsIds="
+				+ reservationsIds + ", deleted=" + deleted + ", blocked=" + blocked + "]";
 	}
 	
 	

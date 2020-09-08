@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -25,7 +26,8 @@ import com.fasterxml.jackson.core.JsonGenerator;
 
 import model.Apartment;
 
-public class ApartmentDAO {
+@SuppressWarnings("serial")
+public class ApartmentDAO implements Serializable{
 
 	private Map<String, Apartment> apartments = new HashMap<String, Apartment>();
 

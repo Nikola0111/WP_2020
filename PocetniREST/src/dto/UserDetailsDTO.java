@@ -1,6 +1,9 @@
 package dto;
 
-public class UserDetailsDTO {
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class UserDetailsDTO implements Serializable{
 
 	private String id;
 	private String userName;

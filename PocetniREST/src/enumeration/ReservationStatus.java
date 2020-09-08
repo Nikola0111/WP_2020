@@ -1,6 +1,8 @@
 package enumeration;
 
-public enum ReservationStatus {
+import java.io.Serializable;
+
+public enum ReservationStatus implements Serializable{
 	CREATED,
 	DECLINED,
 	ACCEPTED,

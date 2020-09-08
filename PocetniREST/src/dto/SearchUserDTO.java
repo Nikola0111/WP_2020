@@ -1,9 +1,12 @@
 package dto;
 
+import java.io.Serializable;
+
 import enumeration.UserGender;
 import enumeration.UserRole;
 
-public class SearchUserDTO {
+@SuppressWarnings("serial")
+public class SearchUserDTO implements Serializable{
 	private UserRole userRole;
 	private UserGender userGender;
 	private String username;

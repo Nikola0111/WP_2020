@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +21,8 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 
 import model.Amenity;
 
-public class AmenityDAO {
+@SuppressWarnings("serial")
+public class AmenityDAO implements Serializable{
 	
 	private Map<String, Amenity> amenities = new HashMap<String, Amenity>();
 	

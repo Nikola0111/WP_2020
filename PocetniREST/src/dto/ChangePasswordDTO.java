@@ -1,6 +1,9 @@
 package dto;
 
-public class ChangePasswordDTO {
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class ChangePasswordDTO implements Serializable{
 
 	private String userName;
 	private String password;

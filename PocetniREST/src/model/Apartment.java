@@ -1,10 +1,12 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import enumeration.ApartmentType;
 
-public class Apartment {
+@SuppressWarnings("serial")
+public class Apartment implements Serializable{
 
 	private String id;
 	private ApartmentType apartmentType;
@@ -16,8 +18,8 @@ public class Apartment {
 	private ArrayList<String> commentIds;
 	private ArrayList<String> photos;
 	private float pricePerNight;
-	private Date checkInTime;
-	private Date checkOutTime;
+	private String checkInTime;
+	private String checkOutTime;
 	private boolean activityStatus;
 	private ArrayList<String> amenityIds;
 	private ArrayList<String> reservationsIds;
@@ -37,7 +39,7 @@ public class Apartment {
 	public Apartment(ApartmentType apartmentType, int numberOfRooms, int numberOfGuests, Location location,
 			ArrayList<Date> datesForRent, String hostId,
 			String host, ArrayList<String> comments, ArrayList<String> photos,
-			float pricePerNight, Date checkInTime, Date checkOutTime, boolean activityStatus,
+			float pricePerNight, String checkInTime, String checkOutTime, boolean activityStatus,
 			ArrayList<String> amenities, ArrayList<String> reservations, boolean deleted, ArrayList<Double> grades) {
 		super();
 		 
@@ -61,7 +63,7 @@ public class Apartment {
 	
 	public Apartment(ApartmentType apartmentType, int numberOfRooms, int numberOfGuests, Location location,
 			ArrayList<Date> datesForRent, ArrayList<String> photos,
-			float pricePerNight, Date checkInTime, Date checkOutTime) {
+			float pricePerNight, String checkInTime, String checkOutTime) {
 		super();
 		 
 		this.apartmentType = apartmentType;
@@ -163,19 +165,19 @@ public class Apartment {
 		this.pricePerNight = pricePerNight;
 	}
 
-	public Date getCheckInTime() {
+	public String getCheckInTime() {
 		return checkInTime;
 	}
 
-	public void setCheckInTime(Date checkInTime) {
+	public void setCheckInTime(String checkInTime) {
 		this.checkInTime = checkInTime;
 	}
 
-	public Date getCheckOutTime() {
+	public String getCheckOutTime() {
 		return checkOutTime;
 	}
 
-	public void setCheckOutTime(Date checkOutTime) {
+	public void setCheckOutTime(String checkOutTime) {
 		this.checkOutTime = checkOutTime;
 	}
 

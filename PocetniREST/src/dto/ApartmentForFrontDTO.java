@@ -1,8 +1,11 @@
 package dto;
 
+import java.io.Serializable;
+
 import model.Location;
 
-public class ApartmentForFrontDTO {
+@SuppressWarnings("serial")
+public class ApartmentForFrontDTO implements Serializable{
 
 	
 	private String id;

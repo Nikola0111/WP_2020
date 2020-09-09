@@ -1,11 +1,13 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
 import enumeration.ReservationStatus;
 
-public class Reservation {
+@SuppressWarnings("serial")
+public class Reservation implements Serializable{
 
 	private String id;
 	private String apartmentId;

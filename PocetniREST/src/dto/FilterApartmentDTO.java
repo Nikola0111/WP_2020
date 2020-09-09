@@ -1,10 +1,12 @@
 package dto;
 
+import java.io.Serializable;
 import java.util.List;
 
 import enumeration.ApartmentType;
 
-public class FilterApartmentDTO {
+@SuppressWarnings("serial")
+public class FilterApartmentDTO implements Serializable{
 	
 	private ApartmentType apartmentType;
 	private List<String> amenityIds;

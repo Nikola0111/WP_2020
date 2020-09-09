@@ -16,7 +16,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import dao.AmenityDAO;
 import dao.ApartmentDAO;
+import dao.CommentDAO;
 import dao.ReservationDAO;
 import dao.UserDAO;
 import dto.ReservationDTO;
@@ -41,6 +43,20 @@ public class ReservationService {
 	
 	@PostConstruct
 	public void init() {
+		
+		if (context.getAttribute("amenities") == null) {
+			System.out.println("Inicijalizaovao amenities");
+			context.setAttribute("amenities", new AmenityDAO(context.getRealPath("")));
+		}
+		
+		if (context.getAttribute("apartments") == null) {
+			context.setAttribute("apartments", new ApartmentDAO(context.getRealPath("")));
+		}
+		
+		if (context.getAttribute("comments") == null) {
+			context.setAttribute("comments", new CommentDAO(context.getRealPath("")));
+		}
+		
 		if (context.getAttribute("reservations") == null) {
 			context.setAttribute("reservations", new ReservationDAO(context.getRealPath("")));
 		}
@@ -48,10 +64,7 @@ public class ReservationService {
 		if (context.getAttribute("users") == null) {
 			context.setAttribute("users", new UserDAO(context.getRealPath("")));
 		}
-		
-		if (context.getAttribute("apartments") == null) {
-			context.setAttribute("apartments", new ApartmentDAO(context.getRealPath("")));
-		}
+	
 	}
 	
 	@GET
@@ -248,7 +261,7 @@ public class ReservationService {
 		dto.setSurname(user.getSurname());
 		dto.setUserName(user.getUserName());
 		dto.setAvailableApartments(user.getAvailableApartments());
-		dto.setNumberOfReservationsMade(user.getReservations().size());
+		dto.setNumberOfReservationsMade(user.getReservationsIds().size());
 		dto.setRentedApartments(user.getRentedApartments());
 		if (user.getUserGender().equals(UserGender.MALE)) {
 			dto.setUserGender("MALE");

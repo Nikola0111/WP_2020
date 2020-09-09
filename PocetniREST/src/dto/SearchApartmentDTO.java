@@ -1,8 +1,10 @@
 package dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class SearchApartmentDTO {
+@SuppressWarnings("serial")
+public class SearchApartmentDTO implements Serializable{
 
 	private Date startDate;
 	private Date endDate;

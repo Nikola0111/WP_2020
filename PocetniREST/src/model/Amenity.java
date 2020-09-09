@@ -1,8 +1,10 @@
 package model;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class Amenity {
+@SuppressWarnings("serial")
+public class Amenity implements Serializable{
 	
 	private String id;
 	private String caption;

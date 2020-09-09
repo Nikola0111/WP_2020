@@ -15,11 +15,49 @@
           </li>
         </ul>
         <ul class="navbar-nav">
-          <li class="nav-item">
+          <li v-if="loggedUserRole == ''" class="nav-item">
             <router-link to="/login" class="nav-link">Login</router-link>
           </li>
-          <li class="nav-item">
+          <li v-if="loggedUserRole == ''" class="nav-item">
             <router-link to="/register" class="nav-link">Register</router-link>
+          </li>
+          <li v-if="loggedUserRole == 'GUEST'">
+            <div style="margin-right: 50px" class="dropdown">
+              <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Profile
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <a class="dropdown-item" href="#">My account</a>
+                <a class="dropdown-item" href="#">My reservations</a>
+                <a @click="logout" class="dropdown-item" href="#">Logout</a>
+              </div>
+            </div>
+          </li>
+          <li v-if="loggedUserRole == 'HOST'">
+            <div style="margin-right: 50px" class="dropdown">
+              <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Profile
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                <a class="dropdown-item" href="#">My account</a>
+                <a class="dropdown-item" href="#">My apartments</a>
+                <a @click="logout" class="dropdown-item" href="#">Logout</a>
+              </div>
+            </div>
+          </li>
+          <li v-if="loggedUserRole == 'ADMINISTRATOR'">
+            <div style="margin-right: 50px" class="dropdown">
+              <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Profile
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                <a class="dropdown-item" href="#">My account</a>
+                <router-link to="/Users" class="dropdown-item" href="#">Users</router-link>
+                <a class="dropdown-item" href="#">Apartments</a>
+                <a class="dropdown-item" href="#">Reservations</a>
+                <a @click="logout" class="dropdown-item" href="#">Logout</a>
+              </div>
+            </div>
           </li>
         </ul>
       </div>
@@ -30,16 +68,24 @@
 </template>
 
 <script>
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import 'bootstrap/dist/css/bootstrap.css'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from "@/components/Login";
 import Register from "@/components/Register";
-
+import {MdIcon} from "vue-material/dist/components"
+import 'material-design-icons/iconfont/material-icons.css'
+import UsersTable from "@/components/AdministratorComponents/UsersTable";
+import http from '@/http-common';
+import Home from "@/components/Home";
 Vue.use(VueRouter)
+Vue.use(MdIcon)
 const routes = [
+  {path: '/', component: Home},
   {path: '/login', component: Login},
-  {path: '/register', component: Register}
+  {path: '/register', component: Register},
+  {path: '/Users', component: UsersTable}
 ]
 
 const router = new VueRouter({
@@ -53,11 +99,35 @@ export default {
   components: {
 
   },
-  data : function() {
-
+  data() {
+    return {
+      loggedUserRole: ""
+    }
+  },
+  mounted() {
+    this.$root.$on('messageToParent', (data) => {
+      this.loggedUserRole = data;
+    });
+    http.get('login/loggedUser')
+    .then(response => {
+      if (response.data) {
+        this.loggedUserRole = response.data.userRole;
+      } else {
+        this.loggedUserRole = "";
+      }
+    })
   },
   methods: {
-
+    logout() {
+      http.get('login/logout')
+      .then(response => {
+        if (response.data) {
+          console.log(response.data)
+          this.loggedUserRole = ""
+          this.$router.push('/')
+        }
+      })
+    }
   }
 
 }
@@ -68,6 +138,5 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
 }
 </style>

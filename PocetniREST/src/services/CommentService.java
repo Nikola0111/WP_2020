@@ -9,8 +9,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import dao.AmenityDAO;
 import dao.ApartmentDAO;
 import dao.CommentDAO;
+import dao.ReservationDAO;
 import dao.UserDAO;
 
 import dto.CommentForOneApartmentDTO;
@@ -39,15 +41,28 @@ public class CommentService {
 	
 	@PostConstruct
 	public void init() {
+		
+		if (context.getAttribute("amenities") == null) {
+			System.out.println("Inicijalizaovao amenities");
+			context.setAttribute("amenities", new AmenityDAO(context.getRealPath("")));
+		}
+		
+		if (context.getAttribute("apartments") == null) {
+			context.setAttribute("apartments", new ApartmentDAO(context.getRealPath("")));
+		}
+		
 		if (context.getAttribute("comments") == null) {
 			context.setAttribute("comments", new CommentDAO(context.getRealPath("")));
 		}
+		
+		if (context.getAttribute("reservations") == null) {
+			context.setAttribute("reservations", new ReservationDAO(context.getRealPath("")));
+		}
+		
 		if (context.getAttribute("users") == null) {
-			context.setAttribute("users", new CommentDAO(context.getRealPath("")));
+			context.setAttribute("users", new UserDAO(context.getRealPath("")));
 		}
-		if (context.getAttribute("apartments") == null) {
-			context.setAttribute("apartments", new CommentDAO(context.getRealPath("")));
-		}
+	
 	}
 	
 	@POST
@@ -96,7 +111,6 @@ public class CommentService {
 		CommentDAO comments = getComments();
 		User loggedUser = (User) request.getSession().getAttribute("loggedUser");
 		
-
 		System.out.println("Number of apartments:" + apartments.getApartments().size());
 		
 		List<Apartment> hostsApartments = new ArrayList<Apartment>();

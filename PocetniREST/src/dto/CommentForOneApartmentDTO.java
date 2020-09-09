@@ -1,6 +1,9 @@
 package dto;
 
-public class CommentForOneApartmentDTO {
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class CommentForOneApartmentDTO implements Serializable{
 
 	private String id;
 	private String caption;

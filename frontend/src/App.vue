@@ -54,7 +54,8 @@
                 <a class="dropdown-item" href="#">My account</a>
                 <router-link to="/Users" class="dropdown-item" href="#">Users</router-link>
                 <a class="dropdown-item" href="#">Apartments</a>
-                <a class="dropdown-item" href="#">Reservations</a>
+                <router-link to="/AllReservations" class="dropdown-item" href="#">Reservations</router-link>
+                <router-link to="/AllAmenities" class="dropdown-item" href="#">Amenities</router-link>
                 <a @click="logout" class="dropdown-item" href="#">Logout</a>
               </div>
             </div>
@@ -79,13 +80,17 @@ import 'material-design-icons/iconfont/material-icons.css'
 import UsersTable from "@/components/AdministratorComponents/UsersTable";
 import http from '@/http-common';
 import Home from "@/components/Home";
+import ReservationsForAdmin from "@/components/AdministratorComponents/ReservationsForAdmin";
+import AmenitiesForAdmin from "@/components/AdministratorComponents/AmenitiesForAdmin";
 Vue.use(VueRouter)
 Vue.use(MdIcon)
 const routes = [
   {path: '/', component: Home},
   {path: '/login', component: Login},
   {path: '/register', component: Register},
-  {path: '/Users', component: UsersTable}
+  {path: '/Users', component: UsersTable},
+  {path: '/AllReservations', component: ReservationsForAdmin},
+  {path: '/AllAmenities', component: AmenitiesForAdmin}
 ]
 
 const router = new VueRouter({

@@ -78,7 +78,6 @@ import Register from "@/components/Register";
 import {MdIcon} from "vue-material/dist/components"
 import 'material-design-icons/iconfont/material-icons.css'
 import UsersTable from "@/components/AdministratorComponents/UsersTable";
-import http from '@/http-common';
 import Home from "@/components/Home";
 import ReservationsForAdmin from "@/components/AdministratorComponents/ReservationsForAdmin";
 import AmenitiesForAdmin from "@/components/AdministratorComponents/AmenitiesForAdmin";
@@ -106,32 +105,23 @@ export default {
   },
   data() {
     return {
-      loggedUserRole: ""
+      loggedUserRole: "",
     }
   },
   mounted() {
     this.$root.$on('messageToParent', (data) => {
       this.loggedUserRole = data;
+      localStorage.setItem("loggedUserRole", JSON.stringify(data));
     });
-    http.get('login/loggedUser')
-    .then(response => {
-      if (response.data) {
-        this.loggedUserRole = response.data.userRole;
-      } else {
-        this.loggedUserRole = "";
-      }
+    this.$root.$on('loggedUser', (data) => {
+      localStorage.setItem("loggedUser", JSON.stringify(data));
     })
   },
   methods: {
     logout() {
-      http.get('login/logout')
-      .then(response => {
-        if (response.data) {
-          console.log(response.data)
-          this.loggedUserRole = ""
-          this.$router.push('/')
-        }
-      })
+      this.loggedUserRole = ""
+      localStorage.clear();
+      this.$router.push('/')
     }
   }
 

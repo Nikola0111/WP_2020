@@ -69,7 +69,7 @@ public class AmenityService {
 	
 	
 	public AmenityDAO getAmenities() {
-		AmenityDAO amenities = (AmenityDAO) context.getAttribute("users");
+		AmenityDAO amenities = (AmenityDAO) context.getAttribute("amenities");
 		return amenities;
 	}
 	

@@ -54,7 +54,8 @@
                 <a class="dropdown-item" href="#">My account</a>
                 <router-link to="/Users" class="dropdown-item" href="#">Users</router-link>
                 <a class="dropdown-item" href="#">Apartments</a>
-                <a class="dropdown-item" href="#">Reservations</a>
+                <router-link to="/AllReservations" class="dropdown-item" href="#">Reservations</router-link>
+                <router-link to="/AllAmenities" class="dropdown-item" href="#">Amenities</router-link>
                 <a @click="logout" class="dropdown-item" href="#">Logout</a>
               </div>
             </div>
@@ -77,15 +78,18 @@ import Register from "@/components/Register";
 import {MdIcon} from "vue-material/dist/components"
 import 'material-design-icons/iconfont/material-icons.css'
 import UsersTable from "@/components/AdministratorComponents/UsersTable";
-import http from '@/http-common';
 import Home from "@/components/Home";
+import ReservationsForAdmin from "@/components/AdministratorComponents/ReservationsForAdmin";
+import AmenitiesForAdmin from "@/components/AdministratorComponents/AmenitiesForAdmin";
 Vue.use(VueRouter)
 Vue.use(MdIcon)
 const routes = [
   {path: '/', component: Home},
   {path: '/login', component: Login},
   {path: '/register', component: Register},
-  {path: '/Users', component: UsersTable}
+  {path: '/Users', component: UsersTable},
+  {path: '/AllReservations', component: ReservationsForAdmin},
+  {path: '/AllAmenities', component: AmenitiesForAdmin}
 ]
 
 const router = new VueRouter({
@@ -101,32 +105,23 @@ export default {
   },
   data() {
     return {
-      loggedUserRole: ""
+      loggedUserRole: "",
     }
   },
   mounted() {
     this.$root.$on('messageToParent', (data) => {
       this.loggedUserRole = data;
+      localStorage.setItem("loggedUserRole", JSON.stringify(data));
     });
-    http.get('login/loggedUser')
-    .then(response => {
-      if (response.data) {
-        this.loggedUserRole = response.data.userRole;
-      } else {
-        this.loggedUserRole = "";
-      }
+    this.$root.$on('loggedUser', (data) => {
+      localStorage.setItem("loggedUser", JSON.stringify(data));
     })
   },
   methods: {
     logout() {
-      http.get('login/logout')
-      .then(response => {
-        if (response.data) {
-          console.log(response.data)
-          this.loggedUserRole = ""
-          this.$router.push('/')
-        }
-      })
+      this.loggedUserRole = ""
+      localStorage.clear();
+      this.$router.push('/')
     }
   }
 

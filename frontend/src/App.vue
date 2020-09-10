@@ -11,7 +11,7 @@
             <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Apartments</a>
+            <router-link to="/apartments" class="dropdown-item" href="#">Apartments</router-link>
           </li>
         </ul>
         <ul class="navbar-nav">
@@ -53,7 +53,7 @@
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
                 <a class="dropdown-item" href="#">My account</a>
                 <router-link to="/Users" class="dropdown-item" href="#">Users</router-link>
-                <a class="dropdown-item" href="#">Apartments</a>
+                <router-link to="/apartments" class="dropdown-item" href="#">Apartments</router-link>
                 <a class="dropdown-item" href="#">Reservations</a>
                 <a @click="logout" class="dropdown-item" href="#">Logout</a>
               </div>
@@ -79,13 +79,15 @@ import 'material-design-icons/iconfont/material-icons.css'
 import UsersTable from "@/components/AdministratorComponents/UsersTable";
 import http from '@/http-common';
 import Home from "@/components/Home";
+import ApartmentList from "@/components/ApartmentList";
 Vue.use(VueRouter)
 Vue.use(MdIcon)
 const routes = [
   {path: '/', component: Home},
   {path: '/login', component: Login},
   {path: '/register', component: Register},
-  {path: '/Users', component: UsersTable}
+  {path: '/Users', component: UsersTable},
+  {path: '/apartments', component: ApartmentList}
 ]
 
 const router = new VueRouter({

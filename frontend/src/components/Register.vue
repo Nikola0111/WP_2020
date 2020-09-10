@@ -19,6 +19,10 @@
                  placeholder="Password" />
         </li>
         <li>
+          <input type="password" name="password" class="field-style field-full align-none" v-model="controlpw"
+                 placeholder="Re-type password" />
+        </li>
+        <li>
           <div class="rb-group">
             <label>Gender:</label>
             <input class="rb-male" style="alignment: left" type="radio" id="one" value="MALE" v-model="gender">
@@ -32,31 +36,60 @@
         </li>
       </ul>
     </form>
+    <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="invalidFieldsSnackbar" md-persistent>
+      <span>None of the fields can remain empty</span>
+      <md-button class="md-primary" @click="showSnackbar = false">Close</md-button>
+    </md-snackbar>
+    <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="passwordsNotMatchingSnackbar" md-persistent>
+      <span>Passwords aren't matching</span>
+      <md-button class="md-primary" @click="showSnackbar = false">Close</md-button>
+    </md-snackbar>
+    <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="genderNotSelectedSnackbar" md-persistent>
+      <span>Gender must be specified</span>
+      <md-button class="md-primary" @click="showSnackbar = false">Close</md-button>
+    </md-snackbar>
   </div>
 </template>
 
 <script>
+import Vue from "vue"
 import http from '../http-common';
+import { MdSnackbar, MdButton } from "vue-material/dist/components"
+import 'vue-material/dist/vue-material.min.css'
+import 'vue-material/dist/theme/default.css'
+Vue.use(MdSnackbar)
+Vue.use(MdButton)
 export default {
   name: "Register.vue",
   data() {
     return {
       username: "",
       password: "",
+      controlpw: "",
       name: "",
       surname: "",
-      gender: ""
+      gender: "",
+      invalidFieldsSnackbar: false,
+      passwordsNotMatchingSnackbar: false,
+      genderNotSelectedSnackbar: false,
+      position: 'center',
+      duration: 3000,
     }
   },
   methods: {
     showData(){
+      if(this.password !== this.controlpw){
+        this.passwordsNotMatchingSnackbar = true
+        return
+      }
+
       if(this.username === "" || this.password === "" || this.name === "" || this.surname === ""){
-        alert("None of the fields can remain empty")
+        this.invalidFieldsSnackbar = true
         return
       }
 
       if(this.gender === ""){
-        alert("A gender must be selected")
+        this.genderNotSelectedSnackbar = true
         return
       }
 

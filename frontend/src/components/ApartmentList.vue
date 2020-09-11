@@ -20,9 +20,16 @@
         <md-table-cell md-label="Host username" md-sort-by="hostUserName">{{ item.hostUserName }}</md-table-cell>
         <md-table-cell md-label="Price per night" md-sort-by="pricePerNight">{{ item.pricePerNight }}</md-table-cell>
         <md-table-cell md-label="Apartment type" md-sort-by="apartmentType">{{ item.apartmentType }}</md-table-cell>
+        <md-table-cell v-if="isAdmin || isHost" md-label="Activity status" md-sort-by="activityStatus">{{ item.activityStatus }}</md-table-cell>
         <md-table-cell><button>Details</button></md-table-cell>
+        <md-table-cell v-if="isAdmin || isHost"><button @click="deleteApartment(item.id, item)">Delete</button></md-table-cell>
       </md-table-row>
     </md-table>
+
+    <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="failedDelete" md-persistent>
+      <span>Problem while deleting apartment, try reloading the page</span>
+      <md-button class="md-primary" @click="failedDelete = false">Close</md-button>
+    </md-snackbar>
   </div>
 </template>
 
@@ -56,31 +63,59 @@ export default {
     return {
       search: null,
       searched: [],
-      apartments: []
+      apartments: [],
+      isAdmin: false,
+      isHost: false,
+      failedDelete: false,
+      duration: 3000,
+      position: 'center'
     }
   },
   methods: {
     searchOnTable () {
       this.searched = searchByHostUsername(this.apartments, this.search)
+    },
+    deleteApartment(apartmentId, objectInList) {
+      http.get(`apartments/deleteApartment/${apartmentId}`).then(response => {
+        if(response.data === true) {
+          this.apartments.splice(objectInList, 1)
+        }else {
+          this.failedDelete = true
+        }
+      })
     }
   },
   created () {
     this.searched = this.apartments
+    this.isAdmin = JSON.parse(localStorage.getItem("loggedUserRole")) === 'ADMINISTRATOR';
+    this.isHost = JSON.parse(localStorage.getItem("loggedUserRole")) === 'HOST';
   },
   mounted() {
-    if(localStorage.getItem("loggedUser") === undefined) {
+    if(localStorage.getItem("loggedUserRole") === null || JSON.parse(localStorage.getItem("loggedUserRole")) === "GUEST") {
       http.get('apartments/ActiveApartments')
           .then(response => {
             this.apartments = response.data;
             this.searched = this.apartments;
             console.log(response.data)
           })
-    }else {
-      var role = JSON.parse(localStorage.getItem("loggedUserRole"))
-      if(role === "GUEST"){
-        console.log("smth")
-      }else if(role === "HOST"){
-        console.log("smth")
+    } else {
+      console.log(localStorage.getItem("loggedUserRole"))
+      let role = JSON.parse(localStorage.getItem("loggedUserRole"))
+      if(role === "HOST"){
+        let user = JSON.parse(localStorage.getItem("loggedUser"))
+        http.get(`apartments/HostApartments/${user.id}`)
+            .then(response => {
+              this.apartments = response.data;
+              this.searched = this.apartments;
+              console.log(response.data)
+            })
+      } else if(role === "ADMINISTRATOR"){
+        http.get('apartments/Apartments')
+            .then(response => {
+              this.apartments = response.data;
+              this.searched = this.apartments;
+              console.log(response.data)
+            })
       }
     }
   }

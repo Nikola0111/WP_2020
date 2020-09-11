@@ -54,6 +54,22 @@ export default {
       loggedUserRole: ""
     }
   },
+  mounted() {
+    let loggedUser = "";
+    let loggedUserRole = "";
+    if (localStorage.getItem("loggedUser") === null) {
+      localStorage.setItem("loggedUser", JSON.stringify(loggedUser))
+    } else {
+      this.loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+    }
+
+    if (localStorage.getItem("loggedUserRole") === null) {
+      localStorage.setItem("loggedUserRole", JSON.stringify(loggedUserRole))
+    } else {
+      this.loggedUserRole = JSON.parse(localStorage.getItem(loggedUserRole));
+    }
+
+  },
   methods: {
     showData() {
       if(this.username === "" || this.password === ""){
@@ -71,8 +87,10 @@ export default {
           this.showSnackbar2 = true;
         } else {
           this.loggedUser = response.data;
+
           this.loggedUserRole = this.loggedUser.userRole;
           this.sendToParrent();
+          this.sendUserToParrent()
           this.$router.push('/')
         }
       })
@@ -83,6 +101,9 @@ export default {
     },
       sendToParrent() {
       this.$root.$emit('messageToParent', this.loggedUserRole)
+      },
+      sendUserToParrent() {
+      this.$root.$emit('loggedUser', this.loggedUser)
       }
   }
 }

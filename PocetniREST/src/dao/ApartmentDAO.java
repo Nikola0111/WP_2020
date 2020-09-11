@@ -12,6 +12,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.ServletContext;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -62,6 +65,19 @@ public class ApartmentDAO implements Serializable{
 		
 		for (Apartment apartment : allApartments) {
 			if (apartment.getHostId().equals(hostId) && apartment.isActivityStatus() == activityStatus) {
+				apartmentsByHost.add(apartment);
+			}
+		}
+		return apartmentsByHost;
+		
+	}
+	
+	public ArrayList<Apartment> findAllByHostId(String hostId) {
+		ArrayList<Apartment> allApartments = new ArrayList<Apartment>(apartments.values());
+		ArrayList<Apartment> apartmentsByHost = new ArrayList<Apartment>();
+		
+		for (Apartment apartment : allApartments) {
+			if (apartment.getHostId().equals(hostId)) {
 				apartmentsByHost.add(apartment);
 			}
 		}
@@ -144,6 +160,20 @@ public class ApartmentDAO implements Serializable{
 		}
 		
 		return ret;
+	}
+	
+	public void reorganizeApartments(ServletContext context) {
+		int currentApartmentID = 1;
+		Map<String, Apartment> newMap = new HashMap<String, Apartment>();
+		
+		for(Map.Entry<String, Apartment> entry : apartments.entrySet()) {
+			entry.getValue().setId(currentApartmentID + "");
+			newMap.put(currentApartmentID + "", entry.getValue());
+			currentApartmentID++;
+		}
+		
+		apartments = newMap;
+		saveApartments(context.getRealPath(""));
 	}
 	
 	public List<Apartment> findByFilterApartmentDTOFields(FilterApartmentDTO apartmentDTO) {

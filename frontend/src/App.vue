@@ -11,17 +11,17 @@
             <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item">
-            <router-link to="/apartments" class="dropdown-item" href="#">Apartments</router-link>
+            <router-link style="margin-top: 4px" v-if="loggedUserRole !== 'HOST'" to="/apartments" class="dropdown-item" href="#">Apartments</router-link>
           </li>
         </ul>
         <ul class="navbar-nav">
-          <li v-if="loggedUserRole == ''" class="nav-item">
+          <li v-if="loggedUserRole === ''" class="nav-item">
             <router-link to="/login" class="nav-link">Login</router-link>
           </li>
-          <li v-if="loggedUserRole == ''" class="nav-item">
+          <li v-if="loggedUserRole === ''" class="nav-item">
             <router-link to="/register" class="nav-link">Register</router-link>
           </li>
-          <li v-if="loggedUserRole == 'GUEST'">
+          <li v-if="loggedUserRole === 'GUEST'">
             <div style="margin-right: 50px" class="dropdown">
               <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Profile
@@ -33,19 +33,19 @@
               </div>
             </div>
           </li>
-          <li v-if="loggedUserRole == 'HOST'">
+          <li v-if="loggedUserRole === 'HOST'">
             <div style="margin-right: 50px" class="dropdown">
               <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Profile
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
                 <a class="dropdown-item" href="#">My account</a>
-                <a class="dropdown-item" href="#">My apartments</a>
+                <router-link to="/apartments" class="dropdown-item" href="#">My apartments</router-link>
                 <a @click="logout" class="dropdown-item" href="#">Logout</a>
               </div>
             </div>
           </li>
-          <li v-if="loggedUserRole == 'ADMINISTRATOR'">
+          <li v-if="loggedUserRole === 'ADMINISTRATOR'">
             <div style="margin-right: 50px" class="dropdown">
               <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Profile
@@ -54,7 +54,8 @@
                 <a class="dropdown-item" href="#">My account</a>
                 <router-link to="/Users" class="dropdown-item" href="#">Users</router-link>
                 <router-link to="/apartments" class="dropdown-item" href="#">Apartments</router-link>
-                <a class="dropdown-item" href="#">Reservations</a>
+                <router-link to="/AllReservations" class="dropdown-item" href="#">Reservations</router-link>
+                <router-link to="/AllAmenities" class="dropdown-item" href="#">Amenities</router-link>
                 <a @click="logout" class="dropdown-item" href="#">Logout</a>
               </div>
             </div>
@@ -77,9 +78,11 @@ import Register from "@/components/Register";
 import {MdIcon} from "vue-material/dist/components"
 import 'material-design-icons/iconfont/material-icons.css'
 import UsersTable from "@/components/AdministratorComponents/UsersTable";
-import http from '@/http-common';
 import Home from "@/components/Home";
 import ApartmentList from "@/components/ApartmentList";
+import ReservationsForAdmin from "@/components/AdministratorComponents/ReservationsForAdmin";
+import AmenitiesForAdmin from "@/components/AdministratorComponents/AmenitiesForAdmin";
+
 Vue.use(VueRouter)
 Vue.use(MdIcon)
 const routes = [
@@ -87,7 +90,9 @@ const routes = [
   {path: '/login', component: Login},
   {path: '/register', component: Register},
   {path: '/Users', component: UsersTable},
-  {path: '/apartments', component: ApartmentList}
+  {path: '/apartments', component: ApartmentList},
+  {path: '/AllReservations', component: ReservationsForAdmin},
+  {path: '/AllAmenities', component: AmenitiesForAdmin}
 ]
 
 const router = new VueRouter({
@@ -103,32 +108,23 @@ export default {
   },
   data() {
     return {
-      loggedUserRole: ""
+      loggedUserRole: "",
     }
   },
   mounted() {
     this.$root.$on('messageToParent', (data) => {
       this.loggedUserRole = data;
+      localStorage.setItem("loggedUserRole", JSON.stringify(data));
     });
-    http.get('login/loggedUser')
-    .then(response => {
-      if (response.data) {
-        this.loggedUserRole = response.data.userRole;
-      } else {
-        this.loggedUserRole = "";
-      }
+    this.$root.$on('loggedUser', (data) => {
+      localStorage.setItem("loggedUser", JSON.stringify(data));
     })
   },
   methods: {
     logout() {
-      http.get('login/logout')
-      .then(response => {
-        if (response.data) {
-          console.log(response.data)
-          this.loggedUserRole = ""
-          this.$router.push('/')
-        }
-      })
+      this.loggedUserRole = ""
+      localStorage.clear();
+      this.$router.push('/')
     }
   }
 

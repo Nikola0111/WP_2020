@@ -254,10 +254,9 @@ public class ApartmentService {
 		
 		ApartmentDAO apartmentDAO = getApartments();
 		if(apartmentDAO.getApartments().containsKey(apartmentID)) {
-			apartmentDAO.getApartments().remove(apartmentID);
+			apartmentDAO.getApartments().get(apartmentID).setDeleted(true);
 			saveApartments(apartmentDAO);
 			
-			apartmentDAO.reorganizeApartments(context);
 			return true;
 		}
 		

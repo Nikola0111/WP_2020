@@ -15,37 +15,37 @@
           </li>
         </ul>
         <ul class="navbar-nav">
-          <li v-if="loggedUserRole == ''" class="nav-item">
+          <li v-if="loggedUserRole === ''" class="nav-item">
             <router-link to="/login" class="nav-link">Login</router-link>
           </li>
-          <li v-if="loggedUserRole == ''" class="nav-item">
+          <li v-if="loggedUserRole === ''" class="nav-item">
             <router-link to="/register" class="nav-link">Register</router-link>
           </li>
-          <li v-if="loggedUserRole == 'GUEST'">
+          <li v-if="loggedUserRole === 'GUEST'">
             <div style="margin-right: 50px" class="dropdown">
               <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Profile
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                <a class="dropdown-item" href="#">My account</a>
+                <router-link to="/Profile" tag="a" class="dropdown-item" href="#">My account</router-link>
                 <a class="dropdown-item" href="#">My reservations</a>
                 <a @click="logout" class="dropdown-item" href="#">Logout</a>
               </div>
             </div>
           </li>
-          <li v-if="loggedUserRole == 'HOST'">
+          <li v-if="loggedUserRole === 'HOST'">
             <div style="margin-right: 50px" class="dropdown">
               <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Profile
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                <a class="dropdown-item" href="#">My account</a>
+                <router-link to="/Profile" tag="a" class="dropdown-item" href="#">My account</router-link>
                 <a class="dropdown-item" href="#">My apartments</a>
                 <a @click="logout" class="dropdown-item" href="#">Logout</a>
               </div>
             </div>
           </li>
-          <li v-if="loggedUserRole == 'ADMINISTRATOR'">
+          <li v-if="loggedUserRole === 'ADMINISTRATOR'">
             <div style="margin-right: 50px" class="dropdown">
               <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Profile
@@ -75,21 +75,26 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from "@/components/Login";
 import Register from "@/components/Register";
-import {MdIcon} from "vue-material/dist/components"
 import 'material-design-icons/iconfont/material-icons.css'
 import UsersTable from "@/components/AdministratorComponents/UsersTable";
 import Home from "@/components/Home";
 import ReservationsForAdmin from "@/components/AdministratorComponents/ReservationsForAdmin";
 import AmenitiesForAdmin from "@/components/AdministratorComponents/AmenitiesForAdmin";
+import ChangePassword from "@/components/SharedComponents/ChangePassword";
+import MyProfile from "@/components/SharedComponents/MyProfile";
+import ChangeUserDetails from "@/components/SharedComponents/ChangeUserDetails";
+
 Vue.use(VueRouter)
-Vue.use(MdIcon)
 const routes = [
   {path: '/', component: Home},
   {path: '/login', component: Login},
   {path: '/register', component: Register},
   {path: '/Users', component: UsersTable},
   {path: '/AllReservations', component: ReservationsForAdmin},
-  {path: '/AllAmenities', component: AmenitiesForAdmin}
+  {path: '/AllAmenities', component: AmenitiesForAdmin},
+  {path: '/Profile', component: MyProfile },
+  {path: '/ChangePassword', component: ChangePassword},
+  {path: '/ChangeDetails', component: ChangeUserDetails}
 ]
 
 const router = new VueRouter({
@@ -116,6 +121,9 @@ export default {
     this.$root.$on('loggedUser', (data) => {
       localStorage.setItem("loggedUser", JSON.stringify(data));
     })
+    if (localStorage.getItem("loggedUserRole") !== null) {
+      this.loggedUserRole = JSON.parse(localStorage.getItem("loggedUserRole"))
+    }
   },
   methods: {
     logout() {

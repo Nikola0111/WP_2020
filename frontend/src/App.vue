@@ -11,7 +11,7 @@
             <router-link to="/" class="nav-link" href="#">Home <span class="sr-only">(current)</span></router-link>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Apartments</a>
+            <router-link to="/Apartments" class="nav-link" href="#">Apartments</router-link>
           </li>
         </ul>
         <ul class="navbar-nav">
@@ -88,6 +88,7 @@ import AmenitiesForAdmin from "@/components/AdministratorComponents/AmenitiesFor
 import ChangePassword from "@/components/SharedComponents/ChangePassword";
 import MyProfile from "@/components/SharedComponents/MyProfile";
 import ChangeUserDetails from "@/components/SharedComponents/ChangeUserDetails";
+import AllActiveApartments from "@/components/SharedComponents/AllActiveApartments";
 
 Vue.use(VueRouter)
 const routes = [
@@ -99,7 +100,8 @@ const routes = [
   {path: '/AllAmenities', component: AmenitiesForAdmin},
   {path: '/Profile', component: MyProfile },
   {path: '/ChangePassword', component: ChangePassword},
-  {path: '/ChangeDetails', component: ChangeUserDetails}
+  {path: '/ChangeDetails', component: ChangeUserDetails},
+  {path: '/Apartments', component: AllActiveApartments}
 ]
 
 const router = new VueRouter({

@@ -9,7 +9,7 @@ public class ApartmentForFrontDTO implements Serializable{
 
 	
 	private String id;
-	private String ApartmentType;
+	private String apartmentType;
 	private Location location;
 	private String hostUserName;
 	private float pricePerNight;
@@ -28,11 +28,11 @@ public class ApartmentForFrontDTO implements Serializable{
 	}
 
 	public String getApartmentType() {
-		return ApartmentType;
+		return apartmentType;
 	}
 
 	public void setApartmentType(String apartmentType) {
-		ApartmentType = apartmentType;
+		apartmentType = apartmentType;
 	}
 
 	public Location getLocation() {

@@ -3,7 +3,7 @@
     <md-table v-model="searched" md-sort="name" md-sort-order="asc" md-card md-fixed-header>
       <md-table-toolbar>
         <div class="md-toolbar-section-start">
-          <h1 class="md-title">Reservations</h1>
+          <h2 class="md-title">Reservations</h2>
         </div>
 
         <md-field md-clearable class="md-toolbar-section-end">

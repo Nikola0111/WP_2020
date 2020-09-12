@@ -65,38 +65,10 @@ const searchByGuestUserName = (items, term) => {
 }
 
 export default {
-  name: "ReservationsForAdmin",
-  data() {
-    return {
-      search1: null,
-      search2: null,
-      searched: [],
-      reservations: []
-    }
-  },
-  methods: {
-    searchOnTable1 () {
-      this.searched = searchByHostUsername(this.reservations, this.search1)
-    },
-    searchOnTable2 () {
-      this.searched = searchByGuestUserName(this.reservations, this.search2)
-    }
-  },
-  created () {
-    this.searched = this.reservations
-  },
-  mounted() {
-    http.get('Reservation/')
-        .then(response => {
-          this.reservations = response.data;
-          this.searched = this.reservations;
-        })
-  }
+name: "ApartmentsTable"
 }
 </script>
 
 <style scoped>
-.md-field {
-  max-width: 300px;
-}
+
 </style>

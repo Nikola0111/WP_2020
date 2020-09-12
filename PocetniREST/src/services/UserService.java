@@ -70,10 +70,11 @@ public class UserService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public boolean changePassword(ChangePasswordDTO userInfo, @Context HttpServletRequest request) {
-		
+		System.out.println(userInfo.toString());
 		UserDAO users = getUsers();
 		User currentUser = users.findByUsernameAndPassword(userInfo.getUserName(), userInfo.getPassword());
 		if (currentUser != null) {
+			System.out.println("Nasao usera!");
 			currentUser.setPassword(userInfo.getNewPassword());
 			saveUsers(users);
 			return true;
@@ -92,11 +93,15 @@ public class UserService {
 		UserDAO users = getUsers();
 		User currentUser = users.findByUsernameAndPassword(userDTO.getPreviousUserName(), userDTO.getPassword());
 		if (currentUser != null) {
+			if (users.findByUsername(userDTO.getNewUserName()) != null) {
+				return false;
+			} else {
 			currentUser.setName(userDTO.getName());
 			currentUser.setUserName(userDTO.getNewUserName());
 			currentUser.setSurname(userDTO.getSurname());
 			saveUsers(users);
 			return true;
+			}
 		} else {
 			return false;
 		}

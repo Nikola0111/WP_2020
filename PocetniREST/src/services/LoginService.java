@@ -68,10 +68,6 @@ public class LoginService {
 		
 		request.getSession().setAttribute("loggedUser", loggedUser);
 		
-		User user1 = (User) request.getSession().getAttribute("loggedUser");
-		System.out.println("Upravo ulogovan korisnik je: " + user1.toString());
-		System.out.println("Sesija kada cuvam ulogovanog usera: " + request.getRequestedSessionId());
-		
 		return loggedUser;	
 	}
 	

@@ -155,7 +155,7 @@ public class ApartmentService {
 		ArrayList<Apartment> apartmentsList = new ArrayList<Apartment>(apartments.findAll());
 		
 		for (Apartment apartment : apartmentsList) {
-			if (apartment.isActivityStatus()) {
+			if (apartment.isActivityStatus() && !apartment.isDeleted()) {
 				User host = users.findById(apartment.getHostId());
 				apartmentsToSend.add(convertApartmentToDTO(apartment, host));
 			}

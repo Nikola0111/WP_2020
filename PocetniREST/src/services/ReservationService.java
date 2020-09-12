@@ -177,8 +177,10 @@ public class ReservationService {
 		ApartmentDAO apartments = getApartments();
 		Apartment apartment = apartments.find(reservation.getApartmentId());
 		
-		apartment.getReservations().add(reservation.getId());
+		System.out.println(reservation);
 		
+		apartment.getReservations().add(reservation.getId());
+		reservation.setReservationStatus(ReservationStatus.ACCEPTED);
 		apartments.getApartments().put(apartment.getId(), apartment);
 		saveApartments(apartments);
 		
@@ -230,11 +232,31 @@ public class ReservationService {
 			}
 		}
 		
+		
 		return ret;
-
 	}
 	
-	public ReservationDAO getReservations() {
+	@GET
+	@Path("getActiveReservationsByApartment/{apartmentId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Reservation> getActiveReservationsByApartment(@Context HttpServletRequest request, @PathParam("apartmentId") String apartmentId) {
+		ReservationDAO reservations = getReservations();
+		
+		List<Reservation> ret = new ArrayList<Reservation>();
+		for(Map.Entry<String, Reservation> entry : reservations.getReservations().entrySet()) {
+			if(entry.getValue().getApartmentId().equals(apartmentId) && entry.getValue().getReservationStatus() == ReservationStatus.ACCEPTED) {
+				System.out.println(entry.getValue());
+				ret.add(entry.getValue());
+			}
+		}
+		
+		
+		return ret;
+	}
+
+	
+	public ReservationDAO getReservations() { 
 		ReservationDAO reservations = (ReservationDAO) context.getAttribute("reservations");
 		return reservations;
 	}

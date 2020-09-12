@@ -64,7 +64,7 @@ public class ApartmentDAO implements Serializable{
 		ArrayList<Apartment> apartmentsByHost = new ArrayList<Apartment>();
 		
 		for (Apartment apartment : allApartments) {
-			if (apartment.getHostId().equals(hostId) && apartment.isActivityStatus() == activityStatus) {
+			if (apartment.getHostId().equals(hostId) && apartment.isActivityStatus() == activityStatus && !apartment.isDeleted()) {
 				apartmentsByHost.add(apartment);
 			}
 		}
@@ -77,7 +77,7 @@ public class ApartmentDAO implements Serializable{
 		ArrayList<Apartment> apartmentsByHost = new ArrayList<Apartment>();
 		
 		for (Apartment apartment : allApartments) {
-			if (apartment.getHostId().equals(hostId)) {
+			if (apartment.getHostId().equals(hostId) && !apartment.isDeleted()) {
 				apartmentsByHost.add(apartment);
 			}
 		}
@@ -86,6 +86,8 @@ public class ApartmentDAO implements Serializable{
 	}
 	
 	public Collection<Apartment> findAll() {
+		
+		
 		return apartments.values();
 	}
 	

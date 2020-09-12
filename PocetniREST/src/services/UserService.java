@@ -93,11 +93,15 @@ public class UserService {
 		UserDAO users = getUsers();
 		User currentUser = users.findByUsernameAndPassword(userDTO.getPreviousUserName(), userDTO.getPassword());
 		if (currentUser != null) {
+			if (users.findByUsername(userDTO.getNewUserName()) != null) {
+				return false;
+			} else {
 			currentUser.setName(userDTO.getName());
 			currentUser.setUserName(userDTO.getNewUserName());
 			currentUser.setSurname(userDTO.getSurname());
 			saveUsers(users);
 			return true;
+			}
 		} else {
 			return false;
 		}

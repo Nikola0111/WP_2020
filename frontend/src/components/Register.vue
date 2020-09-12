@@ -27,39 +27,68 @@
             <label class="rb-label" for="two">Female</label>
           </div>
         </li>
+        <li v-if="showValidation1">
+          <span style="color: red">None of the fields can remain empty.</span>
+        </li>
+        <li v-if="showValidation2">
+          <span style="color: red">Passwords needs to be at least 6 characters long.</span>
+        </li>
         <li>
           <input type="submit" value="Register" />
         </li>
       </ul>
     </form>
+    <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="showSnackbar1" md-persistent>
+      <span>You registered successfully!</span>
+      <md-button class="md-primary" @click="showSnackbar1 = false">Ok</md-button>
+    </md-snackbar>
+    <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="showSnackbar2" md-persistent>
+      <span>Username: {{this.username}} is already taken!</span>
+      <md-button class="md-primary" @click="showSnackbar2 = false">Ok</md-button>
+    </md-snackbar>
   </div>
 </template>
 
 <script>
+import Vue from 'vue'
+import { MdSnackbar, MdButton } from "vue-material/dist/components"
+Vue.use(MdSnackbar)
+Vue.use(MdButton)
 import http from '../http-common';
 export default {
   name: "Register.vue",
   data() {
     return {
+      showValidation1: "",
+      showValidation2: "",
       username: "",
       password: "",
       name: "",
       surname: "",
-      gender: ""
+      gender: "",
+      showSnackbar1: false,
+      showSnackbar2: false,
+      position: 'center',
+      duration: 3000
     }
   },
   methods: {
     showData(){
-      if(this.username === "" || this.password === "" || this.name === "" || this.surname === ""){
-        alert("None of the fields can remain empty")
+      if(this.username === "" || this.password === "" || this.name === "" || this.surname === "" || this.gender === ""){
+        this.showValidation1 = true;
         return
+      } else {
+        this.showValidation1 = false;
       }
 
-      if(this.gender === ""){
-        alert("A gender must be selected")
+      if(this.password.length <= 5){
+        this.showValidation2 = true;
         return
+      } else {
+        this.showValidation2 = false;
       }
-
+      this.showValidation1 = false;
+      this.showValidation2 = false;
       http.post('/Register',
         JSON.stringify({
           userName: this.username,
@@ -70,7 +99,9 @@ export default {
         })
       ).then(response => {
         if(!response.data){
-          alert("Username is taken!")
+          this.showSnackbar2 = true;
+        } else {
+          this.showSnackbar1 = true;
         }
       })
     }

@@ -24,13 +24,17 @@
     <span>All fields are required!</span>
     <md-button class="md-primary" @click="showSnackbar1 = false">Retry</md-button>
     </md-snackbar>
+    <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="showSnackbar1" md-persistent>
+      <span>There is already a user with username: {{newUserName}}!</span>
+      <md-button class="md-primary" @click="showSnackbar2 = false">Retry</md-button>
+    </md-snackbar>
 
   </div>
 </template>
 
 <script>
 
-//import http from '../../http-common'
+import http from '../../http-common'
 import Vue from "vue"
 import { MdSnackbar, MdButton } from "vue-material/dist/components"
 Vue.use(MdSnackbar)
@@ -53,7 +57,22 @@ export default {
   },
   methods: {
     changeDetails() {
+      if(this.newUserName === '' || this.name === '' || this.surname === '') {
+        this.showSnackbar1 = true;
+        return;
+      } else {
+        http.put('/User/changeUser',
+            JSON.stringify({
+              previousUserName:
+              newUserName:
+              password:
+              name:
+              surname:
+        }))
+        .then(response => {
 
+        })
+      }
     }
   },
   mounted() {

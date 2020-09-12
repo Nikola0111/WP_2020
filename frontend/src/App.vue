@@ -1,14 +1,14 @@
 <template>
   <div id="app">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="#">Welcome Neighbors</a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" id="mainNav">
+      <a class="navbar-brand js-scroll-trigger" href=""><img src="./assets/img/logo.png" alt="" style="width:200px;height:50px;"></a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            <router-link to="/" class="nav-link" href="#">Home <span class="sr-only">(current)</span></router-link>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Apartments</a>
@@ -63,7 +63,12 @@
         </ul>
       </div>
     </nav>
-    <router-view></router-view>
+    <!-- Masthead-->
+    <header class="masthead">
+      <div class="container h-100">
+        <router-view></router-view>
+      </div>
+    </header>
   </div>
 
 </template>
@@ -136,10 +141,104 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  header.masthead {
+    padding-top: 10rem;
+    padding-bottom: calc(10rem - 4.5rem);
+    background: transparent;
+  }
+
+  header.masthead h1 {
+    font-size: 2.25rem;
+  }
+  @media (min-width: 992px) {
+    header.masthead {
+      height: 100vh;
+      min-height: 40rem;
+      padding-top: 4.5rem;
+      padding-bottom: 0;
+    }
+    header.masthead p {
+      font-size: 1.15rem;
+    }
+    header.masthead h1 {
+      font-size: 3rem;
+    }
+  }
+  @media (min-width: 1200px) {
+    header.masthead h1 {
+      font-size: 3.5rem;
+    }
+  }
+
+  .text-white-75 {
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  .font-weight-light {
+    font-weight: 300 !important;
+  }
+
+  .mb-5,
+  .my-5 {
+    margin-bottom: 10rem !important;
+  }
+
+  #mainNav {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    background-color: #fff;
+    transition: background-color 0.2s ease;
+  }
+
+  #mainNav .navbar-brand {
+    font-family: "Merriweather Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-weight: 700;
+    color: #212529;
+  }
+
+  #mainNav .navbar-nav .nav-item .nav-link {
+    color: #6c757d;
+    font-family: "Merriweather Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-weight: 700;
+    font-size: 1rem;
+  }
+
+  #mainNav .navbar-nav .nav-item .nav-link:hover, #mainNav .navbar-nav .nav-item .nav-link:active {
+    color: #d9534f;
+    text-decoration-line: none;
+  }
+
+  #mainNav .navbar-nav .nav-item .nav-link.active {
+    color: #d9534f !important;
+  }
+
+  @media (min-width: 992px) {
+    #mainNav {
+      box-shadow: none;
+      background-color: transparent;
+    }
+
+    #mainNav.navbar-nav {
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+      background-color: #fff;
+    }
+    #mainNav.navbar-nav .navbar-brand {
+      color: #212529;
+    }
+    #mainNav.navbar-nav .navbar-brand:hover {
+      color: #f4623a;
+    }
+    #mainNav.navbar-nav .nav-item .nav-link {
+      color: #212529;
+    }
+    #mainNav.navbar-nav .nav-item .nav-link:hover {
+      color: #f4623a;
+    }
+  }
 }
 </style>

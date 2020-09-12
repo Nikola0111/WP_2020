@@ -24,9 +24,13 @@
     <span>All fields are required!</span>
     <md-button class="md-primary" @click="showSnackbar1 = false">Retry</md-button>
     </md-snackbar>
-    <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="showSnackbar1" md-persistent>
+    <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="showSnackbar2" md-persistent>
       <span>There is already a user with username: {{newUserName}}!</span>
       <md-button class="md-primary" @click="showSnackbar2 = false">Retry</md-button>
+    </md-snackbar>
+    <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="showSnackbar3" md-persistent>
+      <span>Changes saved successfully!</span>
+      <md-button class="md-primary" @click="showSnackbar3 = false">Close</md-button>
     </md-snackbar>
 
   </div>
@@ -49,8 +53,10 @@ export default {
       newUserName: '',
       name: '',
       surname: '',
+      password: '',
       showSnackbar1: false,
       showSnackbar2: false,
+      showSnackbar3: false,
       position: 'center',
       duration: 3000
     }
@@ -63,14 +69,18 @@ export default {
       } else {
         http.put('/User/changeUser',
             JSON.stringify({
-              previousUserName:
-              newUserName:
-              password:
-              name:
-              surname:
+              previousUserName: this.previousUserName,
+              newUserName: this.newUserName,
+              password: this.password,
+              name: this.name,
+              surname: this.surname
         }))
         .then(response => {
-
+          if(response.data) {
+            this.showSnackbar3 = true;
+          } else {
+            this.showSnackbar2 = true;
+          }
         })
       }
     }
@@ -82,6 +92,7 @@ export default {
       this.newUserName = this.user.userName;
       this.name = this.user.name;
       this.surname = this.user.surname;
+      this.password = this.user.password;
     }
   }
 }

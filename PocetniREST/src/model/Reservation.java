@@ -108,6 +108,14 @@ public class Reservation implements Serializable{
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
+
+	@Override
+	public String toString() {
+		return "Reservation [id=" + id + ", apartmentId=" + apartmentId + ", startingDate=" + startingDate
+				+ ", rentalDuration=" + rentalDuration + ", fullPrice=" + fullPrice + ", optionalMessage="
+				+ optionalMessage + ", guestId=" + guestId + ", reservationStatus=" + reservationStatus + ", deleted="
+				+ deleted + "]";
+	}
 	
 	
 	

@@ -155,7 +155,7 @@ public class ApartmentService {
 		ArrayList<Apartment> apartmentsList = new ArrayList<Apartment>(apartments.findAll());
 		
 		for (Apartment apartment : apartmentsList) {
-			if (apartment.isActivityStatus()) {
+			if (apartment.isActivityStatus() && !apartment.isDeleted()) {
 				User host = users.findById(apartment.getHostId());
 				apartmentsToSend.add(convertApartmentToDTO(apartment, host));
 			}
@@ -205,6 +205,27 @@ public class ApartmentService {
 	}
 	
 	@GET
+	@Path("HostApartments/{hostId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<ApartmentForFrontDTO> getAllApartmentsFromOneHost(@PathParam("hostId") String hostId, @Context HttpServletRequest request) {
+		
+		ArrayList<ApartmentForFrontDTO> activeApartments = new ArrayList<ApartmentForFrontDTO>();
+		ApartmentDAO apartments = getApartments();
+		UserDAO users = getUsers();
+		
+		User host = users.findById(hostId);
+		
+		ArrayList<Apartment> activeApartmentsByHost = apartments.findAllByHostId(hostId);
+		System.out.println(activeApartmentsByHost);
+		for (Apartment apartment : activeApartmentsByHost) {
+			ApartmentForFrontDTO dto = convertApartmentToDTO(apartment, host);
+			activeApartments.add(dto);
+		}
+		return activeApartments;	
+	}
+	
+	@GET
 	@Path("HostInactiveApartments/{hostId}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -223,6 +244,23 @@ public class ApartmentService {
 			inactiveApartments.add(dto);
 		}
 		return inactiveApartments;	
+	}
+	
+	@GET
+	@Path("deleteApartment/{apartmentID}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public boolean deleteApartment(@PathParam("apartmentID") String apartmentID, @Context HttpServletRequest request) {
+		
+		ApartmentDAO apartmentDAO = getApartments();
+		if(apartmentDAO.getApartments().containsKey(apartmentID)) {
+			apartmentDAO.getApartments().get(apartmentID).setDeleted(true);
+			saveApartments(apartmentDAO);
+			
+			return true;
+		}
+		
+		return false;
 	}
 	
 	

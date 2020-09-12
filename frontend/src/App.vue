@@ -11,7 +11,7 @@
             <router-link to="/" class="nav-link" href="#">Home <span class="sr-only">(current)</span></router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/Apartments" class="nav-link" href="#">Apartments</router-link>
+            <router-link class="nav-link" v-if="loggedUserRole !== 'HOST'" to="/apartments" href="#">Apartments</router-link>
           </li>
         </ul>
         <ul class="navbar-nav">
@@ -41,6 +41,8 @@
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
                 <router-link to="/Profile" tag="a" class="dropdown-item" href="#">My account</router-link>
                 <a class="dropdown-item" href="#">My apartments</a>
+                <a class="dropdown-item" href="#">My account</a>
+                <router-link to="/apartments" class="dropdown-item" href="#">My apartments</router-link>
                 <a @click="logout" class="dropdown-item" href="#">Logout</a>
               </div>
             </div>
@@ -53,7 +55,7 @@
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
                 <a class="dropdown-item" href="#">My account</a>
                 <router-link to="/Users" class="dropdown-item" href="#">Users</router-link>
-                <a class="dropdown-item" href="#">Apartments</a>
+                <router-link to="/apartments" class="dropdown-item" href="#">Apartments</router-link>
                 <router-link to="/AllReservations" class="dropdown-item" href="#">Reservations</router-link>
                 <router-link to="/AllAmenities" class="dropdown-item" href="#">Amenities</router-link>
                 <a @click="logout" class="dropdown-item" href="#">Logout</a>
@@ -83,12 +85,12 @@ import Register from "@/components/Register";
 import 'material-design-icons/iconfont/material-icons.css'
 import UsersTable from "@/components/AdministratorComponents/UsersTable";
 import Home from "@/components/Home";
+import ApartmentList from "@/components/ApartmentList";
 import ReservationsForAdmin from "@/components/AdministratorComponents/ReservationsForAdmin";
 import AmenitiesForAdmin from "@/components/AdministratorComponents/AmenitiesForAdmin";
 import ChangePassword from "@/components/SharedComponents/ChangePassword";
 import MyProfile from "@/components/SharedComponents/MyProfile";
 import ChangeUserDetails from "@/components/SharedComponents/ChangeUserDetails";
-import AllActiveApartments from "@/components/SharedComponents/AllActiveApartments";
 
 Vue.use(VueRouter)
 const routes = [
@@ -96,12 +98,12 @@ const routes = [
   {path: '/login', component: Login},
   {path: '/register', component: Register},
   {path: '/Users', component: UsersTable},
+  {path: '/apartments', component: ApartmentList},
   {path: '/AllReservations', component: ReservationsForAdmin},
   {path: '/AllAmenities', component: AmenitiesForAdmin},
   {path: '/Profile', component: MyProfile },
   {path: '/ChangePassword', component: ChangePassword},
   {path: '/ChangeDetails', component: ChangeUserDetails},
-  {path: '/Apartments', component: AllActiveApartments}
 ]
 
 const router = new VueRouter({

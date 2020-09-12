@@ -19,6 +19,10 @@
                  placeholder="Password" />
         </li>
         <li>
+          <input type="password" name="password" class="field-style field-full align-none" v-model="controlpw"
+                 placeholder="Re-type password" />
+        </li>
+        <li>
           <div class="rb-group">
             <label>Gender:</label>
             <input class="rb-male" style="alignment: left" type="radio" id="one" value="MALE" v-model="gender">
@@ -46,15 +50,30 @@
       <span>Username: {{this.username}} is already taken!</span>
       <md-button class="md-primary" @click="showSnackbar2 = false">Ok</md-button>
     </md-snackbar>
+    <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="invalidFieldsSnackbar" md-persistent>
+      <span>None of the fields can remain empty</span>
+      <md-button class="md-primary" @click="invalidFieldsSnackbar = false">Close</md-button>
+    </md-snackbar>
+    <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="passwordsNotMatchingSnackbar" md-persistent>
+      <span>Passwords aren't matching</span>
+      <md-button class="md-primary" @click="passwordsNotMatchingSnackbar = false">Close</md-button>
+    </md-snackbar>
+    <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="genderNotSelectedSnackbar" md-persistent>
+      <span>Gender must be specified</span>
+      <md-button class="md-primary" @click="genderNotSelectedSnackbar = false">Close</md-button>
+    </md-snackbar>
   </div>
 </template>
 
 <script>
-import Vue from 'vue'
+
+import Vue from "vue"
+import http from '../http-common';
 import { MdSnackbar, MdButton } from "vue-material/dist/components"
+import 'vue-material/dist/vue-material.min.css'
+import 'vue-material/dist/theme/default.css'
 Vue.use(MdSnackbar)
 Vue.use(MdButton)
-import http from '../http-common';
 export default {
   name: "Register.vue",
   data() {
@@ -63,42 +82,51 @@ export default {
       showValidation2: "",
       username: "",
       password: "",
+      controlpw: "",
       name: "",
       surname: "",
       gender: "",
       showSnackbar1: false,
       showSnackbar2: false,
       position: 'center',
-      duration: 3000
+      duration: 3000,
+      invalidFieldsSnackbar: false,
+      passwordsNotMatchingSnackbar: false,
+      genderNotSelectedSnackbar: false
     }
   },
   methods: {
-    showData(){
-      if(this.username === "" || this.password === "" || this.name === "" || this.surname === "" || this.gender === ""){
+    showData() {
+      if (this.username === "" || this.password === "" || this.name === "" || this.surname === "" || this.gender === "") {
         this.showValidation1 = true;
-        return
+        this.invalidFieldsSnackbar = true
       } else {
         this.showValidation1 = false;
       }
 
-      if(this.password.length <= 5){
+      if (this.password.length <= 5) {
         this.showValidation2 = true;
         return
       } else {
         this.showValidation2 = false;
       }
+      if (this.password !== this.controlpw) {
+        this.passwordsNotMatchingSnackbar = true
+        return
+      }
+
       this.showValidation1 = false;
       this.showValidation2 = false;
       http.post('/Register',
-        JSON.stringify({
-          userName: this.username,
-          name: this.name,
-          surname: this.surname,
-          password: this.password,
-          userGender: this.gender
-        })
+          JSON.stringify({
+            userName: this.username,
+            name: this.name,
+            surname: this.surname,
+            password: this.password,
+            userGender: this.gender
+          })
       ).then(response => {
-        if(!response.data){
+        if (!response.data) {
           this.showSnackbar2 = true;
         } else {
           this.showSnackbar1 = true;

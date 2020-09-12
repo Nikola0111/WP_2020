@@ -16,12 +16,14 @@
     "material-design-icons": "^3.0.1",
     "sass": "^1.26.10",
     "sass-loader": "^10.0.2",
+    "v-calendar": "^1.0.8",
     "vue": "^2.6.11",
     "vue-axios": "^2.1.5",
     "vue-cli": "^2.9.6",
     "vue-js-modal": "^2.0.0-rc.6",
     "vue-material": "^1.0.0-beta-15",
-    "vue-router": "^3.4.3"
+    "vue-router": "^3.4.3",
+    "vuejs-datepicker": "^1.6.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.3.0",

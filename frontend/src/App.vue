@@ -40,9 +40,8 @@
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
                 <router-link to="/Profile" tag="a" class="dropdown-item" href="#">My account</router-link>
-                <a class="dropdown-item" href="#">My apartments</a>
-                <a class="dropdown-item" href="#">My account</a>
                 <router-link to="/apartments" class="dropdown-item" href="#">My apartments</router-link>
+                <router-link to="/apartmentRegistration" class="dropdown-item" href="#">Register apartment</router-link>
                 <a @click="logout" class="dropdown-item" href="#">Logout</a>
               </div>
             </div>
@@ -85,12 +84,13 @@ import Register from "@/components/Register";
 import 'material-design-icons/iconfont/material-icons.css'
 import UsersTable from "@/components/AdministratorComponents/UsersTable";
 import Home from "@/components/Home";
-import ApartmentList from "@/components/ApartmentList";
+import ApartmentList from "@/components/SharedComponents/ApartmentList";
 import ReservationsForAdmin from "@/components/AdministratorComponents/ReservationsForAdmin";
 import AmenitiesForAdmin from "@/components/AdministratorComponents/AmenitiesForAdmin";
 import ChangePassword from "@/components/SharedComponents/ChangePassword";
 import MyProfile from "@/components/SharedComponents/MyProfile";
 import ChangeUserDetails from "@/components/SharedComponents/ChangeUserDetails";
+import ApartmentRegistration from "@/components/HostComponents/ApartmentRegistration";
 
 Vue.use(VueRouter)
 const routes = [
@@ -104,6 +104,7 @@ const routes = [
   {path: '/Profile', component: MyProfile },
   {path: '/ChangePassword', component: ChangePassword},
   {path: '/ChangeDetails', component: ChangeUserDetails},
+  {path: '/apartmentRegistration', component: ApartmentRegistration},
 ]
 
 const router = new VueRouter({

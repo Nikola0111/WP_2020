@@ -209,7 +209,7 @@ public class ApartmentService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public ArrayList<ApartmentForFrontDTO> getAllApartmentsFromOneHost(@PathParam("hostId") String hostId, @Context HttpServletRequest request) {
-		
+		System.out.println("Pogodio endpoint, id je: " + hostId);
 		ArrayList<ApartmentForFrontDTO> activeApartments = new ArrayList<ApartmentForFrontDTO>();
 		ApartmentDAO apartments = getApartments();
 		UserDAO users = getUsers();

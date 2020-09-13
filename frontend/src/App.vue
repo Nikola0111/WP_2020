@@ -40,7 +40,7 @@
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
                 <router-link to="/Profile" tag="a" class="dropdown-item" href="#">My account</router-link>
-                <a class="dropdown-item" href="#">My apartments</a>
+                <router-link to="/apartments" class="dropdown-item" href="#">My apartments</router-link>
                 <a class="dropdown-item" href="#">My account</a>
                 <router-link to="/apartments" class="dropdown-item" href="#">My apartments</router-link>
                 <a @click="logout" class="dropdown-item" href="#">Logout</a>

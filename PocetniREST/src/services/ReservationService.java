@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -94,7 +95,7 @@ public class ReservationService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public ArrayList<ReservationDTO> getAllGuestReservations(@PathParam("guestId") String guestId, @Context HttpServletRequest request) {
-		
+		System.out.println("ENDPOINT POGODJEN, GUEST ID JE: " + guestId);
 		ArrayList<ReservationDTO> reservationsToSend = new ArrayList<ReservationDTO>();
 		ReservationDAO reservations = getReservations();
 		UserDAO users = getUsers();
@@ -254,7 +255,23 @@ public class ReservationService {
 		
 		return ret;
 	}
-
+	
+	@PUT
+	@Path("cancelReservation/{reservationId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public boolean cancelReservation(@Context HttpServletRequest request, @PathParam("reservationId") String reservationId) {
+		ReservationDAO reservations = getReservations();
+		
+		Reservation reservation = reservations.findById(reservationId);
+		if (reservation != null) {
+			reservation.setReservationStatus(ReservationStatus.CANCELED);
+			saveReservations(reservations);
+			return true;
+		} else {
+			return false;
+		}
+	}
 	
 	public ReservationDAO getReservations() { 
 		ReservationDAO reservations = (ReservationDAO) context.getAttribute("reservations");

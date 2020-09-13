@@ -73,8 +73,6 @@ public class ApartmentService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public void registerApartment(@Context HttpServletRequest request, ApartmentDTO apartmentDTO) {
 		ApartmentDAO apartments = getApartments();
-		User loggedUser = (User) request.getSession().getAttribute("loggedUser");
-		System.out.println(loggedUser);
 
 		AmenityDAO amenities = getAmenities();
 		
@@ -100,7 +98,7 @@ public class ApartmentService {
 			amenityId++;
 		}
 
-		apartment.setHostId(loggedUser == null ? "1" : loggedUser.getId());
+		apartment.setHostId(apartmentDTO.getHostId());
 		apartment.setId(apartments.getApartments().size() + "");
 		
 		apartments.getApartments().put(apartment.getId(), apartment);

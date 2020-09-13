@@ -1,12 +1,13 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
 
 import enumeration.UserGender;
 import enumeration.UserRole;
 
-public class User {
+public class User implements Serializable{
 
 	private String id;
 	private String userName;
@@ -16,20 +17,21 @@ public class User {
 	private UserRole userRole;
 	private UserGender userGender;
 	private int availableApartments;
-	private int rentedApartmaets;
-	private ArrayList<Reservation> reservations;
+	private int rentedApartments;
+	private ArrayList<String> reservationsIds;
 	private boolean deleted;
 	private boolean blocked;
 	
 	public User() {
 		super();
-		this.reservations = new ArrayList<Reservation>();
+		this.reservationsIds = new ArrayList<String>();
 	}
 	
 	
 
 	public User(String userName, String password, String name, String surname, UserRole userRole,
-			UserGender userGender, int availableApartments, int rentedApartmaets, ArrayList<Reservation> reservations,
+			UserGender userGender, int availableApartments, 
+			ArrayList<String> reservationsIds,int rentedApartments,
 			boolean deleted, boolean blocked) {
 		super();
 		UUID uuid = UUID.randomUUID();
@@ -41,8 +43,9 @@ public class User {
 		this.userRole = userRole;
 		this.userGender = userGender;
 		this.availableApartments = availableApartments;
-		this.rentedApartmaets = rentedApartmaets;
-		this.reservations = reservations;
+		this.rentedApartments = rentedApartments;
+		this.reservationsIds = reservationsIds;
+		this.rentedApartments = rentedApartments;
 		this.deleted = deleted;
 		this.blocked = blocked;
 	}
@@ -97,15 +100,15 @@ public class User {
 		this.availableApartments = availableApartments;
 	}
 
-	public int getRentedApartmaets() {
-		return rentedApartmaets;
+	public int getRentedApartments() {
+		return rentedApartments;
 	}
 
-	public void setRentedApartmaets(int rentedApartmaets) {
-		this.rentedApartmaets = rentedApartmaets;
+	public void setRentedApartments(int rentedApartments) {
+		this.rentedApartments = rentedApartments;
 	}
 
-	public boolean isDeleted() {
+	public boolean getDeleted() {
 		return deleted;
 	}
 
@@ -113,7 +116,7 @@ public class User {
 		this.deleted = deleted;
 	}
 
-	public boolean isBlocked() {
+	public boolean getBlocked() {
 		return blocked;
 	}
 
@@ -121,6 +124,7 @@ public class User {
 		this.blocked = blocked;
 	}
 
+	
 	public UserRole getUserRole() {
 		return userRole;
 	}
@@ -138,15 +142,23 @@ public class User {
 	}
 
 
+	public ArrayList<String> getReservationsIds() {
+		return reservationsIds;
+	}
 
-	public ArrayList<Reservation> getReservations() {
-		return reservations;
+
+	public void setReservations(ArrayList<String> reservationsIds) {
+		this.reservationsIds = reservationsIds;
 	}
 
 
 
-	public void setReservations(ArrayList<Reservation> reservations) {
-		this.reservations = reservations;
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", userName=" + userName + ", password=" + password + ", name=" + name + ", surname="
+				+ surname + ", userRole=" + userRole + ", userGender=" + userGender + ", availableApartments="
+				+ availableApartments + ", rentedApartments=" + rentedApartments + ", reservationsIds="
+				+ reservationsIds + ", deleted=" + deleted + ", blocked=" + blocked + "]";
 	}
 	
 	

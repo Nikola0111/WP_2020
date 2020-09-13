@@ -1,8 +1,10 @@
 package model;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class Comment {
+@SuppressWarnings("serial")
+public class Comment implements Serializable{
 	
 	private String id;
 	private String caption;

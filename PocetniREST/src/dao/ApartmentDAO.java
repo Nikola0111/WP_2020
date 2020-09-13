@@ -6,20 +6,31 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import javax.servlet.ServletContext;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.introspect.VisibilityChecker;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+
+import dto.FilterApartmentDTO;
+import dto.SearchApartmentDTO;
+
 import com.fasterxml.jackson.databind.type.MapType;
 import com.fasterxml.jackson.core.JsonGenerator;
 
 import model.Apartment;
 
-public class ApartmentDAO {
+@SuppressWarnings("serial")
+public class ApartmentDAO implements Serializable{
 
 	private Map<String, Apartment> apartments = new HashMap<String, Apartment>();
 
@@ -48,8 +59,170 @@ public class ApartmentDAO {
 		
 	}
 	
+	public ArrayList<Apartment> findAllByHostIdAndActivityStatus(String hostId, boolean activityStatus) {
+		ArrayList<Apartment> allApartments = new ArrayList<Apartment>(apartments.values());
+		ArrayList<Apartment> apartmentsByHost = new ArrayList<Apartment>();
+		
+		for (Apartment apartment : allApartments) {
+			if (apartment.getHostId().equals(hostId) && apartment.isActivityStatus() == activityStatus && !apartment.isDeleted()) {
+				apartmentsByHost.add(apartment);
+			}
+		}
+		return apartmentsByHost;
+		
+	}
+	
+	public ArrayList<Apartment> findAllByHostId(String hostId) {
+		ArrayList<Apartment> allApartments = new ArrayList<Apartment>(apartments.values());
+		ArrayList<Apartment> apartmentsByHost = new ArrayList<Apartment>();
+		
+		for (Apartment apartment : allApartments) {
+			if (apartment.getHostId().equals(hostId) && !apartment.isDeleted()) {
+				apartmentsByHost.add(apartment);
+			}
+		}
+		return apartmentsByHost;
+		
+	}
+	
 	public Collection<Apartment> findAll() {
+		
+		
 		return apartments.values();
+	}
+	
+	public List<Apartment> findBySearchApartmentDTOFields(SearchApartmentDTO apartment) {
+		List<Apartment> ret = new ArrayList<Apartment>();
+		
+		for(Map.Entry<String, Apartment> entry : apartments.entrySet()) {
+			boolean condition = false;
+			boolean initialized = false;
+			
+			/*
+			 * if(apartment.getStartDate() != null) { condition =
+			 * entry.getValue().getCheckInTime().before(apartment.getStartDate());
+			 * initialized = true; }
+			 */
+			
+			/*
+			 * if(apartment.getEndDate() != null) { if(initialized) { condition = condition
+			 * && entry.getValue().getCheckOutTime().after(apartment.getEndDate()); } else {
+			 * condition = entry.getValue().getCheckOutTime().after(apartment.getEndDate());
+			 * initialized = true; } }
+			 */
+			
+			if(apartment.getNumberOfPeople() != -1) {
+				if(initialized) {
+					condition = condition && entry.getValue().getNumberOfGuests() >= apartment.getNumberOfPeople();
+				} else {
+					condition = entry.getValue().getNumberOfGuests() >= apartment.getNumberOfPeople();
+					initialized = true;
+				}
+			}
+			
+			if(apartment.getNumberOfRooms() != -1) {
+				if(initialized) {
+					condition = condition && entry.getValue().getNumberOfRooms() >= apartment.getNumberOfRooms();
+				} else {
+					condition = entry.getValue().getNumberOfRooms() >= apartment.getNumberOfRooms();
+					initialized = true;
+				}	
+			}
+			
+			if(apartment.getPrice() != -1) {
+				if(initialized) {
+					condition = condition && entry.getValue().getPricePerNight() <= apartment.getPrice();
+				} else {
+					condition = entry.getValue().getPricePerNight() <= apartment.getPrice();
+					initialized = true;
+				}
+			}
+			
+			if(!apartment.getCity().equals("")) {
+				if(initialized) {
+					condition = condition && entry.getValue().getLocation().getAddress().getCity().equals(apartment.getCity());
+				} else {
+					condition = entry.getValue().getLocation().getAddress().getCity().equals(apartment.getCity());
+					initialized = true;
+				}
+			}
+			
+			if(!apartment.getCountry().equals("")) {
+				if(initialized) {
+					condition = condition && entry.getValue().getLocation().getAddress().getCountry().equals(apartment.getCountry());
+				} else {
+					condition = entry.getValue().getLocation().getAddress().getCountry().equals(apartment.getCountry());
+					initialized = true;
+				}
+			}
+			
+			if(condition) {
+				ret.add(entry.getValue());
+			}
+		}
+		
+		return ret;
+	}
+	
+	public void reorganizeApartments(ServletContext context) {
+		int currentApartmentID = 1;
+		Map<String, Apartment> newMap = new HashMap<String, Apartment>();
+		
+		for(Map.Entry<String, Apartment> entry : apartments.entrySet()) {
+			entry.getValue().setId(currentApartmentID + "");
+			newMap.put(currentApartmentID + "", entry.getValue());
+			currentApartmentID++;
+		}
+		
+		apartments = newMap;
+		saveApartments(context.getRealPath(""));
+	}
+	
+	public List<Apartment> findByFilterApartmentDTOFields(FilterApartmentDTO apartmentDTO) {
+		List<Apartment> ret = new ArrayList<Apartment>();
+		
+		for(Map.Entry<String, Apartment> entry : apartments.entrySet()) {
+			boolean condition = false;
+			boolean initialized = false;
+			
+			
+			if(apartmentDTO.getApartmentType() != null) {
+				initialized = true;
+				condition = entry.getValue().getApartmentType() == apartmentDTO.getApartmentType();
+			}
+			
+			try {
+				if(apartmentDTO.getAmenityIds().size() != 0) {
+					if(initialized) {
+						condition = condition && checkAmenities(entry.getValue(), apartmentDTO);
+					} else {
+						condition = checkAmenities(entry.getValue(), apartmentDTO);
+					}
+				}
+			} catch(Exception e) {
+				
+			}
+			
+			if(condition) {
+				ret.add(entry.getValue());
+			}
+		}
+		
+		return ret;
+	}
+	
+	private boolean checkAmenities(Apartment entry, FilterApartmentDTO apartmentDTO) {
+		boolean contains = false;
+		for(String id: apartmentDTO.getAmenityIds()) {
+			if(!entry.getAmenityIds().contains(id)) {
+				contains = false;
+				break;
+			} else {
+				contains = true;
+			}
+		}
+		
+		return contains;
 	}
 	
 	@SuppressWarnings("unchecked")

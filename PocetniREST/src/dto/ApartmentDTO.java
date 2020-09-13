@@ -1,5 +1,6 @@
 package dto;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -8,7 +9,8 @@ import model.Amenity;
 import model.Location;
 import model.Reservation;
 
-public class ApartmentDTO {
+@SuppressWarnings("serial")
+public class ApartmentDTO implements Serializable{
 	private String id;
 	private ApartmentType apartmentType;
 	private int numberOfRooms;
@@ -19,8 +21,8 @@ public class ApartmentDTO {
 	private ArrayList<String> commentIds;
 	private ArrayList<String> photos;
 	private float pricePerNight;
-	private Date checkInTime;
-	private Date checkOutTime;
+	private String checkInTime;
+	private String checkOutTime;
 	private boolean activityStatus;
 	private ArrayList<Amenity> amenities;
 	private ArrayList<Reservation> reservations;
@@ -39,7 +41,7 @@ public class ApartmentDTO {
 
 	public ApartmentDTO(ApartmentType apartmentType, int numberOfRooms, int numberOfGuests, Location location,
 			ArrayList<Date> datesForRent, String host, ArrayList<String> comments, ArrayList<String> photos,
-			float pricePerNight, Date checkInTime, Date checkOutTime, boolean activityStatus,
+			float pricePerNight, String checkInTime, String checkOutTime, boolean activityStatus,
 			ArrayList<Amenity> amenities, ArrayList<Reservation> reservations, boolean deleted, ArrayList<Double> grades) {
 		super();
 		 
@@ -141,19 +143,19 @@ public class ApartmentDTO {
 		this.pricePerNight = pricePerNight;
 	}
 
-	public Date getCheckInTime() {
+	public String getCheckInTime() {
 		return checkInTime;
 	}
 
-	public void setCheckInTime(Date checkInTime) {
+	public void setCheckInTime(String checkInTime) {
 		this.checkInTime = checkInTime;
 	}
 
-	public Date getCheckOutTime() {
+	public String getCheckOutTime() {
 		return checkOutTime;
 	}
 
-	public void setCheckOutTime(Date checkOutTime) {
+	public void setCheckOutTime(String checkOutTime) {
 		this.checkOutTime = checkOutTime;
 	}
 
@@ -196,10 +198,18 @@ public class ApartmentDTO {
 	public void setGrades(ArrayList<Double> grades) {
 		this.grades = grades;
 	}
-	
+
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return "NumberOfRomms:" + numberOfRooms;
+		return "ApartmentDTO [id=" + id + ", apartmentType=" + apartmentType + ", numberOfRooms=" + numberOfRooms
+				+ ", numberOfGuests=" + numberOfGuests + ", location=" + location + ", datesForRent=" + datesForRent
+				+ ", hostId=" + hostId + ", commentIds=" + commentIds + ", photos=" + photos + ", pricePerNight="
+				+ pricePerNight + ", checkInTime=" + checkInTime + ", checkOutTime=" + checkOutTime
+				+ ", activityStatus=" + activityStatus + ", amenities=" + amenities + ", reservations=" + reservations
+				+ ", deleted=" + deleted + ", grades=" + grades + "]";
 	}
+	
+	
+	
+	
 }

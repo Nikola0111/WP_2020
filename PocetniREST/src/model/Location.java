@@ -1,11 +1,13 @@
 package model;
 
-public class Location {
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class Location implements Serializable{
 
 	private float latitude;
 	private float longitude;
 	private Address address;
-	
 	
 	public Location() {
 		super();
@@ -47,7 +49,5 @@ public class Location {
 	public void setAddress(Address address) {
 		this.address = address;
 	}
-	
-	
-	
+		
 }

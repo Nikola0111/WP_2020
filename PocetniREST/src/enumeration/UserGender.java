@@ -1,6 +1,8 @@
 package enumeration;
 
-public enum UserGender {
+import java.io.Serializable;
+
+public enum UserGender implements Serializable{
 	MALE,
 	FEMALE
 }

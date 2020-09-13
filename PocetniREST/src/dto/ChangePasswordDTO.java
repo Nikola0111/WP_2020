@@ -1,6 +1,9 @@
 package dto;
 
-public class ChangePasswordDTO {
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class ChangePasswordDTO implements Serializable{
 
 	private String userName;
 	private String password;
@@ -33,5 +36,12 @@ public class ChangePasswordDTO {
 	public void setNewPassword(String newPassword) {
 		this.newPassword = newPassword;
 	}
+
+	@Override
+	public String toString() {
+		return "ChangePasswordDTO [userName=" + userName + ", password=" + password + ", newPassword=" + newPassword
+				+ "]";
+	}
+	
 	
 }

@@ -1,11 +1,13 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
 import enumeration.ReservationStatus;
 
-public class Reservation {
+@SuppressWarnings("serial")
+public class Reservation implements Serializable{
 
 	private String id;
 	private String apartmentId;
@@ -15,13 +17,13 @@ public class Reservation {
 	private String optionalMessage;
 	private String guestId;
 	private ReservationStatus reservationStatus;
-	
+	private boolean deleted;
 	public Reservation() {
 		super();
 	}
 
 	public Reservation(String apartmentId, Date startingDate, int rentalDuration, float fullPrice,
-			String optionalMessage, String guestId, ReservationStatus reservationStatus) {
+			String optionalMessage, String guestId, ReservationStatus reservationStatus, boolean deleted) {
 		super();
 		UUID uuid = UUID.randomUUID();
 		this.id = uuid.toString();
@@ -32,6 +34,7 @@ public class Reservation {
 		this.optionalMessage = optionalMessage;
 		this.guestId = guestId;
 		this.reservationStatus = reservationStatus;
+		this.deleted = deleted;
 	}
 
 	public String getId() {
@@ -96,6 +99,22 @@ public class Reservation {
 
 	public void setReservationStatus(ReservationStatus reservationStatus) {
 		this.reservationStatus = reservationStatus;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	@Override
+	public String toString() {
+		return "Reservation [id=" + id + ", apartmentId=" + apartmentId + ", startingDate=" + startingDate
+				+ ", rentalDuration=" + rentalDuration + ", fullPrice=" + fullPrice + ", optionalMessage="
+				+ optionalMessage + ", guestId=" + guestId + ", reservationStatus=" + reservationStatus + ", deleted="
+				+ deleted + "]";
 	}
 	
 	

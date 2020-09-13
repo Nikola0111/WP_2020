@@ -1,6 +1,8 @@
 package enumeration;
 
-public enum ApartmentType {
+import java.io.Serializable;
+
+public enum ApartmentType implements Serializable{
 	ONE_ROOM,
 	TWO_ROOMS,
 	THREE_ROOMS,

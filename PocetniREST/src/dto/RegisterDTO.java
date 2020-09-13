@@ -1,6 +1,10 @@
 package dto;
 
-public class RegisterDTO {
+import java.io.Serializable;
+
+
+@SuppressWarnings("serial")
+public class RegisterDTO implements Serializable{
 
 	private String userName;
 	private String password;
@@ -50,6 +54,12 @@ public class RegisterDTO {
 
 	public void setUserGender(String userGender) {
 		this.userGender = userGender;
+	}
+
+	@Override
+	public String toString() {
+		return "RegisterDTO [userName=" + userName + ", password=" + password + ", name=" + name + ", surname="
+				+ surname + ", userGender=" + userGender + "]";
 	}
 	
 	

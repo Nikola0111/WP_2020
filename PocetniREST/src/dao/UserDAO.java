@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -21,7 +22,8 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 
 import model.User;
 
-public class UserDAO {
+@SuppressWarnings("serial")
+public class UserDAO implements Serializable{
 	
 	private Map<String, User> users = new HashMap<String, User>();
 
@@ -61,6 +63,19 @@ public class UserDAO {
 				} else {
 					return currentUser;
 				}
+			}
+		}
+		return null;
+	}
+	
+	public User findByUsername(String userName) {
+		if (users.values().size() == 0) {
+			return null;
+		}
+		ArrayList<User> usersList = new ArrayList<User>(users.values());
+		for (User currentUser : usersList) {
+			if (currentUser.getUserName().equals(userName)) {
+				return currentUser;
 			}
 		}
 		return null;

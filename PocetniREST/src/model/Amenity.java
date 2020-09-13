@@ -1,8 +1,10 @@
 package model;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class Amenity {
+@SuppressWarnings("serial")
+public class Amenity implements Serializable{
 	
 	private String id;
 	private String caption;
@@ -52,6 +54,11 @@ public class Amenity {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	@Override
+	public String toString() {
+		return "\nAmenity [id=" + id + ", caption=" + caption + ", description=" + description + ", type=" + type + "]";
 	}
 	
 	

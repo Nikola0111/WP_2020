@@ -167,6 +167,7 @@ public class ApartmentService {
 		ArrayList<Apartment> apartmentsList = new ArrayList<Apartment>(apartments.findAll());
 		
 		for (Apartment apartment : apartmentsList) {
+			System.out.println(apartment.toString());
 			User host = users.findById(apartment.getHostId());
 			apartmentsToSend.add(convertApartmentToDTO(apartment, host));
 		}
@@ -268,6 +269,7 @@ public class ApartmentService {
 		} else {
 			dto.setActivityStatus("Not active");
 		}
+		System.out.println("TIP JE: " + dto.getApartmentType());
 		return dto;
 	}
 	
@@ -277,10 +279,12 @@ public class ApartmentService {
 		
 		if (type.equals(ApartmentType.APARTMENT)) {
 			convertedType = "Apartment";
+			System.out.println("USAO U IF");
 		} else if (type.equals(ApartmentType.ROOM)) {
 			convertedType = "Room";
+			System.out.println("USAO U ELSE IF");
 		} 
-		
+		System.out.println("TIP JE: " + convertedType);
 		return convertedType;
 	}
 	

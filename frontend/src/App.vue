@@ -43,6 +43,7 @@
                 <router-link to="/apartments" class="dropdown-item" href="#">My apartments</router-link>
                 <router-link to="/reservationsFromGuests" class="dropdown-item" href="#"> Reservations</router-link>
                 <router-link to="/apartmentRegistration" class="dropdown-item" href="#">Register apartment</router-link>
+                <router-link to="/guests" class="dropdown-item" href="#">My guests</router-link>
                 <a @click="logout" class="dropdown-item" href="#">Logout</a>
               </div>
             </div>
@@ -94,6 +95,7 @@ import ChangeUserDetails from "@/components/SharedComponents/ChangeUserDetails";
 import ApartmentRegistration from "@/components/HostComponents/ApartmentRegistration";
 import ReservationsFromGuests from "@/components/HostComponents/ReservationsFromGuests";
 import ReservationsByGuest from "@/components/GuestComponents/ReservationsByGuest";
+import UsersThatMadeReservations from "@/components/HostComponents/UsersThatMadeReservations";
 
 Vue.use(VueRouter)
 const routes = [
@@ -109,7 +111,8 @@ const routes = [
   {path: '/ChangeDetails', component: ChangeUserDetails},
   {path: '/apartmentRegistration', component: ApartmentRegistration},
   {path: '/reservationsFromGuests', component: ReservationsFromGuests},
-  {path: '/myReservations', component: ReservationsByGuest}
+  {path: '/myReservations', component: ReservationsByGuest},
+  {path: '/guests', component: UsersThatMadeReservations}
 ]
 
 const router = new VueRouter({

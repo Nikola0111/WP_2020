@@ -1,6 +1,6 @@
 <template>
-  <div style="width: 80%; margin-top: 5%; margin-left: 10%;">
-    <md-table v-model="searched" md-sort="name" md-sort-order="asc" md-card md-fixed-header>
+  <div style="width: 100%; margin-top: 5%; margin-left: 5%;">
+    <md-table v-model="searched" md-sort="name" md-sort-order="asc" class="md-card md-fixed-header" style="padding:20px ">
       <md-table-toolbar>
         <div class="md-toolbar-section-start">
           <h2 class="md-title">Reservations</h2>
@@ -23,9 +23,9 @@
         <md-table-cell md-label="Starting date" md-sort-by="startingDate">{{ item.startingDate }}</md-table-cell>
         <md-table-cell md-label="Rental duration" md-sort-by="rentalDuration">{{ item.rentalDuration }}</md-table-cell>
         <md-table-cell md-label="Status" md-sort-by="status">{{ item.reservationStatus }}</md-table-cell>
-        <md-table-cell v-if="item.reservationStatus === 'Created'"><button class="btn btn-success">Accept</button></md-table-cell>
-        <md-table-cell v-if="item.reservationStatus === 'Created'"><button class="btn btn-danger">Decline</button></md-table-cell>
-        <md-table-cell v-if="item.reservationStatus === 'Accepted'"><button class="btn btn-info">Finish</button></md-table-cell>
+        <md-table-cell v-if="item.reservationStatus === 'Created'"><button @click="acceptReservation(item.id, item)" class="btn btn-success">Accept</button></md-table-cell>
+        <md-table-cell v-if="item.reservationStatus === 'Created' || item.reservationStatus === 'Accepted'"><button @click="declineReservation(item.id, item)" class="btn btn-danger">Decline</button></md-table-cell>
+        <md-table-cell v-if="item.reservationStatus === 'Accepted'"><button @click="finishReservation(item.id, item)" class="btn btn-info">Finish</button></md-table-cell>
 
       </md-table-row>
     </md-table>
@@ -71,7 +71,31 @@ export default {
   methods: {
     searchOnTable2 () {
       this.searched = searchByGuestUserName(this.reservations, this.search2)
-    }
+    },
+    declineReservation(reservationId, item) {
+      http.put('Reservation/declineReservation/' + reservationId)
+          .then(response => {
+            if (response.data) {
+              item.reservationStatus = 'Declined';
+            }
+          })
+    },
+    acceptReservation(reservationId, item) {
+      http.put('Reservation/acceptReservation/' + reservationId)
+          .then(response => {
+            if (response.data) {
+              item.reservationStatus = 'Accepted';
+            }
+          })
+    },
+    finishReservation(reservationId, item) {
+      http.put('Reservation/finishReservation/' + reservationId)
+          .then(response => {
+            if (response.data) {
+              item.reservationStatus = 'Finished';
+            }
+          })
+    },
   },
   created () {
     this.searched = this.reservations

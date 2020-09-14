@@ -155,8 +155,18 @@ public class ReservationService {
 				
 				if (host.getId().equals(hostId)) {
 					User guest = users.findById(reservation.getGuestId());
-					UserDetailsDTO dto = convertUserToUserDetails(guest);
-					usersToSend.add(dto);
+					boolean duplicate = false;
+					for (UserDetailsDTO userDTO : usersToSend) {
+						if (userDTO.getUserName().equals(guest.getUserName())) {
+							duplicate = true;
+						} else {
+							continue;
+						}
+					}
+					if(!duplicate) {
+						UserDetailsDTO dto = convertUserToUserDetails(guest);
+						usersToSend.add(dto);
+					}
 				}
 				
 				
@@ -266,6 +276,57 @@ public class ReservationService {
 		Reservation reservation = reservations.findById(reservationId);
 		if (reservation != null) {
 			reservation.setReservationStatus(ReservationStatus.CANCELED);
+			saveReservations(reservations);
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	@PUT
+	@Path("acceptReservation/{reservationId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public boolean acceptReservation(@Context HttpServletRequest request, @PathParam("reservationId") String reservationId) {
+		ReservationDAO reservations = getReservations();
+		
+		Reservation reservation = reservations.findById(reservationId);
+		if (reservation != null) {
+			reservation.setReservationStatus(ReservationStatus.ACCEPTED);
+			saveReservations(reservations);
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	@PUT
+	@Path("declineReservation/{reservationId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public boolean declineReservation(@Context HttpServletRequest request, @PathParam("reservationId") String reservationId) {
+		ReservationDAO reservations = getReservations();
+		
+		Reservation reservation = reservations.findById(reservationId);
+		if (reservation != null) {
+			reservation.setReservationStatus(ReservationStatus.DECLINED);
+			saveReservations(reservations);
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	@PUT
+	@Path("finishReservation/{reservationId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public boolean finishReservation(@Context HttpServletRequest request, @PathParam("reservationId") String reservationId) {
+		ReservationDAO reservations = getReservations();
+		
+		Reservation reservation = reservations.findById(reservationId);
+		if (reservation != null) {
+			reservation.setReservationStatus(ReservationStatus.FINISHED);
 			saveReservations(reservations);
 			return true;
 		} else {

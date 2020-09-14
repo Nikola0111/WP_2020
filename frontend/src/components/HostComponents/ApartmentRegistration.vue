@@ -11,15 +11,17 @@
       </div>
       <div class="field">
         <label>Number of rooms:</label>
-        <input class="form-control" type="number" min="0" style="width: 340px" v-model="numberOfRooms" />
+        <input class="form-control" type="number" min="1" style="width: 340px" v-model="numberOfRooms" />
       </div>
       <div class="field">
         <label>Number of guests:</label>
-        <input class="form-control" type="number" min="0" style="width: 340px" v-model="numberOfGuests" />
+        <input class="form-control" type="number" min="1" style="width: 340px" v-model="numberOfGuests" />
       </div>
       <div class="field">
         <label>Country:</label><br>
         <input class="form-control" type="text" style="width: 340px" v-model="country" />
+        <label>City:</label>
+        <input class="form-control" type="text" style="width: 340px" v-model="city" />
         <label>Street and number:</label>
         <input class="form-control" type="text" style="width: 340px" v-model="streetAndNumber" />
       </div>
@@ -32,7 +34,7 @@
       </div>
       <div class="field">
         <label>Price per night:</label>
-        <input class="form-control" type="number" min="0" style="width: 340px" v-model="pricePerNight" />
+        <input class="form-control" type="number" min="1" style="width: 340px" v-model="pricePerNight" />
       </div>
       <div class="field">
         <div style="float:left;">
@@ -45,13 +47,46 @@
         </div>
         <div style="padding-top: 10px">
           <label style="padding-top: 15px">Select amenities(hover amenities for amenity details)</label><br>
-          <div v-for="amenity in amenities" style="display: inline; margin-right: 10px" v-bind:key="amenity.caption">
-            <input @change="editAmenities(amenity)" type="checkbox" />
-            <label v-tooltip="'This is a tooltip ffs show up'" style="margin-left: 3px" class="amenity-caption">{{amenity.caption}}</label>
+          <input @change="filterAmenities" placeholder="Search amenities" type="text" v-model="searchCriteria"/><br><br>
+          <div v-for="(item, index) in amenities" style="display: inline; margin-right: 10px" v-bind:key="item.item.id">
+            <input :checked="item.checked" @change="editAmenities(item, index)" type="checkbox" />
+            <label v-tooltip="'This is a tooltip ffs show up'" style="margin-left: 3px" class="amenity-caption">{{item.item.caption}}</label>
           </div>
         </div>
+
+        <button class="btn btn-success" @click="registerAmenity" style="margin-left: 320px;">Register</button>
       </div>
     </div>
+
+    <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="saved" md-persistent>
+      <span>Apartment successfully registered!</span>
+      <md-button class="md-primary" @click="saved = false">Close</md-button>
+    </md-snackbar>
+
+    <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="notSaved" md-persistent>
+      <span>There was an error saving the apartment, please re-enter information</span>
+      <md-button class="md-primary" @click="notSaved = false">Close</md-button>
+    </md-snackbar>
+
+    <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="apartmentTypeCheck" md-persistent>
+      <span>You must select an apartment type</span>
+      <md-button class="md-primary" @click="apartmentTypeCheck = false">Close</md-button>
+    </md-snackbar>
+
+    <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="adressCheck" md-persistent>
+      <span>You must enter the full adress of the apartment</span>
+      <md-button class="md-primary" @click="adressCheck = false">Close</md-button>
+    </md-snackbar>
+
+    <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="datesForRentCheck" md-persistent>
+      <span>Please enter the dates when the apartment/room is available for rent</span>
+      <md-button class="md-primary" @click="datesForRentCheck = false">Close</md-button>
+    </md-snackbar>
+
+    <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="checkInOutTimeCheck" md-persistent>
+      <span>Check in time must be after 14:00(2:00PM) and check out time must be after 10:00(10:00AM)</span>
+      <md-button class="md-primary" @click="checkInOutTimeCheck = false">Close</md-button>
+    </md-snackbar>
   </div>
 </template>
 
@@ -67,26 +102,37 @@ import VTooltip from 'v-tooltip'
 
 Vue.use(VTooltip)
 Vue.component('date-picker', DatePicker)
-Vue.component('time-picker',VueTimepicker)
+Vue.component('time-picker', VueTimepicker)
 Vue.use(VueLayers)
 
 export default {
-name: "ApartmentRegistration",
+  name: "ApartmentRegistration",
   data () {
     return {
       apartmentType: "",
-      numberOfRooms: 0,
-      numberOfGuests: 0,
+      numberOfRooms: 1,
+      numberOfGuests: 1,
       country: "",
+      city: '',
       streetAndNumber: "",
       datesForRent: [],
       dateRange: "",
-      pricePerNight: 0,
+      pricePerNight: 1,
       checkInTime: "",
       checkOutTime: "",
       amenities: [],
+      tempAmenities: [],
       checkedAmenities: [],
-      msg: 'This is a button.'
+      searchCriteria: '',
+      duration: 3000,
+      position: 'center',
+
+      saved: false,
+      notSaved: false,
+      apartmentTypeCheck: false,
+      adressCheck: false,
+      datesForRentCheck: false,
+      checkInOutTimeCheck: false
     }
   },
   methods: {
@@ -95,23 +141,144 @@ name: "ApartmentRegistration",
         start: this.dateRange.start,
         end: this.dateRange.end
       }
-      this.attributes[0].dates.push(value)
 
       this.datesForRent.push(value)
       this.dateRange = ""
     },
-    editAmenities(item){
-      if(this.checkedAmenities.includes(item)){
-        this.checkedAmenities.splice(item,1)
-      }else{
-        this.checkedAmenities.push(item)
+    editAmenities(item, index){
+      this.tempAmenities[index].checked = !this.tempAmenities[index].checked
+      if(this.checkedAmenities.length === 0) {
+        this.checkedAmenities.push({checked: true, item: item.item})
+
+        console.log(this.checkedAmenities)
+        return
       }
+
+      var exists = false
+      var temp = {}
+
+      console.log(item.item)
+      this.checkedAmenities.forEach(checkedAmenity =>{
+        console.log('Comparing: ' + checkedAmenity.item.id + ':' + item.item.id)
+        if(checkedAmenity.item.id === item.item.id){
+          console.log('Indices match!')
+          exists = true
+          temp = checkedAmenity
+        }
+      })
+
+      console.log(temp)
+      if(exists){
+        this.checkedAmenities.splice(temp, 1)
+      }else {
+        this.checkedAmenities.push({checked: true, item: item.item})
+      }
+
+      item.checked = false
+
       console.log(this.checkedAmenities)
+    },
+    filterAmenities(){
+      if(this.searchCriteria === ''){
+        this.amenities = this.tempAmenities
+      }else {
+        this.amenities = this.tempAmenities.filter(current => {
+          let item = current.item.caption.toLowerCase()
+          let criteriaLowerCase = this.searchCriteria.toLowerCase()
+          if(item.includes(criteriaLowerCase)){
+            console.log(current)
+            return current
+          }
+        })
+      }
+    },
+    registerAmenity(){
+      if(this.apartmentType === '') {
+        this.apartmentTypeCheck = true
+        return
+      }
+
+      if(this.city === '' || this.country === '' || this.streetAndNumber === ''){
+        this.adressCheck = true
+        return
+      }
+
+      if(this.datesForRent.length === 0) {
+        this.datesForRentCheck = true;
+        return
+      }
+
+      if(this.checkInTime !== '' && this.checkOutTime !== '') {
+        let checkInTimeElements = this.checkInTime.split(':')
+        let cIHour = parseInt(checkInTimeElements[0])
+
+        let checkOutTimeElements = this.checkOutTime.split(':')
+        let cOHours = parseInt(checkOutTimeElements[0])
+
+        if(cIHour < 14 || cOHours < 10){
+          this.checkInOutTimeCheck = true
+          return
+        }
+      } else {
+        this.checkInOutTimeCheck = true
+        return
+      }
+
+      let street = this.streetAndNumber.split(', ')[0]
+      let number = this.streetAndNumber.split(', ')[1]
+      let loggedUser = JSON.parse(localStorage.getItem("loggedUser"))
+
+      console.log(this.datesForRent)
+      let listOfDates = []
+      this.datesForRent.forEach(item =>{
+        listOfDates.push(item.start)
+        listOfDates.push(item.end)
+      })
+
+      console.log(this.datesForRent)
+
+      let chosenAmenities = []
+
+      this.checkedAmenities.forEach(amenity => {
+        chosenAmenities.push(amenity.item)
+      })
+
+      http.post('apartments/registerApartment', JSON.stringify({
+        apartmentType: this.apartmentType,
+        numberOfRooms: this.numberOfRooms,
+        numberOfGuests: this.numberOfGuests,
+        location: {
+          address: {
+            street: street,
+            number: number,
+            city: this.city,
+            postalCode: '22330',
+            country: this.country
+          }
+        },
+        datesForRent: listOfDates,
+        hostId: loggedUser.id,
+        photos: [],
+        pricePerNight: this.pricePerNight,
+        checkInTime: this.checkInTime,
+        checkOutTime: this.checkOutTime,
+        activityStatus: true,
+        amenities: chosenAmenities
+      })).then(response => {
+        if(response.data === true){
+          this.saved = true
+        }else {
+          this.notSaved = true
+        }
+      })
     }
   },
   mounted() {
     http.get('Amenity').then(response => {
-      this.amenities = response.data
+      response.data.forEach(amenity =>{
+        this.amenities.push({checked: false, item: amenity})
+        this.tempAmenities.push({checked: false, item: amenity})
+      })
     })
   }
 }

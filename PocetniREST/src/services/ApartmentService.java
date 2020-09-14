@@ -71,42 +71,35 @@ public class ApartmentService {
 	@Path("registerApartment")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public void registerApartment(@Context HttpServletRequest request, ApartmentDTO apartmentDTO) {
-		ApartmentDAO apartments = getApartments();
-
-		AmenityDAO amenities = getAmenities();
-		
-		int amenityId = 0;
-		
+	public boolean registerApartment(@Context HttpServletRequest request, ApartmentDTO apartmentDTO) {
 		try {
-			amenityId = amenities.getAmenities().size();
+			ApartmentDAO apartments = getApartments();
+	
+			Apartment apartment = new Apartment(ApartmentType.APARTMENT, apartmentDTO.getNumberOfRooms(), apartmentDTO.getNumberOfGuests(),
+					apartmentDTO.getLocation(), apartmentDTO.getDatesForRent(), apartmentDTO.getPhotos(), apartmentDTO.getPricePerNight(),
+					apartmentDTO.getCheckInTime(), apartmentDTO.getCheckOutTime());
+			
+			System.out.println(apartmentDTO);
+			
+			for(Amenity temp : apartmentDTO.getAmenities()) {
+				apartment.getAmenityIds().add(temp.getId());
+			}
+			
+			if(apartmentDTO.getApartmentType().equals("apartment")) {
+				apartment.setApartmentType(ApartmentType.APARTMENT);
+			} else {
+				apartment.setApartmentType(ApartmentType.ROOM);
+			}
+	
+			apartment.setHostId(apartmentDTO.getHostId());
+			apartment.setId(apartments.getApartments().size() + 1 + "");
+			
+			apartments.getApartments().put(apartment.getId(), apartment);
+			saveApartments(apartments);
+			return true;
 		} catch(Exception e) {
-			System.out.println("Nalazi se 0 amenitija u fajlu");
+			return false;
 		}
-		
-		Apartment apartment = new Apartment(apartmentDTO.getApartmentType(), apartmentDTO.getNumberOfRooms(), apartmentDTO.getNumberOfGuests(),
-				apartmentDTO.getLocation(), apartmentDTO.getDatesForRent(), apartmentDTO.getPhotos(), apartmentDTO.getPricePerNight(),
-				apartmentDTO.getCheckInTime(), apartmentDTO.getCheckOutTime());
-		
-		System.out.println(apartmentDTO);
-		
-		for (Amenity temp: apartmentDTO.getAmenities()) {
-			temp.setId(amenityId + "");
-			System.out.println(temp);
-			amenities.getAmenities().put(temp.getId(), temp);
-			apartment.getAmenityIds().add(temp.getId());
-			amenityId++;
-		}
-
-		apartment.setHostId(apartmentDTO.getHostId());
-		apartment.setId(apartments.getApartments().size() + "");
-		
-		apartments.getApartments().put(apartment.getId(), apartment);
-		saveApartments(apartments);
-		
-		////////ovo se treba obrisati kad se naprave amenitiji/////////
-		saveAmenities(amenities);
-		///////////////////////////////////////////////////////////////
 	}
 	
 	@POST
@@ -282,15 +275,11 @@ public class ApartmentService {
 		
 		String convertedType = "";
 		
-		if (type.equals(ApartmentType.ONE_ROOM)) {
-			convertedType = "One room";
-		} else if (type.equals(ApartmentType.TWO_ROOMS)) {
-			convertedType = "Two rooms";
-		} else if (type.equals(ApartmentType.THREE_ROOMS)) {
-			convertedType = "Three rooms";
-		} else {
-			convertedType = "More than three rooms";
-		}
+		if (type.equals(ApartmentType.APARTMENT)) {
+			convertedType = "Apartment";
+		} else if (type.equals(ApartmentType.ROOM)) {
+			convertedType = "Room";
+		} 
 		
 		return convertedType;
 	}

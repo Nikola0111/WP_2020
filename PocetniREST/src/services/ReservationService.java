@@ -330,22 +330,19 @@ public class ReservationService {
 		return dto;
 	}
 	
-	public String convertApartmentType(ApartmentType type) {
+public String convertApartmentType(ApartmentType type) {
 		
 		String convertedType = "";
 		
-		if (type.equals(ApartmentType.ONE_ROOM)) {
-			convertedType = "One room";
-		} else if (type.equals(ApartmentType.TWO_ROOMS)) {
-			convertedType = "Two rooms";
-		} else if (type.equals(ApartmentType.THREE_ROOMS)) {
-			convertedType = "Three rooms";
-		} else {
-			convertedType = "More than three rooms";
-		}
+		if (type.equals(ApartmentType.APARTMENT)) {
+			convertedType = "Apartment";
+		} else if (type.equals(ApartmentType.ROOM)) {
+			convertedType = "Room";
+		} 
 		
 		return convertedType;
 	}
+	
 	
 	public String convertReservationStatus(ReservationStatus status) {
 		

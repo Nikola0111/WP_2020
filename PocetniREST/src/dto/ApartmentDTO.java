@@ -12,7 +12,7 @@ import model.Reservation;
 @SuppressWarnings("serial")
 public class ApartmentDTO implements Serializable{
 	private String id;
-	private ApartmentType apartmentType;
+	private String apartmentType;
 	private int numberOfRooms;
 	private int numberOfGuests;
 	private Location location;
@@ -39,7 +39,7 @@ public class ApartmentDTO implements Serializable{
 		this.grades = new ArrayList<Double>();
 	}
 
-	public ApartmentDTO(ApartmentType apartmentType, int numberOfRooms, int numberOfGuests, Location location,
+	public ApartmentDTO(String apartmentType, int numberOfRooms, int numberOfGuests, Location location,
 			ArrayList<Date> datesForRent, String host, ArrayList<String> comments, ArrayList<String> photos,
 			float pricePerNight, String checkInTime, String checkOutTime, boolean activityStatus,
 			ArrayList<Amenity> amenities, ArrayList<Reservation> reservations, boolean deleted, ArrayList<Double> grades) {
@@ -71,11 +71,11 @@ public class ApartmentDTO implements Serializable{
 		this.id = id;
 	}
 
-	public ApartmentType getApartmentType() {
+	public String getApartmentType() {
 		return apartmentType;
 	}
 
-	public void setApartmentType(ApartmentType apartmentType) {
+	public void setApartmentType(String apartmentType) {
 		this.apartmentType = apartmentType;
 	}
 

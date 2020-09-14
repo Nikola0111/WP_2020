@@ -1,24 +1,92 @@
 <template>
-  <div>
-    <vl-map :load-tiles-while-animating="true" :load-tiles-while-interacting="true"
-            data-projection="EPSG:4326" style="height: 400px">
-      <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation"></vl-view>
+  <div style="overflow-y: auto;background:white; width: 80%; margin-bottom:20px; margin-left: 10%;height: 500px;">
+    <h3>Enter apartment information</h3>
+    <div class="column">
+      <div class="field">
+        <label>Apartment type:</label><br>
+        <input class="rb-male" style="alignment: left" type="radio" id="one" value="apartment" v-model="apartmentType">
+        <label class="rb-label" for="one">Apartment</label>
+        <input type="radio" id="two" value="room" v-model="apartmentType">
+        <label class="rb-label" for="two">Room</label>
+      </div>
+      <div class="field">
+        <label>Number of rooms:</label>
+        <input class="form-control" type="number" min="1" style="width: 340px" v-model="numberOfRooms" />
+      </div>
+      <div class="field">
+        <label>Number of guests:</label>
+        <input class="form-control" type="number" min="1" style="width: 340px" v-model="numberOfGuests" />
+      </div>
+      <div class="field">
+        <label>Country:</label><br>
+        <input class="form-control" type="text" style="width: 340px" v-model="country" />
+        <label>City:</label>
+        <input class="form-control" type="text" style="width: 340px" v-model="city" />
+        <label>Street and number:</label>
+        <input class="form-control" type="text" style="width: 340px" v-model="streetAndNumber" />
+      </div>
+    </div>
+    <div class="column">
+      <div class="field">
+        <label>Select available dates for rent:</label><br>
+        <date-picker mode="range" color="blue" v-model="dateRange" :disabled-dates="datesForRent"/>
+        <button class="btn btn-info" style="margin-top: 5px" @click="saveDateForRent">Save date</button>
+      </div>
+      <div class="field">
+        <label>Price per night:</label>
+        <input class="form-control" type="number" min="1" style="width: 340px" v-model="pricePerNight" />
+      </div>
+      <div class="field">
+        <div style="float:left;">
+          <label>Check in time:</label><br>
+          <time-picker v-model="checkInTime"></time-picker>
+        </div>
+        <div style="margin-left:20px;float:left;">
+          <label>Check out time:</label><br>
+          <time-picker v-model="checkOutTime"></time-picker>
+        </div>
+        <div style="padding-top: 10px">
+          <label style="padding-top: 15px">Select amenities(hover amenities for amenity details)</label><br>
+          <input @change="filterAmenities" placeholder="Search amenities" type="text" v-model="searchCriteria"/><br><br>
+          <div v-for="(item, index) in amenities" style="display: inline; margin-right: 10px" v-bind:key="item.item.id">
+            <input :checked="item.checked" @change="editAmenities(item, index)" type="checkbox" />
+            <label v-tooltip="'This is a tooltip ffs show up'" style="margin-left: 3px" class="amenity-caption">{{item.item.caption}}</label>
+          </div>
+        </div>
 
-      <vl-geoloc @update:position="geolocPosition = $event">
-        <template slot-scope="geoloc">
-          <vl-feature v-if="geoloc.position" id="position-feature">
-            <vl-geom-point :coordinates="geoloc.position"></vl-geom-point>
-            <vl-style-box>
-              <vl-style-icon src="_media/marker.png" :scale="0.4" :anchor="[0.5, 1]"></vl-style-icon>
-            </vl-style-box>
-          </vl-feature>
-        </template>
-      </vl-geoloc>
+        <button class="btn btn-success" @click="registerAmenity" style="margin-left: 320px;">Register</button>
+      </div>
+    </div>
 
-      <vl-layer-tile id="osm">
-        <vl-source-osm></vl-source-osm>
-      </vl-layer-tile>
-    </vl-map>
+    <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="saved" md-persistent>
+      <span>Apartment successfully registered!</span>
+      <md-button class="md-primary" @click="saved = false">Close</md-button>
+    </md-snackbar>
+
+    <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="notSaved" md-persistent>
+      <span>There was an error saving the apartment, please re-enter information</span>
+      <md-button class="md-primary" @click="notSaved = false">Close</md-button>
+    </md-snackbar>
+
+    <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="apartmentTypeCheck" md-persistent>
+      <span>You must select an apartment type</span>
+      <md-button class="md-primary" @click="apartmentTypeCheck = false">Close</md-button>
+    </md-snackbar>
+
+    <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="adressCheck" md-persistent>
+      <span>You must enter the full adress of the apartment</span>
+      <md-button class="md-primary" @click="adressCheck = false">Close</md-button>
+    </md-snackbar>
+
+    <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="datesForRentCheck" md-persistent>
+      <span>Please enter the dates when the apartment/room is available for rent</span>
+      <md-button class="md-primary" @click="datesForRentCheck = false">Close</md-button>
+    </md-snackbar>
+
+    <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="checkInOutTimeCheck" md-persistent>
+      <span>Check in time must be after 14:00(2:00PM) and check out time must be after 10:00(10:00AM)</span>
+      <md-button class="md-primary" @click="checkInOutTimeCheck = false">Close</md-button>
+    </md-snackbar>
   </div>
 </template>
 
@@ -26,21 +94,209 @@
 import Vue from 'vue'
 import VueLayers from 'vuelayers'
 import 'vuelayers/lib/style.css'
+import DatePicker from 'v-calendar/lib/components/date-picker.umd'
+import VueTimepicker from 'vue2-timepicker'
+import 'vue2-timepicker/dist/VueTimepicker.css'
+import http from "@/http-common";
+import VTooltip from 'v-tooltip'
 
+Vue.use(VTooltip)
+Vue.component('date-picker', DatePicker)
+Vue.component('time-picker', VueTimepicker)
 Vue.use(VueLayers)
+
 export default {
-name: "ApartmentRegistration",
+  name: "ApartmentRegistration",
   data () {
     return {
-      zoom: 2,
-      center: [0, 0],
-      rotation: 0,
-      geolocPosition: undefined,
+      apartmentType: "",
+      numberOfRooms: 1,
+      numberOfGuests: 1,
+      country: "",
+      city: '',
+      streetAndNumber: "",
+      datesForRent: [],
+      dateRange: "",
+      pricePerNight: 1,
+      checkInTime: "",
+      checkOutTime: "",
+      amenities: [],
+      tempAmenities: [],
+      checkedAmenities: [],
+      searchCriteria: '',
+      duration: 3000,
+      position: 'center',
+
+      saved: false,
+      notSaved: false,
+      apartmentTypeCheck: false,
+      adressCheck: false,
+      datesForRentCheck: false,
+      checkInOutTimeCheck: false
     }
   },
+  methods: {
+    saveDateForRent(){
+      let value = {
+        start: this.dateRange.start,
+        end: this.dateRange.end
+      }
+
+      this.datesForRent.push(value)
+      this.dateRange = ""
+    },
+    editAmenities(item, index){
+      this.tempAmenities[index].checked = !this.tempAmenities[index].checked
+      if(this.checkedAmenities.length === 0) {
+        this.checkedAmenities.push({checked: true, item: item.item})
+
+        console.log(this.checkedAmenities)
+        return
+      }
+
+      var exists = false
+      var temp = {}
+
+      console.log(item.item)
+      this.checkedAmenities.forEach(checkedAmenity =>{
+        console.log('Comparing: ' + checkedAmenity.item.id + ':' + item.item.id)
+        if(checkedAmenity.item.id === item.item.id){
+          console.log('Indices match!')
+          exists = true
+          temp = checkedAmenity
+        }
+      })
+
+      console.log(temp)
+      if(exists){
+        this.checkedAmenities.splice(temp, 1)
+      }else {
+        this.checkedAmenities.push({checked: true, item: item.item})
+      }
+
+      item.checked = false
+
+      console.log(this.checkedAmenities)
+    },
+    filterAmenities(){
+      if(this.searchCriteria === ''){
+        this.amenities = this.tempAmenities
+      }else {
+        this.amenities = this.tempAmenities.filter(current => {
+          let item = current.item.caption.toLowerCase()
+          let criteriaLowerCase = this.searchCriteria.toLowerCase()
+          if(item.includes(criteriaLowerCase)){
+            console.log(current)
+            return current
+          }
+        })
+      }
+    },
+    registerAmenity(){
+      if(this.apartmentType === '') {
+        this.apartmentTypeCheck = true
+        return
+      }
+
+      if(this.city === '' || this.country === '' || this.streetAndNumber === ''){
+        this.adressCheck = true
+        return
+      }
+
+      if(this.datesForRent.length === 0) {
+        this.datesForRentCheck = true;
+        return
+      }
+
+      if(this.checkInTime !== '' && this.checkOutTime !== '') {
+        let checkInTimeElements = this.checkInTime.split(':')
+        let cIHour = parseInt(checkInTimeElements[0])
+
+        let checkOutTimeElements = this.checkOutTime.split(':')
+        let cOHours = parseInt(checkOutTimeElements[0])
+
+        if(cIHour < 14 || cOHours < 10){
+          this.checkInOutTimeCheck = true
+          return
+        }
+      } else {
+        this.checkInOutTimeCheck = true
+        return
+      }
+
+      let street = this.streetAndNumber.split(', ')[0]
+      let number = this.streetAndNumber.split(', ')[1]
+      let loggedUser = JSON.parse(localStorage.getItem("loggedUser"))
+
+      console.log(this.datesForRent)
+      let listOfDates = []
+      this.datesForRent.forEach(item =>{
+        listOfDates.push(item.start)
+        listOfDates.push(item.end)
+      })
+
+      console.log(this.datesForRent)
+
+      let chosenAmenities = []
+
+      this.checkedAmenities.forEach(amenity => {
+        chosenAmenities.push(amenity.item)
+      })
+
+      http.post('apartments/registerApartment', JSON.stringify({
+        apartmentType: this.apartmentType,
+        numberOfRooms: this.numberOfRooms,
+        numberOfGuests: this.numberOfGuests,
+        location: {
+          address: {
+            street: street,
+            number: number,
+            city: this.city,
+            postalCode: '22330',
+            country: this.country
+          }
+        },
+        datesForRent: listOfDates,
+        hostId: loggedUser.id,
+        photos: [],
+        pricePerNight: this.pricePerNight,
+        checkInTime: this.checkInTime,
+        checkOutTime: this.checkOutTime,
+        activityStatus: true,
+        amenities: chosenAmenities
+      })).then(response => {
+        if(response.data === true){
+          this.saved = true
+        }else {
+          this.notSaved = true
+        }
+      })
+    }
+  },
+  mounted() {
+    http.get('Amenity').then(response => {
+      response.data.forEach(amenity =>{
+        this.amenities.push({checked: false, item: amenity})
+        this.tempAmenities.push({checked: false, item: amenity})
+      })
+    })
+  }
 }
 </script>
 
 <style scoped>
+.field, h3{
+  margin: 15px;
+  padding-top: 10px;
+}
 
+.rb-label {
+  margin-right: 10px;
+  margin-left: 3px;
+}
+
+.column {
+  width: 50%;
+  float: left;
+}
 </style>

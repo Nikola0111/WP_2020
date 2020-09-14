@@ -236,13 +236,5 @@ export default {
 
 
 <style scoped>
-.vl {
-  border-left: 2px solid gray;
-  height: 290px;
-  position: absolute;
-  left: 50%;
-  margin-left: -3px;
-  margin-top: 22%;
-  top: 0;
-}
+
 </style>

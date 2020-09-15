@@ -66,6 +66,13 @@ public class ApartmentForFrontDTO implements Serializable{
 	public void setActivityStatus(String activityStatus) {
 		this.activityStatus = activityStatus;
 	}
+
+	@Override
+	public String toString() {
+		return "ApartmentForFrontDTO [id=" + id + ", apartmentType=" + apartmentType + ", location=" + location
+				+ ", hostUserName=" + hostUserName + ", pricePerNight=" + pricePerNight + ", activityStatus="
+				+ activityStatus + "]";
+	}
 	
 	
 }

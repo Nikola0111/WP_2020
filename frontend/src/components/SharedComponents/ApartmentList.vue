@@ -2,11 +2,27 @@
   <div style="width: 80%; margin-top: 5%; margin-left: 10%;">
     <md-table v-model="searched" md-sort="hostUserName" md-sort-order="asc" md-card md-fixed-header>
       <md-table-toolbar>
-        <div class="md-toolbar-section-start">
+        <div v-if="!isHost" class="md-toolbar-section-start">
           <h2 class="md-title">Apartments</h2>
         </div>
 
-        <md-field md-clearable class="md-toolbar-section-end">
+        <div v-if="isHost && showInactiveBool" class="md-toolbar-section-start">
+          <h2 class="md-title">Active apartments</h2>
+        </div>
+
+        <div v-if="isHost && showActiveBool" class="md-toolbar-section-start">
+          <h2 class="md-title">Deactivated apartments</h2>
+        </div>
+
+        <md-button @click="showInactive" v-if="showInactiveBool && isHost">
+          Show inactive
+        </md-button>
+
+        <md-button @click="showActive" v-if="showActiveBool && isHost">
+          Show active
+        </md-button>
+
+        <md-field v-if="!isHost" md-clearable class="md-toolbar-section-end">
           <md-input placeholder="Search by host username" v-model="search" @input="searchOnTable" />
         </md-field>
       </md-table-toolbar>
@@ -24,6 +40,8 @@
         <md-table-cell><button>Details</button></md-table-cell>
         <md-table-cell v-if="isAdmin || isHost"><button @click="deleteApartment(item.id, item)">Delete</button></md-table-cell>
         <md-table-cell v-if="isGuest"><button @click="showDialog(item)">Reserve</button></md-table-cell>
+        <md-table-cell v-if="isHost && item.activityStatus === 'Active'"><button @click="deactivateApartment(item)">Deactivate</button></md-table-cell>
+        <md-table-cell v-if="isHost && item.activityStatus !== 'Active'"><button @click="activateApartment(item)">Activate</button></md-table-cell>
       </md-table-row>
     </md-table>
 
@@ -73,6 +91,7 @@ const searchByHostUsername = (items, term) => {
 
 import Vue from "vue"
 import {MdTable, MdCard, MdContent, MdField, MdEmptyState, MdRipple} from 'vue-material/dist/components'
+import VueMaterial from 'vue-material'
 import http from "@/http-common";
 import VModel from 'vue-js-modal'
 import DatePicker from 'v-calendar/lib/components/date-picker.umd'
@@ -85,6 +104,8 @@ Vue.use(MdContent)
 Vue.use(MdEmptyState)
 Vue.use(MdRipple)
 Vue.use(VModel)
+Vue.use(VueMaterial)
+import 'vue-material/dist/vue-material.css'
 Vue.use(VCalendar, {
   componentPrefix: 'vc'
 })
@@ -110,7 +131,11 @@ export default {
       additionalComment: "",
       apartmentReservations: [],
       occupiedDates: [],
-      attributes: []
+      attributes: [],
+      fallbackApartments: [],
+
+      showActiveBool: false,
+      showInactiveBool: true
     }
   },
   components: {
@@ -161,6 +186,28 @@ export default {
       this.attributes = []
       this.$modal.hide('reservationDialog')
     },
+    showActive(){
+      console.log('showing active')
+      this.showActiveBool = false
+      this.showInactiveBool = true
+      this.searched = []
+      this.fallbackApartments.forEach(apartment => {
+        if(apartment.activityStatus === 'Active') {
+          this.searched.push(apartment)
+        }
+      })
+    },
+    showInactive(){
+      console.log('showing inactive')
+      this.showActiveBool = true
+      this.showInactiveBool = false
+      this.searched = []
+      this.fallbackApartments.forEach(apartment => {
+        if(apartment.activityStatus !== 'Active') {
+          this.searched.push(apartment)
+        }
+      })
+    },
     date_function: function () {
 
       var currentDate = new Date();
@@ -192,6 +239,48 @@ export default {
         console.log(response.data)
         this.hideDialog()
       })
+    },
+    activateApartment(item) {
+      http.get(`apartments/activateApartment/${item.id}`).then(response => {
+        if(response.data) {
+          this.searched.splice(item, 1)
+
+          this.apartments.forEach(apartment => {
+            if(item.id === apartment.id){
+              apartment.activityStatus = 'Active'
+            }
+          })
+
+          this.fallbackApartments.forEach(apartment => {
+            if(item.id === apartment.id){
+              apartment.activityStatus = 'Active'
+            }
+          })
+
+          item.activityStatus = 'Active'
+        }
+      })
+    },
+    deactivateApartment(item) {
+      http.get(`apartments/deactivateApartment/${item.id}`).then(response => {
+        if(response.data) {
+          this.searched.splice(item, 1)
+
+          this.apartments.forEach(apartment => {
+            if(item.id === apartment.id){
+              apartment.activityStatus = 'Not active'
+            }
+          })
+
+          this.fallbackApartments.forEach(apartment => {
+            if(item.id === apartment.id){
+              apartment.activityStatus = 'Not active'
+            }
+          })
+
+          item.activityStatus = 'Not active'
+        }
+      })
     }
   },
   created () {
@@ -218,7 +307,8 @@ export default {
             .then(response => {
               this.apartments = response.data;
               this.searched = this.apartments;
-              console.log(response.data)
+              this.fallbackApartments = this.apartments
+              this.showActive()
             })
       } else if(role === "ADMINISTRATOR"){
         http.get('apartments/Apartments')

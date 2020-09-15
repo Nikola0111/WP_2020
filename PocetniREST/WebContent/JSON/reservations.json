@@ -1,0 +1,35 @@
+{
+  "0" : {
+    "id" : "0",
+    "apartmentId" : "2",
+    "startingDate" : 1600207200000,
+    "rentalDuration" : 2,
+    "fullPrice" : 70.0,
+    "optionalMessage" : "fsdfsdf",
+    "guestId" : "5",
+    "reservationStatus" : "ACCEPTED",
+    "deleted" : false
+  },
+  "1" : {
+    "id" : "1",
+    "apartmentId" : "2",
+    "startingDate" : 1600725600000,
+    "rentalDuration" : 4,
+    "fullPrice" : 140.0,
+    "optionalMessage" : "",
+    "guestId" : "5",
+    "reservationStatus" : "ACCEPTED",
+    "deleted" : false
+  },
+  "2" : {
+    "id" : "2",
+    "apartmentId" : "2",
+    "startingDate" : 1601157600000,
+    "rentalDuration" : 2,
+    "fullPrice" : 70.0,
+    "optionalMessage" : "",
+    "guestId" : "5",
+    "reservationStatus" : "ACCEPTED",
+    "deleted" : false
+  }
+}

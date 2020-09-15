@@ -25,7 +25,9 @@ import dao.UserDAO;
 import dto.ChangePasswordDTO;
 import dto.ChangeUserDTO;
 import dto.UserDetailsDTO;
+import dto.UsersFilterDTO;
 import enumeration.UserGender;
+import enumeration.UserRole;
 import dto.SearchUserDTO;
 import model.User;
 
@@ -118,6 +120,67 @@ public class UserService {
 		return usersToSend;
 	}
 	
+	@POST
+	@Path("FilterUsers")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<User> getFilteredUsers(@Context HttpServletRequest request, UsersFilterDTO dto) {
+		
+		UserDAO users = getUsers();
+		ArrayList<User> allUsers = new ArrayList<User>(users.findAll());
+		ArrayList<User> usersToSend = new ArrayList<User>();
+		
+		
+		if (dto.getUserGender().equals("all")) {
+			UserRole role = getRole(dto.getUserRole());
+			for (User user : allUsers) {
+				if (user.getUserRole().equals(role)) {
+					usersToSend.add(user);
+				}
+			}
+			return usersToSend;
+		}
+		
+		if (dto.getUserRole().equals("all")) {
+			UserGender gender = getGender(dto.getUserGender());
+			for (User user : allUsers) {
+				if (user.getUserGender().equals(gender)) {
+					usersToSend.add(user);
+				}
+			}
+			return usersToSend;
+		}
+		
+		UserRole role = getRole(dto.getUserRole());
+		UserGender gender = getGender(dto.getUserGender());
+		
+		for (User user : allUsers) {
+			if (user.getUserGender().equals(gender) && user.getUserRole().equals(role)) {
+				usersToSend.add(user);
+			}
+		}
+		
+		return usersToSend;
+		
+		}
+		
+	public UserGender getGender(String gender) {
+		if (gender.equals("male")) {
+			return UserGender.MALE;
+		} else {
+			return UserGender.FEMALE;
+		}
+	}
+	
+	public UserRole getRole(String role) {
+		if (role.equals("administrator")) {
+			return UserRole.ADMINISTRATOR;
+		} else if (role.equals("host")) {
+			return UserRole.HOST;
+		} else {
+			return UserRole.GUEST;
+		}
+	}
 
 	@GET
 	@Path("UserDetails/{userName}")
@@ -150,6 +213,8 @@ public class UserService {
 		return dto;
 		
 	}
+	
+
 	@POST
 	@Path("findUsersBySearchUserDTO")
 	@Consumes(MediaType.APPLICATION_JSON)

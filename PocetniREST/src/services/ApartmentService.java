@@ -167,6 +167,7 @@ public class ApartmentService {
 		ArrayList<Apartment> apartmentsList = new ArrayList<Apartment>(apartments.findAll());
 		
 		for (Apartment apartment : apartmentsList) {
+			System.out.println(apartment.toString());
 			User host = users.findById(apartment.getHostId());
 			apartmentsToSend.add(convertApartmentToDTO(apartment, host));
 		}
@@ -200,7 +201,7 @@ public class ApartmentService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public ArrayList<ApartmentForFrontDTO> getAllApartmentsFromOneHost(@PathParam("hostId") String hostId, @Context HttpServletRequest request) {
-		
+		System.out.println("Pogodio endpoint, id je: " + hostId);
 		ArrayList<ApartmentForFrontDTO> activeApartments = new ArrayList<ApartmentForFrontDTO>();
 		ApartmentDAO apartments = getApartments();
 		UserDAO users = getUsers();
@@ -312,6 +313,7 @@ public class ApartmentService {
 		} else {
 			dto.setActivityStatus("Not active");
 		}
+		System.out.println("TIP JE: " + dto.getApartmentType());
 		return dto;
 	}
 	
@@ -321,10 +323,12 @@ public class ApartmentService {
 		
 		if (type.equals(ApartmentType.APARTMENT)) {
 			convertedType = "Apartment";
+			System.out.println("USAO U IF");
 		} else if (type.equals(ApartmentType.ROOM)) {
 			convertedType = "Room";
+			System.out.println("USAO U ELSE IF");
 		} 
-		
+		System.out.println("TIP JE: " + convertedType);
 		return convertedType;
 	}
 	

@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top: 2%" class="container">
+  <div style="margin-top: 2%;background-color: white !important; padding: 50px" class="container">
     <h2>Change your password</h2>
     <div class="row">
       <div class="col-sm-4">

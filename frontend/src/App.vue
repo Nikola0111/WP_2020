@@ -28,7 +28,7 @@
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                 <router-link to="/Profile" tag="a" class="dropdown-item" href="#">My account</router-link>
-                <a class="dropdown-item" href="#">My reservations</a>
+                <router-link to="/myReservations" class="dropdown-item" href="#">My reservations</router-link>
                 <a @click="logout" class="dropdown-item" href="#">Logout</a>
               </div>
             </div>
@@ -41,7 +41,9 @@
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
                 <router-link to="/Profile" tag="a" class="dropdown-item" href="#">My account</router-link>
                 <router-link to="/apartments" class="dropdown-item" href="#">My apartments</router-link>
+                <router-link to="/reservationsFromGuests" class="dropdown-item" href="#"> Reservations</router-link>
                 <router-link to="/apartmentRegistration" class="dropdown-item" href="#">Register apartment</router-link>
+                <router-link to="/guests" class="dropdown-item" href="#">My guests</router-link>
                 <a @click="logout" class="dropdown-item" href="#">Logout</a>
               </div>
             </div>
@@ -91,6 +93,9 @@ import ChangePassword from "@/components/SharedComponents/ChangePassword";
 import MyProfile from "@/components/SharedComponents/MyProfile";
 import ChangeUserDetails from "@/components/SharedComponents/ChangeUserDetails";
 import ApartmentRegistration from "@/components/HostComponents/ApartmentRegistration";
+import ReservationsFromGuests from "@/components/HostComponents/ReservationsFromGuests";
+import ReservationsByGuest from "@/components/GuestComponents/ReservationsByGuest";
+import UsersThatMadeReservations from "@/components/HostComponents/UsersThatMadeReservations";
 
 Vue.use(VueRouter)
 const routes = [
@@ -105,6 +110,9 @@ const routes = [
   {path: '/ChangePassword', component: ChangePassword},
   {path: '/ChangeDetails', component: ChangeUserDetails},
   {path: '/apartmentRegistration', component: ApartmentRegistration},
+  {path: '/reservationsFromGuests', component: ReservationsFromGuests},
+  {path: '/myReservations', component: ReservationsByGuest},
+  {path: '/guests', component: UsersThatMadeReservations}
 ]
 
 const router = new VueRouter({

@@ -1,6 +1,6 @@
 <template>
-  <div style="width: 80%; margin-top: 5%; margin-left: 10%;">
-    <md-table v-model="searched" md-sort="hostUserName" md-sort-order="asc" md-card md-fixed-header>
+  <div style="width: 90%; margin-top: 5%; margin-left: 5%;">
+    <md-table v-model="searched" md-sort="name" md-sort-order="asc" class="md-card md-fixed-header" style="padding:20px ">
       <md-table-toolbar>
         <div v-if="!isHost" class="md-toolbar-section-start">
           <h2 class="md-title">Apartments</h2>
@@ -37,11 +37,11 @@
         <md-table-cell md-label="Price per night" md-sort-by="pricePerNight">{{ item.pricePerNight }}</md-table-cell>
         <md-table-cell md-label="Apartment type" md-sort-by="apartmentType">{{ item.apartmentType }}</md-table-cell>
         <md-table-cell v-if="isAdmin || isHost" md-label="Activity status" md-sort-by="activityStatus">{{ item.activityStatus }}</md-table-cell>
-        <md-table-cell><button>Details</button></md-table-cell>
-        <md-table-cell v-if="isAdmin || isHost"><button @click="deleteApartment(item.id, item)">Delete</button></md-table-cell>
-        <md-table-cell v-if="isGuest"><button @click="showDialog(item)">Reserve</button></md-table-cell>
-        <md-table-cell v-if="isHost && item.activityStatus === 'Active'"><button @click="deactivateApartment(item)">Deactivate</button></md-table-cell>
-        <md-table-cell v-if="isHost && item.activityStatus !== 'Active'"><button @click="activateApartment(item)">Activate</button></md-table-cell>
+        <md-table-cell><button class="btn btn-info">Details</button></md-table-cell>
+        <md-table-cell v-if="isAdmin || isHost"><button class="btn btn-danger" @click="deleteApartment(item.id, item)">Delete</button></md-table-cell>
+        <md-table-cell v-if="isGuest"><button class="btn btn-success" @click="showDialog(item)">Reserve</button></md-table-cell>
+        <md-table-cell v-if="isHost && item.activityStatus === 'Active'"><button class="btn btn-warning" @click="deactivateApartment(item)">Deactivate</button></md-table-cell>
+        <md-table-cell v-if="isHost && item.activityStatus !== 'Active'"><button class="btn btn-warning" @click="activateApartment(item)">Activate</button></md-table-cell>
       </md-table-row>
     </md-table>
 
@@ -148,6 +148,18 @@ export default {
       http.get(`apartments/deleteApartment/${apartmentId}`).then(response => {
         if(response.data === true) {
           this.apartments.splice(objectInList, 1)
+
+          this.searched.forEach(apartment => {
+            if(apartment.id === apartmentId){
+              this.searched.splice(apartment, 1)
+            }
+          })
+
+          this.fallbackApartments.forEach(apartment => {
+            if(apartment.id === apartmentId){
+              this.fallbackApartments.splice(apartment, 1)
+            }
+          })
         }else {
           this.failedDelete = true
         }

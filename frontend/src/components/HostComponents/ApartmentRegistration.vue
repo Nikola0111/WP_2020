@@ -33,6 +33,10 @@
         <button class="btn btn-info" style="margin-top: 5px" @click="saveDateForRent">Save date</button>
       </div>
       <div class="field">
+        <label style="padding: 5px" >Upload pictures</label>
+        <input style="padding: 5px" type="file" ref="file" multiple="multiple">
+      </div>
+      <div class="field">
         <label>Price per night:</label>
         <input class="form-control" type="number" min="1" style="width: 340px" v-model="pricePerNight" />
       </div>
@@ -82,7 +86,7 @@
       <span>Please enter the dates when the apartment/room is available for rent</span>
       <md-button class="md-primary" @click="datesForRentCheck = false">Close</md-button>
     </md-snackbar>
-
+    <div id="imgTest"></div>
     <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="checkInOutTimeCheck" md-persistent>
       <span>Check in time must be after 14:00(2:00PM) and check out time must be after 10:00(10:00AM)</span>
       <md-button class="md-primary" @click="checkInOutTimeCheck = false">Close</md-button>
@@ -126,7 +130,7 @@ export default {
       searchCriteria: '',
       duration: 3000,
       position: 'center',
-
+      photos: [],
       saved: false,
       notSaved: false,
       apartmentTypeCheck: false,
@@ -202,6 +206,13 @@ export default {
         })
       }
     },
+    getBase64(vueInstance, files, callback) {
+      for (let i = 0; i < files.length; i++) {
+        const reader = new FileReader();
+        reader.addEventListener('load', () => callback(reader.result));
+        reader.readAsDataURL(files[i]);
+      }
+    },
     registerAmenity(){
       if(this.apartmentType === '') {
         this.apartmentTypeCheck = true
@@ -253,35 +264,48 @@ export default {
         chosenAmenities.push(amenity.item)
       })
 
-      http.post('apartments/registerApartment', JSON.stringify({
-        apartmentType: this.apartmentType,
-        numberOfRooms: this.numberOfRooms,
-        numberOfGuests: this.numberOfGuests,
-        location: {
-          address: {
-            street: street,
-            number: number,
-            city: this.city,
-            postalCode: '22330',
-            country: this.country
-          }
-        },
-        startDates: startDates,
-        endDates: endDates,
-        hostId: loggedUser.id,
-        photos: [],
-        pricePerNight: this.pricePerNight,
-        checkInTime: this.checkInTime,
-        checkOutTime: this.checkOutTime,
-        activityStatus: true,
-        amenities: chosenAmenities
-      })).then(response => {
-        if(response.data === true){
-          this.saved = true
-        }else {
-          this.notSaved = true
+      //PICTURES
+      let files = this.$refs.file.files;
+      let vueInstance = this;
+      this.getBase64(vueInstance, files, function (base64Data) {
+        let photoString = base64Data.toString();
+        vueInstance.photos.push(photoString);
+
+        if(files.length == vueInstance.photos.length){
+          http.post('apartments/registerApartment',{
+            apartmentType: vueInstance.apartmentType,
+            numberOfRooms: vueInstance.numberOfRooms,
+            numberOfGuests: vueInstance.numberOfGuests,
+            location: {
+              address: {
+                street: street,
+                number: number,
+                city: vueInstance.city,
+                postalCode: '22330',
+                country: vueInstance.country
+              }
+            },
+            startDates: startDates,
+            endDates: endDates,
+            hostId: loggedUser.id,
+            photos: vueInstance.photos,
+            pricePerNight: vueInstance.pricePerNight,
+            checkInTime: vueInstance.checkInTime,
+            checkOutTime: vueInstance.checkOutTime,
+            activityStatus: false,
+            amenities: chosenAmenities
+          }).then(response => {
+            if(response.data === true){
+              vueInstance.saved = true
+            }else {
+              vueInstance.notSaved = true
+            }
+          })
+
+          return;
         }
-      })
+      });
+
     }
   },
   mounted() {

@@ -1,16 +1,36 @@
 <template>
-  <div style="width: 80%; margin-top: 5%; margin-left: 10%;">
-    <md-table v-model="searched" md-sort="name" md-sort-order="asc" md-card md-fixed-header>
+  <div style="background-color: white !important;width: 90%; margin-top: 5%; margin-left: 5%;">
+    <div style="padding: 20px" class="row">
+      <div class="form-group col-sm-4">
+        <label for="exampleFormControlSelect1">User role</label>
+        <select v-model="selectedUserRole" class="form-control" id="exampleFormControlSelect1">
+          <option value="all">All</option>
+          <option value="administrator">Administrator</option>
+          <option value="host">Host</option>
+          <option value="guest">Guest</option>
+        </select>
+      </div>
+        <div class="form-group col-sm-4">
+          <label for="exampleFormControlSelect2">User gender</label>
+          <select v-model="selectedGender" class="form-control" id="exampleFormControlSelect2">
+            <option value="all">All</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+      <div class="form-group col-sm-4">
+          <button @click="filterUsers()" style="margin-top: 30px" class="btn btn-info">Filter</button>
+      </div>
+    </div>
+    <md-table v-model="searched" md-sort="name" md-sort-order="asc" class="md-card md-fixed-header" style="padding:20px ">
       <md-table-toolbar>
         <div class="md-toolbar-section-start">
           <h2 class="md-title">Users</h2>
         </div>
-
         <md-field md-clearable class="md-toolbar-section-end">
           <md-input placeholder="Search by name..." v-model="search" @input="searchOnTable" />
         </md-field>
       </md-table-toolbar>
-
       <md-table-empty-state
           md-label="No users found"
           :md-description="`No user found for this '${search}' query. Try a different search term.`">
@@ -57,27 +77,44 @@ export default {
     return {
       search: null,
       searched: [],
-      users: []
+      users: [],
+      selectedUserRole: 'all',
+      selectedGender: 'all'
     }
   },
   methods: {
-    newUser () {
-      window.alert('Noop')
-    },
-    searchOnTable () {
+    searchOnTable() {
       this.searched = searchByName(this.users, this.search)
+    },
+    filterUsers() {
+      if (this.selectedUserRole === 'all' && this.selectedGender === 'all') {
+        http.get('User/getUsers')
+            .then(response => {
+              this.users = response.data;
+              this.searched = this.users;
+            })
+      } else {
+        http.post('User/FilterUsers', JSON.stringify({
+          userRole: this.selectedUserRole,
+          userGender: this.selectedGender
+        }))
+            .then(response => {
+              this.users = response.data;
+              this.searched = this.users;
+            })
+      }
     }
-  },
-  created () {
-    this.searched = this.users
-  },
-  mounted() {
-    http.get('User/getUsers')
-    .then(response => {
-      this.users = response.data;
-      this.searched = this.users;
-    })
-  }
+    },
+    created() {
+      this.searched = this.users
+    },
+    mounted() {
+      http.get('User/getUsers')
+          .then(response => {
+            this.users = response.data;
+            this.searched = this.users;
+          })
+    }
 }
 </script>
 

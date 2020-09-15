@@ -1,7 +1,7 @@
 {
   "1" : {
     "id" : "1",
-    "apartmentType" : "ONE_ROOM",
+    "apartmentType" : "APARTMENT",
     "numberOfRooms" : 1,
     "numberOfGuests" : 1,
     "location" : {
@@ -30,7 +30,7 @@
     },
   "2" : {
     "id" : "2",
-    "apartmentType" : "TWO_ROOMS",
+    "apartmentType" : "APARTMENT",
     "numberOfRooms" : 2,
     "numberOfGuests" : 3,
     "location" : {

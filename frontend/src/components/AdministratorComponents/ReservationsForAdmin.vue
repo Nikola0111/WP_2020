@@ -1,13 +1,13 @@
 <template>
-  <div style="width: 80%; margin-top: 5%; margin-left: 10%;">
-    <md-table v-model="searched" md-sort="name" md-sort-order="asc" md-card md-fixed-header>
+  <div style="width: 90%; margin-top: 5%; margin-left: 5%;">
+    <md-table v-model="searched" md-sort="name" md-sort-order="asc" class="md-card md-fixed-header" style="padding: 20px">
       <md-table-toolbar>
         <div class="md-toolbar-section-start">
           <h2 class="md-title">Reservations</h2>
         </div>
 
-        <md-field md-clearable class="md-toolbar-section-end">
-          <md-input placeholder="Search by host username..." v-model="search1" @input="searchOnTable1" />
+        <md-field style="margin-right: 15px;" md-clearable class="md-toolbar-section-end">
+          <md-input  placeholder="Search by host username..." v-model="search1" @input="searchOnTable1" />
         </md-field>
         <md-field md-clearable class="md-toolbar-section-end">
           <md-input placeholder="Search by guest username..." v-model="search2" @input="searchOnTable2" />

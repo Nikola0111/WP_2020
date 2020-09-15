@@ -64,6 +64,10 @@ public class ReservationDAO implements Serializable{
 		return reservationsToSend;
 	}
 	
+	public Reservation findById(String id) {
+		return reservations.get(id);
+	}
+	
 	public List<Reservation> findReservationsByUsername(String username, UserDAO userDAO) {
 		List<Reservation> ret = new ArrayList<Reservation>();
 		

@@ -1,6 +1,6 @@
 <template>
-  <div style="width: 80%; margin-top: 5%; margin-left: 10%;">
-    <md-table v-model="searched" md-sort="name" md-sort-order="asc" md-card md-fixed-header>
+  <div style="width: 90%; margin-top: 5%; margin-left: 5%;">
+    <md-table v-model="searched" md-sort="name" md-sort-order="asc" class="md-card md-fixed-header" style="padding:20px ">
       <md-table-toolbar>
         <div class="md-toolbar-section-start">
           <h2 class="md-title">Reservations</h2>

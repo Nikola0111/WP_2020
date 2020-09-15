@@ -32,7 +32,7 @@ public class ApartmentForFrontDTO implements Serializable{
 	}
 
 	public void setApartmentType(String apartmentType) {
-		apartmentType = apartmentType;
+		this.apartmentType = apartmentType;
 	}
 
 	public Location getLocation() {

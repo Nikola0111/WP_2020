@@ -1,5 +1,9 @@
-/dto/
-/enumeration/
+/model/
 /services/
+<<<<<<< HEAD
+/dto/
+=======
 /dao/
 /model/
+>>>>>>> 967d249a6331b419c54c4d26b739cfab8ff77ed8
+/enumeration/

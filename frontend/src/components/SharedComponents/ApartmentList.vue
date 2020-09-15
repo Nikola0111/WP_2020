@@ -2,11 +2,27 @@
   <div style="width: 90%; margin-top: 5%; margin-left: 5%;">
     <md-table v-model="searched" md-sort="name" md-sort-order="asc" class="md-card md-fixed-header" style="padding:20px ">
       <md-table-toolbar>
-        <div class="md-toolbar-section-start">
+        <div v-if="!isHost" class="md-toolbar-section-start">
           <h2 class="md-title">Apartments</h2>
         </div>
 
-        <md-field md-clearable class="md-toolbar-section-end">
+        <div v-if="isHost && showInactiveBool" class="md-toolbar-section-start">
+          <h2 class="md-title">Active apartments</h2>
+        </div>
+
+        <div v-if="isHost && showActiveBool" class="md-toolbar-section-start">
+          <h2 class="md-title">Deactivated apartments</h2>
+        </div>
+
+        <md-button @click="showInactive" v-if="showInactiveBool && isHost">
+          Show inactive
+        </md-button>
+
+        <md-button @click="showActive" v-if="showActiveBool && isHost">
+          Show active
+        </md-button>
+
+        <md-field v-if="!isHost" md-clearable class="md-toolbar-section-end">
           <md-input placeholder="Search by host username" v-model="search" @input="searchOnTable" />
         </md-field>
       </md-table-toolbar>
@@ -21,9 +37,11 @@
         <md-table-cell md-label="Price per night" md-sort-by="pricePerNight">{{ item.pricePerNight }}</md-table-cell>
         <md-table-cell md-label="Apartment type" md-sort-by="apartmentType">{{ item.apartmentType }}</md-table-cell>
         <md-table-cell v-if="isAdmin || isHost" md-label="Activity status" md-sort-by="activityStatus">{{ item.activityStatus }}</md-table-cell>
-        <md-table-cell><button>Details</button></md-table-cell>
-        <md-table-cell v-if="isAdmin || isHost"><button @click="deleteApartment(item.id, item)">Delete</button></md-table-cell>
-        <md-table-cell v-if="isGuest"><button @click="showDialog(item)">Reserve</button></md-table-cell>
+        <md-table-cell><button class="btn btn-info">Details</button></md-table-cell>
+        <md-table-cell v-if="isAdmin || isHost"><button class="btn btn-danger" @click="deleteApartment(item.id, item)">Delete</button></md-table-cell>
+        <md-table-cell v-if="isGuest"><button class="btn btn-success" @click="showDialog(item, item.startDates, item.endDates)">Reserve</button></md-table-cell>
+        <md-table-cell v-if="isHost && item.activityStatus === 'Active'"><button class="btn btn-warning" @click="deactivateApartment(item)">Deactivate</button></md-table-cell>
+        <md-table-cell v-if="isHost && item.activityStatus !== 'Active'"><button class="btn btn-warning" @click="activateApartment(item)">Activate</button></md-table-cell>
       </md-table-row>
     </md-table>
 
@@ -37,7 +55,7 @@
       <div style="margin: 30px">
         <div>
           <label>Select starting date</label>
-          <date-picker color="blue" v-model="date" :attributes="attributes" :disabled-dates="occupiedDates"/>
+          <date-picker color="blue" v-model="date" :attributes="attributes" :available-dates="availableDates"/>
         </div>
         <div style="margin-top: 20px">
           <label>How many days will you stay?</label><br>
@@ -51,9 +69,11 @@
         <div style="margin-top: 20px">
           <label style="font-size: 20px">Your total is: <b>{{bill}}</b></label>
         </div>
-        <div style="margin-top: 30px; text-align: right">
+        <div style="margin-top: 30px; text-align: right;">
+          <button style="margin-right: 10px" class="btn btn-dark" @click="cancelReservationCreation">Cancel</button>
           <button class="btn btn-success" @click="registerReservation">Reserve</button>
         </div>
+
       </div>
     </modal>
   </div>
@@ -73,6 +93,7 @@ const searchByHostUsername = (items, term) => {
 
 import Vue from "vue"
 import {MdTable, MdCard, MdContent, MdField, MdEmptyState, MdRipple} from 'vue-material/dist/components'
+import VueMaterial from 'vue-material'
 import http from "@/http-common";
 import VModel from 'vue-js-modal'
 import DatePicker from 'v-calendar/lib/components/date-picker.umd'
@@ -85,6 +106,8 @@ Vue.use(MdContent)
 Vue.use(MdEmptyState)
 Vue.use(MdRipple)
 Vue.use(VModel)
+Vue.use(VueMaterial)
+import 'vue-material/dist/vue-material.css'
 Vue.use(VCalendar, {
   componentPrefix: 'vc'
 })
@@ -110,12 +133,26 @@ export default {
       additionalComment: "",
       apartmentReservations: [],
       occupiedDates: [],
-      attributes: []
+      attributes: [],
+      fallbackApartments: [],
+      availableDates: [],
+
+      showActiveBool: false,
+      showInactiveBool: true
     }
   },
   components: {
   },
   methods: {
+    cancelReservationCreation(){
+      this.$modal.hide('reservationDialog')
+      this.clearLists()
+    },
+    clearLists(){
+      this.attributes = []
+      this.occupiedDates = []
+      this.availableDates = []
+    },
     searchOnTable () {
       this.searched = searchByHostUsername(this.apartments, this.search)
     },
@@ -123,15 +160,30 @@ export default {
       http.get(`apartments/deleteApartment/${apartmentId}`).then(response => {
         if(response.data === true) {
           this.apartments.splice(objectInList, 1)
+
+          this.searched.forEach(apartment => {
+            if(apartment.id === apartmentId){
+              this.searched.splice(apartment, 1)
+            }
+          })
+
+          this.fallbackApartments.forEach(apartment => {
+            if(apartment.id === apartmentId){
+              this.fallbackApartments.splice(apartment, 1)
+            }
+          })
         }else {
           this.failedDelete = true
         }
       })
     },
-    showDialog(item){
+    showDialog(item, startDates, endDates){
+      console.log(item.id)
       http.get(`Reservation/getActiveReservationsByApartment/${item.id}`).then(response =>{
         this.selectedApartment = item
         this.apartmentReservations = response.data
+
+        console.log(this.attributes)
 
         this.apartmentReservations.forEach(reservation => {
           console.log(reservation.startingDate)
@@ -145,6 +197,10 @@ export default {
           highlight: true,
           dates: this.occupiedDates
         })
+
+        for(let i = 0; i  < startDates.length; i++){
+          this.availableDates.push({start: startDates[i], end: endDates[i]})
+        }
 
         console.log(this.attributes)
 
@@ -160,6 +216,28 @@ export default {
       this.occupiedDates = []
       this.attributes = []
       this.$modal.hide('reservationDialog')
+    },
+    showActive(){
+      console.log('showing active')
+      this.showActiveBool = false
+      this.showInactiveBool = true
+      this.searched = []
+      this.fallbackApartments.forEach(apartment => {
+        if(apartment.activityStatus === 'Active') {
+          this.searched.push(apartment)
+        }
+      })
+    },
+    showInactive(){
+      console.log('showing inactive')
+      this.showActiveBool = true
+      this.showInactiveBool = false
+      this.searched = []
+      this.fallbackApartments.forEach(apartment => {
+        if(apartment.activityStatus !== 'Active') {
+          this.searched.push(apartment)
+        }
+      })
     },
     date_function: function () {
 
@@ -190,7 +268,52 @@ export default {
         deleted: false
       })).then(response => {
         console.log(response.data)
+        this.datesForRent = []
+        this.attributes = []
+        this.clearLists()
         this.hideDialog()
+      })
+    },
+    activateApartment(item) {
+      http.get(`apartments/activateApartment/${item.id}`).then(response => {
+        if(response.data) {
+          this.searched.splice(item, 1)
+
+          this.apartments.forEach(apartment => {
+            if(item.id === apartment.id){
+              apartment.activityStatus = 'Active'
+            }
+          })
+
+          this.fallbackApartments.forEach(apartment => {
+            if(item.id === apartment.id){
+              apartment.activityStatus = 'Active'
+            }
+          })
+
+          item.activityStatus = 'Active'
+        }
+      })
+    },
+    deactivateApartment(item) {
+      http.get(`apartments/deactivateApartment/${item.id}`).then(response => {
+        if(response.data) {
+          this.searched.splice(item, 1)
+
+          this.apartments.forEach(apartment => {
+            if(item.id === apartment.id){
+              apartment.activityStatus = 'Not active'
+            }
+          })
+
+          this.fallbackApartments.forEach(apartment => {
+            if(item.id === apartment.id){
+              apartment.activityStatus = 'Not active'
+            }
+          })
+
+          item.activityStatus = 'Not active'
+        }
       })
     }
   },
@@ -218,7 +341,8 @@ export default {
             .then(response => {
               this.apartments = response.data;
               this.searched = this.apartments;
-              console.log(response.data)
+              this.fallbackApartments = this.apartments
+              this.showActive()
             })
       } else if(role === "ADMINISTRATOR"){
         http.get('apartments/Apartments')

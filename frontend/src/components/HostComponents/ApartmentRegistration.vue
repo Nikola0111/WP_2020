@@ -48,8 +48,8 @@
         <div style="padding-top: 10px">
           <label style="padding-top: 15px">Select amenities(hover amenities for amenity details)</label><br>
           <input @change="filterAmenities" placeholder="Search amenities" type="text" v-model="searchCriteria"/><br><br>
-          <div v-for="(item, index) in amenities" style="display: inline; margin-right: 10px" v-bind:key="item.item.id">
-            <input :checked="item.checked" @change="editAmenities(item, index)" type="checkbox" />
+          <div v-for="item in amenities" style="display: inline; margin-right: 10px" v-bind:key="item.item.id">
+            <input :checked="item.checked" @change="editAmenities(item)" type="checkbox" />
             <label v-tooltip="'This is a tooltip ffs show up'" style="margin-left: 3px" class="amenity-caption">{{item.item.caption}}</label>
           </div>
         </div>
@@ -145,8 +145,13 @@ export default {
       this.datesForRent.push(value)
       this.dateRange = ""
     },
-    editAmenities(item, index){
-      this.tempAmenities[index].checked = !this.tempAmenities[index].checked
+    editAmenities(item){
+      this.tempAmenities.forEach(amenity => {
+        if(amenity.item.id === item.item.id){
+          amenity.checked = !amenity.checked
+        }
+      })
+
       if(this.checkedAmenities.length === 0) {
         this.checkedAmenities.push({checked: true, item: item.item})
 
@@ -158,7 +163,7 @@ export default {
       var temp = {}
 
       console.log(item.item)
-      this.checkedAmenities.forEach(checkedAmenity =>{
+      this.checkedAmenities.forEach(checkedAmenity => {
         console.log('Comparing: ' + checkedAmenity.item.id + ':' + item.item.id)
         if(checkedAmenity.item.id === item.item.id){
           console.log('Indices match!')
@@ -169,7 +174,12 @@ export default {
 
       console.log(temp)
       if(exists){
-        this.checkedAmenities.splice(temp, 1)
+        this.checkedAmenities = []
+        this.tempAmenities.forEach(amenity => {
+          if(amenity.checked) {
+            this.checkedAmenities.push(amenity)
+          }
+        })
       }else {
         this.checkedAmenities.push({checked: true, item: item.item})
       }

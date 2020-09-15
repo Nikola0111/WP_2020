@@ -1,8 +1,11 @@
 package dto;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
 
 import model.Location;
+import model.OccupationDate;
 
 @SuppressWarnings("serial")
 public class ApartmentForFrontDTO implements Serializable{
@@ -14,7 +17,9 @@ public class ApartmentForFrontDTO implements Serializable{
 	private String hostUserName;
 	private float pricePerNight;
 	private String activityStatus;
-	
+	private ArrayList<Date> startDates;
+	private ArrayList<Date> endDates;
+
 	public ApartmentForFrontDTO() {
 		
 	}
@@ -65,6 +70,23 @@ public class ApartmentForFrontDTO implements Serializable{
 
 	public void setActivityStatus(String activityStatus) {
 		this.activityStatus = activityStatus;
+	}
+
+
+	public ArrayList<Date> getStartDates() {
+		return startDates;
+	}
+
+	public void setStartDates(ArrayList<Date> startDates) {
+		this.startDates = startDates;
+	}
+
+	public ArrayList<Date> getEndDates() {
+		return endDates;
+	}
+
+	public void setEndDates(ArrayList<Date> endDates) {
+		this.endDates = endDates;
 	}
 
 	@Override

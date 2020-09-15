@@ -39,7 +39,7 @@
         <md-table-cell v-if="isAdmin || isHost" md-label="Activity status" md-sort-by="activityStatus">{{ item.activityStatus }}</md-table-cell>
         <md-table-cell><button class="btn btn-info">Details</button></md-table-cell>
         <md-table-cell v-if="isAdmin || isHost"><button class="btn btn-danger" @click="deleteApartment(item.id, item)">Delete</button></md-table-cell>
-        <md-table-cell v-if="isGuest"><button class="btn btn-success" @click="showDialog(item)">Reserve</button></md-table-cell>
+        <md-table-cell v-if="isGuest"><button class="btn btn-success" @click="showDialog(item, item.startDates, item.endDates)">Reserve</button></md-table-cell>
         <md-table-cell v-if="isHost && item.activityStatus === 'Active'"><button class="btn btn-warning" @click="deactivateApartment(item)">Deactivate</button></md-table-cell>
         <md-table-cell v-if="isHost && item.activityStatus !== 'Active'"><button class="btn btn-warning" @click="activateApartment(item)">Activate</button></md-table-cell>
       </md-table-row>
@@ -55,7 +55,7 @@
       <div style="margin: 30px">
         <div>
           <label>Select starting date</label>
-          <date-picker color="blue" v-model="date" :attributes="attributes" :disabled-dates="occupiedDates"/>
+          <date-picker color="blue" v-model="date" :attributes="attributes" :available-dates="availableDates"/>
         </div>
         <div style="margin-top: 20px">
           <label>How many days will you stay?</label><br>
@@ -69,9 +69,11 @@
         <div style="margin-top: 20px">
           <label style="font-size: 20px">Your total is: <b>{{bill}}</b></label>
         </div>
-        <div style="margin-top: 30px; text-align: right">
+        <div style="margin-top: 30px; text-align: right;">
+          <button style="margin-right: 10px" class="btn btn-dark" @click="cancelReservationCreation">Cancel</button>
           <button class="btn btn-success" @click="registerReservation">Reserve</button>
         </div>
+
       </div>
     </modal>
   </div>
@@ -133,6 +135,7 @@ export default {
       occupiedDates: [],
       attributes: [],
       fallbackApartments: [],
+      availableDates: [],
 
       showActiveBool: false,
       showInactiveBool: true
@@ -141,6 +144,15 @@ export default {
   components: {
   },
   methods: {
+    cancelReservationCreation(){
+      this.$modal.hide('reservationDialog')
+      this.clearLists()
+    },
+    clearLists(){
+      this.attributes = []
+      this.occupiedDates = []
+      this.availableDates = []
+    },
     searchOnTable () {
       this.searched = searchByHostUsername(this.apartments, this.search)
     },
@@ -165,10 +177,13 @@ export default {
         }
       })
     },
-    showDialog(item){
+    showDialog(item, startDates, endDates){
+      console.log(item.id)
       http.get(`Reservation/getActiveReservationsByApartment/${item.id}`).then(response =>{
         this.selectedApartment = item
         this.apartmentReservations = response.data
+
+        console.log(this.attributes)
 
         this.apartmentReservations.forEach(reservation => {
           console.log(reservation.startingDate)
@@ -182,6 +197,10 @@ export default {
           highlight: true,
           dates: this.occupiedDates
         })
+
+        for(let i = 0; i  < startDates.length; i++){
+          this.availableDates.push({start: startDates[i], end: endDates[i]})
+        }
 
         console.log(this.attributes)
 
@@ -249,6 +268,9 @@ export default {
         deleted: false
       })).then(response => {
         console.log(response.data)
+        this.datesForRent = []
+        this.attributes = []
+        this.clearLists()
         this.hideDialog()
       })
     },

@@ -15,7 +15,8 @@
     		"country" : "Serbia"
     	}
     	},
-    "datesForRent" : [],
+    "startDates" : [],
+    "endDates" : [],
     "hostId" : "3",
     "commentIds" : [],
     "photos" : [],
@@ -44,7 +45,8 @@
     		"country" : "Serbia"
     	}
     	},
-    "datesForRent" : [],
+    "startDates" : [],
+    "endDates" : [],
     "hostId" : "4",
     "commentIds" : [],
     "photos" : [],

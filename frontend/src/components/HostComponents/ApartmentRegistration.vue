@@ -239,13 +239,13 @@ export default {
       let loggedUser = JSON.parse(localStorage.getItem("loggedUser"))
 
       console.log(this.datesForRent)
-      let listOfDates = []
-      this.datesForRent.forEach(item =>{
-        listOfDates.push(item.start)
-        listOfDates.push(item.end)
-      })
 
-      console.log(this.datesForRent)
+      let startDates = []
+      let endDates = []
+      this.datesForRent.forEach(item =>{
+        startDates.push(item.start)
+        endDates.push(item.end)
+      })
 
       let chosenAmenities = []
 
@@ -266,7 +266,8 @@ export default {
             country: this.country
           }
         },
-        datesForRent: listOfDates,
+        startDates: startDates,
+        endDates: endDates,
         hostId: loggedUser.id,
         photos: [],
         pricePerNight: this.pricePerNight,

@@ -79,6 +79,7 @@
 </template>
 
 <script>
+import 'jquery/dist/jquery.js'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import 'bootstrap/dist/css/bootstrap.css'
 import Vue from 'vue'
@@ -98,7 +99,11 @@ import ApartmentRegistration from "@/components/HostComponents/ApartmentRegistra
 import ReservationsFromGuests from "@/components/HostComponents/ReservationsFromGuests";
 import ReservationsByGuest from "@/components/GuestComponents/ReservationsByGuest";
 import UsersThatMadeReservations from "@/components/HostComponents/UsersThatMadeReservations";
+<<<<<<< HEAD
 import CommentList from "@/components/SharedComponents/CommentList";
+=======
+import ApartmentDetails from "@/components/SharedComponents/ApartmentDetails";
+>>>>>>> cb3196c1555ca08436b5089d27b3ac6e42bc5d7c
 
 Vue.use(VueRouter)
 const routes = [
@@ -116,7 +121,8 @@ const routes = [
   {path: '/reservationsFromGuests', component: ReservationsFromGuests},
   {path: '/myReservations', component: ReservationsByGuest},
   {path: '/guests', component: UsersThatMadeReservations},
-  {path: '/commentList', component: CommentList}
+  {path: '/commentList', component: CommentList},
+  {path: '/apartmentDetails/:id', component: ApartmentDetails}
 ]
 
 const router = new VueRouter({

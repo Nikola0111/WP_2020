@@ -72,11 +72,10 @@ public class ApartmentService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public boolean registerApartment(@Context HttpServletRequest request, ApartmentDTO apartmentDTO) {
-		try {
 			ApartmentDAO apartments = getApartments();
 	
 			Apartment apartment = new Apartment(ApartmentType.APARTMENT, apartmentDTO.getNumberOfRooms(), apartmentDTO.getNumberOfGuests(),
-					apartmentDTO.getLocation(), apartmentDTO.getDatesForRent(), apartmentDTO.getPhotos(), apartmentDTO.getPricePerNight(),
+					apartmentDTO.getLocation(), apartmentDTO.getStartDates(), apartmentDTO.getEndDates(), apartmentDTO.getPhotos(), apartmentDTO.getPricePerNight(),
 					apartmentDTO.getCheckInTime(), apartmentDTO.getCheckOutTime());
 			
 			System.out.println(apartmentDTO);
@@ -97,9 +96,7 @@ public class ApartmentService {
 			apartments.getApartments().put(apartment.getId(), apartment);
 			saveApartments(apartments);
 			return true;
-		} catch(Exception e) {
-			return false;
-		}
+		
 	}
 	
 	@POST
@@ -214,6 +211,8 @@ public class ApartmentService {
 			ApartmentForFrontDTO dto = convertApartmentToDTO(apartment, host);
 			activeApartments.add(dto);
 		}
+		System.out.println(activeApartments);
+		
 		return activeApartments;	
 	}
 	
@@ -254,6 +253,48 @@ public class ApartmentService {
 	}
 	
 	@GET
+	@Path("activateApartment/{apartmentId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public boolean activateApartment(@PathParam("apartmentId") String apartmentId, @Context HttpServletRequest request) {
+		
+		try {
+		ApartmentDAO apartmentDAO = getApartments();
+		Apartment apartment = apartmentDAO.find(apartmentId);
+		
+		if(apartment != null) {
+			apartment.setActivityStatus(true);
+			saveApartments(apartmentDAO);
+			return true;
+		}
+			return false;
+		} catch(Exception e) {
+			return false;
+		}
+	}
+	
+	@GET
+	@Path("deactivateApartment/{apartmentId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public boolean deactivateApartment(@PathParam("apartmentId") String apartmentId, @Context HttpServletRequest request) {
+		
+		try {
+		ApartmentDAO apartmentDAO = getApartments();
+		Apartment apartment = apartmentDAO.find(apartmentId);
+		
+		if(apartment != null) {
+			apartment.setActivityStatus(false);
+			saveApartments(apartmentDAO);
+			return true;
+		}
+			return false;
+		} catch(Exception e) {
+			return false;
+		}
+	}
+	
+	@GET
 	@Path("deleteApartment/{apartmentID}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -279,6 +320,9 @@ public class ApartmentService {
 		dto.setLocation(apartment.getLocation());
 		dto.setHostUserName(host.getUserName());
 		dto.setPricePerNight(apartment.getPricePerNight());
+		dto.setStartDates(apartment.getStartDates());
+		dto.setEndDates(apartment.getEndDates());
+		
 		if (apartment.isActivityStatus()) {
 			dto.setActivityStatus("Active");
 		} else {

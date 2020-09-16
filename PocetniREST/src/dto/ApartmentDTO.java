@@ -7,7 +7,6 @@ import java.util.Date;
 import enumeration.ApartmentType;
 import model.Amenity;
 import model.Location;
-import model.OccupationDate;
 import model.Reservation;
 
 @SuppressWarnings("serial")

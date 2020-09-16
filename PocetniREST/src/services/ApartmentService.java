@@ -16,6 +16,7 @@ import dao.UserDAO;
 import dto.ApartmentForFrontDTO;
 import enumeration.ApartmentType;
 import dto.ApartmentDTO;
+import dto.ApartmentDetailsDTO;
 import dto.FilterApartmentDTO;
 import dto.SearchApartmentDTO;
 import enumeration.UserRole;
@@ -220,14 +221,15 @@ public class ApartmentService {
 	@Path("apartmentDetails/{apartmentId}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public ApartmentForFrontDTO getApartmentDetails(@PathParam("apartmentId") String apartmentId, @Context HttpServletRequest request) {
+	public ApartmentDetailsDTO getApartmentDetails(@PathParam("apartmentId") String apartmentId, @Context HttpServletRequest request) {
 		
 		ApartmentDAO apartments = getApartments();
 		UserDAO users = getUsers();
 		Apartment apartment = apartments.find(apartmentId);
 		User host = users.findById(apartment.getHostId());
 		
-		ApartmentForFrontDTO dto = convertApartmentToDTO(apartment, host);
+		ApartmentDetailsDTO dto = convertToApartmentDetails(apartment, host);
+		System.out.println("Apartmant: " + dto.toString());
 		return dto;
 	}
 	
@@ -329,6 +331,33 @@ public class ApartmentService {
 			dto.setActivityStatus("Not active");
 		}
 		System.out.println("TIP JE: " + dto.getApartmentType());
+		return dto;
+	}
+	
+	public ApartmentDetailsDTO convertToApartmentDetails(Apartment apartment, User host) {
+		ApartmentDetailsDTO dto = new ApartmentDetailsDTO();
+		
+		dto.setId(apartment.getId());
+		if (apartment.getApartmentType().equals(ApartmentType.APARTMENT)) {
+			dto.setApartmentType("Apartment");
+		} else {
+			dto.setApartmentType("Room");
+		}
+		dto.setNumberOfRooms(apartment.getNumberOfRooms());
+		dto.setNumberOfGuests(apartment.getNumberOfGuests());
+		dto.setLocation(apartment.getLocation());
+		dto.setStartDates(apartment.getStartDates());
+		dto.setEndDates(apartment.getEndDates());
+		dto.setUserName(host.getUserName());
+		dto.setPhotos(apartment.getPhotos());
+		dto.setPricePerNight(apartment.getPricePerNight());
+		dto.setCheckInTime(apartment.getCheckInTime());
+		dto.setCheckOutTime(apartment.getCheckOutTime());
+		if (apartment.isActivityStatus()) {
+			dto.setActivityStatus("Active");
+		} else {
+			dto.setActivityStatus("Not active");
+		}
 		return dto;
 	}
 	

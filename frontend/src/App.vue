@@ -96,6 +96,7 @@ import ApartmentRegistration from "@/components/HostComponents/ApartmentRegistra
 import ReservationsFromGuests from "@/components/HostComponents/ReservationsFromGuests";
 import ReservationsByGuest from "@/components/GuestComponents/ReservationsByGuest";
 import UsersThatMadeReservations from "@/components/HostComponents/UsersThatMadeReservations";
+import ApartmentDetails from "@/components/SharedComponents/ApartmentDetails";
 
 Vue.use(VueRouter)
 const routes = [
@@ -112,7 +113,8 @@ const routes = [
   {path: '/apartmentRegistration', component: ApartmentRegistration},
   {path: '/reservationsFromGuests', component: ReservationsFromGuests},
   {path: '/myReservations', component: ReservationsByGuest},
-  {path: '/guests', component: UsersThatMadeReservations}
+  {path: '/guests', component: UsersThatMadeReservations},
+  {path: '/apartmentDetails/:id', component: ApartmentDetails}
 ]
 
 const router = new VueRouter({

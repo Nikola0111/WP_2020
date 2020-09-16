@@ -218,6 +218,21 @@ public class ApartmentService {
 	}
 	
 	@GET
+	@Path("apartmentDetails/{apartmentId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ApartmentForFrontDTO getApartmentDetails(@PathParam("apartmentId") String apartmentId, @Context HttpServletRequest request) {
+		
+		ApartmentDAO apartments = getApartments();
+		UserDAO users = getUsers();
+		Apartment apartment = apartments.find(apartmentId);
+		User host = users.findById(apartment.getHostId());
+		
+		ApartmentForFrontDTO dto = convertApartmentToDTO(apartment, host);
+		return dto;
+	}
+	
+	@GET
 	@Path("HostInactiveApartments/{hostId}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)

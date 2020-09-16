@@ -10,6 +10,7 @@ public class CommentForOneApartmentDTO implements Serializable{
 	private String content;
 	private String guestUserName;
 	private double rating;
+	private boolean showed;
 	
 	public CommentForOneApartmentDTO() {
 		
@@ -53,6 +54,14 @@ public class CommentForOneApartmentDTO implements Serializable{
 
 	public void setRating(double rating) {
 		this.rating = rating;
+	}
+
+	public boolean isShowed() {
+		return showed;
+	}
+
+	public void setShowed(boolean showed) {
+		this.showed = showed;
 	}
 	
 	

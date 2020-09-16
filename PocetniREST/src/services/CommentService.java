@@ -102,21 +102,20 @@ public class CommentService {
 	//jednak id-ju rezervacije kojoj pripada komentar
 	
 	@GET
-	@Path("getHostsApartmentsComments")
+	@Path("getHostsApartmentsComments/{hostId}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Comment> getHostsApartmentsComments(@Context HttpServletRequest request) {
+	public List<CommentForOneApartmentDTO> getHostsApartmentsComments(@PathParam("hostId") String hostId, @Context HttpServletRequest request) {
 		List<Comment> hostsComments = new ArrayList<Comment>();
 		ApartmentDAO apartments = getApartments();
 		CommentDAO comments = getComments();
-		User loggedUser = (User) request.getSession().getAttribute("loggedUser");
-		
+		UserDAO users = getUsers();
 		System.out.println("Number of apartments:" + apartments.getApartments().size());
 		
 		List<Apartment> hostsApartments = new ArrayList<Apartment>();
 		for(Map.Entry<String, Apartment> temp : apartments.getApartments().entrySet()) {
-			System.out.println("Porede se: " + temp.getValue().getHostId() + " i 1");
-			if(temp.getValue().getHostId().equals("1")) {
+			System.out.println("Porede se: " + temp.getValue().getHostId() + "i " + hostId);
+			if(temp.getValue().getHostId().equals(hostId)) {
 				
 				hostsApartments.add(temp.getValue());
 			}
@@ -127,22 +126,38 @@ public class CommentService {
 		for(Apartment temp: hostsApartments) {
 			for(Map.Entry<String, Comment> entry : comments.getComments().entrySet()) {
 				System.out.println("Porede se: " + entry.getValue().getApartmentId() + " i " + temp.getId());
-				if(temp.getId().equals(entry.getValue().getApartmentId())) {
+				if(temp.getId().equals(entry.getValue().getApartmentId()) && !entry.getValue().isDeleted()) {
 					hostsComments.add(entry.getValue());
 				}
 			}
 		}
 		
+		List<CommentForOneApartmentDTO> ret = new ArrayList<CommentForOneApartmentDTO>();
+		for(Comment comment : hostsComments) {
+			CommentForOneApartmentDTO temp = new CommentForOneApartmentDTO();
+			temp.setId(comment.getId());
+			temp.setCaption(comment.getCaption());
+			temp.setContent(comment.getContent());
+			temp.setRating(comment.getRating());
+			temp.setShowed(comment.isShowed());
+			
+			User commentUser = users.findById(comment.getUserID());
+			
+			temp.setGuestUserName(commentUser.getUserName());
+			
+			ret.add(temp);
+		}
+		
 		System.out.println("Number of comments:" + hostsComments.size());
 		
-		return hostsComments;
+		return ret;
     }  
 	
 	@GET
 	@Path("getComments")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Comment> getAllComments(@Context HttpServletRequest request){
+	public List<CommentForOneApartmentDTO> getAllComments(@Context HttpServletRequest request){
 		CommentDAO commentDAO = getComments();
 		List<Comment> comments = new ArrayList<Comment>();
 		
@@ -150,7 +165,67 @@ public class CommentService {
 			comments.add(temp.getValue());
 		}
 		
-		return comments;
+		UserDAO users = getUsers();
+		
+		List<CommentForOneApartmentDTO> ret = new ArrayList<CommentForOneApartmentDTO>();
+		for(Comment comment : comments) {
+			CommentForOneApartmentDTO temp = new CommentForOneApartmentDTO();
+			temp.setId(comment.getId());
+			temp.setCaption(comment.getCaption());
+			temp.setContent(comment.getContent());
+			temp.setRating(comment.getRating());
+			temp.setShowed(comment.isShowed());
+			
+			User commentUser = users.findById(comment.getUserID());
+			
+			temp.setGuestUserName(commentUser.getUserName());
+			
+			ret.add(temp);
+		}
+		
+		return ret;
+	}
+	
+	@GET
+	@Path("enableComment/{commentId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public boolean enableComment(@PathParam("commentId") String commentId, @Context HttpServletRequest request) {
+		
+		try {
+		CommentDAO commentDAO = getComments();
+		Comment comment = commentDAO.find(commentId);
+		
+		if(comment != null) {
+			comment.setShowed(true);
+			saveComments(commentDAO);
+			return true;
+		}
+			return false;
+		} catch(Exception e) {
+			return false;
+		}
+	}
+	
+	@GET
+	@Path("disableComment/{commentId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public boolean disableComments(@PathParam("commentId") String commentId, @Context HttpServletRequest request) {
+		
+		try {
+		CommentDAO commentDAO = getComments();
+		Comment comment = commentDAO.find(commentId);
+		
+		if(comment != null) {
+			comment.setShowed(false);
+			saveComments(commentDAO);
+			return true;
+		}
+			return false;
+		} catch(Exception e) {
+			return false;
+		}
 	}
 	
 	@GET

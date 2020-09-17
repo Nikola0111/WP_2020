@@ -59,7 +59,6 @@
       </div>
     </div>
     <div>
-      <button v-if="!changingDetails" @click="changeDetails" class="btn btn-info">Change details</button>
       <button v-if="changingDetails" @click="saveDetails(apartmentDetails)" style="width: 76px" class="btn btn-success">Save  </button><br><br>
       <button v-if="changingDetails" @click="changingDetails = false" class="btn btn-secondary">Cancel</button>
     </div>
@@ -133,8 +132,6 @@
     </div>
     <div>
       <button v-if="!changingDetails" @click="changeDetails" class="btn btn-info">Change details</button>
-      <button v-if="changingDetails" @click="saveDetails(apartmentDetails)" style="width: 76px" class="btn btn-success">Save  </button><br><br>
-      <button v-if="changingDetails" @click="changingDetails = false" class="btn btn-secondary">Cancel</button>
     </div>
   </div>
 

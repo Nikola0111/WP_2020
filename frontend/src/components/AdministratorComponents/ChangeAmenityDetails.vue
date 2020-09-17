@@ -23,6 +23,10 @@
       <span>Amenity successfully changed.</span>
       <md-button class="md-primary" @click="showSnackbar = false">Retry</md-button>
     </md-snackbar>
+    <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="showSnackbar1" md-persistent>
+      <span>All fields are required.</span>
+      <md-button class="md-primary" @click="showSnackbar1 = false">Retry</md-button>
+    </md-snackbar>
   </div>
 </template>
 
@@ -39,12 +43,18 @@ name: "ChangeAmenityDetails",
       description: null,
       type: null,
       showSnackbar: false,
+      showSnackbar1: false,
       position: 'center',
       duration: 3000
     }
   },
   methods: {
     changeDetails() {
+      if (this.caption === "" || this.description === "" || this.type === "") {
+        this.showSnackbar1 = true;
+        return;
+      }
+
       http
       .put('Amenity/changeAmenity', JSON.stringify({
         id: this.amenity.id,

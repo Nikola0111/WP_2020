@@ -78,6 +78,13 @@ export default {
         .then(response => {
           if(response.data) {
             this.showSnackbar3 = true;
+
+            let changeUser = JSON.parse(localStorage.getItem("loggedUser"))
+            changeUser.userName = this.newUserName;
+            changeUser.name = this.name;
+            changeUser.surname = this.surname;
+            localStorage.setItem("loggedUser", JSON.stringify(changeUser));
+
           } else {
             this.showSnackbar2 = true;
           }

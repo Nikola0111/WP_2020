@@ -93,17 +93,21 @@ public class UserService {
 	public boolean changeUser(ChangeUserDTO userDTO, @Context HttpServletRequest request) {
 		
 		UserDAO users = getUsers();
-		User currentUser = users.findByUsernameAndPassword(userDTO.getPreviousUserName(), userDTO.getPassword());
-		if (currentUser != null) {
-			if (users.findByUsername(userDTO.getNewUserName()) != null) {
-				return false;
-			} else {
+		
+		User currentUser = users.findByUsername(userDTO.getPreviousUserName());
+		
+		User checkForNewUserName = users.findByUsername(userDTO.getNewUserName());
+		
+		if (checkForNewUserName == null) {
+			
 			currentUser.setName(userDTO.getName());
-			currentUser.setUserName(userDTO.getNewUserName());
+			if (!userDTO.getPreviousUserName().equals(userDTO.getNewUserName())) {
+				currentUser.setUserName(userDTO.getNewUserName());
+			}
 			currentUser.setSurname(userDTO.getSurname());
 			saveUsers(users);
+			
 			return true;
-			}
 		} else {
 			return false;
 		}

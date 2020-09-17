@@ -69,8 +69,8 @@
       </div>
     </nav>
     <!-- Masthead-->
-    <header class="masthead">
-      <div class="container h-100">
+    <header style=" overflow-y: scroll !important;" class="masthead" >
+      <div class="container h-100" >
         <router-view></router-view>
       </div>
     </header>

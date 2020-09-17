@@ -58,7 +58,6 @@ public class LoginService {
 	
 	
 	@POST
-	@Path("")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public User login(User user, @Context HttpServletRequest request) {

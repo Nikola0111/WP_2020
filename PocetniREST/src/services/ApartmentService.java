@@ -18,6 +18,7 @@ import dto.CommentForOneApartmentDTO;
 import enumeration.ApartmentType;
 import dto.ApartmentDTO;
 import dto.ApartmentDetailsDTO;
+import dto.ApartmentFilterDTO;
 import dto.FilterApartmentDTO;
 import dto.SearchApartmentDTO;
 import enumeration.UserRole;
@@ -155,27 +156,6 @@ public class ApartmentService {
 		return apartmentDAO.findBySearchApartmentDTOFields(apartmentDTO);
 	}
 	
-	@POST
-	@Path("filterApartments")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<Apartment> filterApartments(@Context HttpServletRequest request, FilterApartmentDTO apartmentDTO) {
-		ApartmentDAO apartmentDAO = getApartments();
-		//Koristnik filtrira apartmane samo po tipu i sadrzaju, jer im se uvek prikazuju samo aktivni apartmani, a admin moze i po statusu, mozda i host?
-		List<Apartment> ret =  apartmentDAO.findByFilterApartmentDTOFields(apartmentDTO);
-		User loggedUser = (User) request.getSession().getAttribute("loggedUser");
-		
-		if(loggedUser.getUserRole() != UserRole.GUEST) {
-			for(Apartment temp : ret) {
-				if(temp.isActivityStatus() != apartmentDTO.isActivityStatus()) {
-					ret.remove(temp);
-				}
-			}
-		}
-		
-		return ret;
-	}
-	
 	@GET
 	@Path("ActiveApartments")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -215,6 +195,122 @@ public class ApartmentService {
 			apartmentsToSend.add(convertApartmentToDTO(apartment, host));
 		}
 		
+		return apartmentsToSend;
+	}
+	
+	@POST
+	@Path("filterApartments")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<ApartmentForFrontDTO> getFilteredApartments(@Context HttpServletRequest request, ApartmentFilterDTO dto) {
+		ApartmentDAO apartments = getApartments();
+		UserDAO users = getUsers();
+		
+		ArrayList<Apartment> allApartments = new ArrayList<Apartment>(apartments.findAll());
+		ArrayList<Apartment> filtered = new ArrayList<Apartment>();
+		ArrayList<ApartmentForFrontDTO> apartmentsToSend = new ArrayList<ApartmentForFrontDTO>();
+		
+		filtered = filterType(allApartments, dto.getType());
+		filtered = filterRooms(filtered, dto.getRooms());
+		filtered = filterGuests(filtered, dto.getGuests());
+		filtered = filterPrice(filtered, dto.getPriceFrom(), dto.getPriceTo());
+		
+		for (Apartment apartment : filtered) {
+			User host = users.findById(apartment.getHostId());
+			apartmentsToSend.add(convertApartmentToDTO(apartment, host));
+		}
+		
+		return apartmentsToSend;
+	}
+	
+	
+	public ArrayList<Apartment> filterType(ArrayList<Apartment> apartments, String type) {
+		
+		if(type.equals("all")) {
+			return apartments;
+		}
+		ArrayList<Apartment> apartmentsToSend = new ArrayList<Apartment>();
+		if (type.equals("apartment")) {
+			for (Apartment apartment: apartments) {
+				if (apartment.getApartmentType().equals(ApartmentType.APARTMENT)) {
+					apartmentsToSend.add(apartment);
+				}
+			}
+			return apartmentsToSend;
+		} else {
+			for (Apartment apartment: apartments) {
+				if (apartment.getApartmentType().equals(ApartmentType.ROOM)) {
+					apartmentsToSend.add(apartment);
+				}
+			}
+			return apartmentsToSend;
+		}
+	
+	}
+	
+	public ArrayList<Apartment> filterRooms(ArrayList<Apartment> apartments, String rooms) {
+		
+		if (rooms.equals("all")) {
+			return apartments;
+		}
+		ArrayList<Apartment> apartmentsToSend = new ArrayList<Apartment>();
+		
+		int numberRooms = Integer.parseInt(rooms);
+		if (numberRooms < 5) {
+			for (Apartment apartment : apartments) {
+				if (apartment.getNumberOfRooms() == numberRooms) {
+					apartmentsToSend.add(apartment);
+				}
+			}
+			return apartmentsToSend;
+		} else {
+			for (Apartment apartment : apartments) {
+				if (apartment.getNumberOfRooms() >= numberRooms) {
+					apartmentsToSend.add(apartment);
+				}
+			}
+			return apartmentsToSend;
+		}
+	}
+	
+	public ArrayList<Apartment> filterGuests(ArrayList<Apartment> apartments, String guests) {
+		
+		if (guests.equals("all")) {
+			return apartments;
+		}
+		ArrayList<Apartment> apartmentsToSend = new ArrayList<Apartment>();
+		
+		int numberGuests = Integer.parseInt(guests);
+		if (numberGuests < 5) {
+			for (Apartment apartment : apartments) {
+				if (apartment.getNumberOfGuests() == numberGuests) {
+					apartmentsToSend.add(apartment);
+				}
+			}
+			return apartmentsToSend;
+		} else {
+			for (Apartment apartment : apartments) {
+				if (apartment.getNumberOfGuests() >= numberGuests) {
+					apartmentsToSend.add(apartment);
+				}
+			}
+			return apartmentsToSend;
+		}
+	}
+
+	public ArrayList<Apartment> filterPrice(ArrayList<Apartment> apartments, int priceFrom, int priceTo) {
+		
+		ArrayList<Apartment> apartmentsToSend = new ArrayList<Apartment>();
+		
+		float priceFromF = (float) priceFrom;
+		float priceToF = (float) priceTo;
+		
+		for (Apartment apartment : apartments) {
+			float price = apartment.getPricePerNight();
+			if (price >= priceFromF && price <= priceToF) {
+				apartmentsToSend.add(apartment);
+			}
+		}
 		return apartmentsToSend;
 	}
 	

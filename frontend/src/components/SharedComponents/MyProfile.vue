@@ -74,7 +74,7 @@ export default {
       this.loggedUserName = user.userName;
     }
 
-    http.get('/User/UserDetails/' + this.loggedUserName)
+    http.get('/User/UserDetails/' + this.UserName)
       .then(response => {
         if (response.data) {
           this.userDetails = response.data;

@@ -11,10 +11,23 @@ public class RegisterDTO implements Serializable{
 	private String name;
 	private String surname;
 	private String userGender;
+	private String userRole;
 	
 	public RegisterDTO() {
 		
 	}
+
+	public String getUserRole() {
+		return userRole;
+	}
+
+
+
+	public void setUserRole(String userRole) {
+		this.userRole = userRole;
+	}
+
+
 
 	public String getUserName() {
 		return userName;

@@ -55,8 +55,9 @@
                 Profile
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                <a class="dropdown-item" href="#">My account</a>
+                <router-link to="/Profile" tag="a" class="dropdown-item" href="#">My account</router-link>
                 <router-link to="/Users" class="dropdown-item" href="#">Users</router-link>
+                <router-link to="/registerHost" class="dropdown-item" href="#">Register host</router-link>
                 <router-link to="/apartments" class="dropdown-item" href="#">Apartments</router-link>
                 <router-link to="/AllReservations" class="dropdown-item" href="#">Reservations</router-link>
                 <router-link to="/AllAmenities" class="dropdown-item" href="#">Amenities</router-link>
@@ -103,6 +104,8 @@ import CommentList from "@/components/SharedComponents/CommentList";
 import ApartmentDetails from "@/components/SharedComponents/ApartmentDetails";
 import ChangeAmenityDetails from "@/components/AdministratorComponents/ChangeAmenityDetails";
 import CreateAmenity from "@/components/AdministratorComponents/CreateAmenity";
+import CreateHost from "@/components/AdministratorComponents/CreateHost";
+import UserProfile from "@/components/SharedComponents/UserProfile";
 
 Vue.use(VueRouter)
 const routes = [
@@ -124,7 +127,9 @@ const routes = [
   {path: '/changeAmenityDetails/:id', component: ChangeAmenityDetails},
   {path: '/createAmenity', component: CreateAmenity},
   {path: '/commentList', component: CommentList},
-  {path: '/apartmentDetails/:id', component: ApartmentDetails}
+  {path: '/apartmentDetails/:id', component: ApartmentDetails},
+  {path: '/registerHost', component: CreateHost},
+  {path: '/userProfile/:userName', component: UserProfile}
 ]
 
 const router = new VueRouter({

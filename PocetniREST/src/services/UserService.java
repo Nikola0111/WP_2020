@@ -68,6 +68,18 @@ public class UserService {
 	}
 	
 	@PUT
+	@Path("blockUser/{id}")
+	public String changePassword(@PathParam("id") String id, @Context HttpServletRequest request) {
+		
+		UserDAO users = getUsers();
+		User currentUser = users.findById(id);
+		currentUser.setBlocked(true);
+		saveUsers(users);
+		
+		return "Korisnik uspesno blokiran!";
+	}
+	
+	@PUT
 	@Path("changePassword")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -213,6 +225,15 @@ public class UserService {
 			dto.setUserGender("MALE");
 		} else {
 			dto.setUserGender("FEMALE");
+		}
+		if (user.getUserRole().equals(UserRole.GUEST)) {
+			dto.setUserRole("GUEST");
+		} 
+		else if (user.getUserRole().equals(UserRole.ADMINISTRATOR)) {
+			dto.setUserRole("ADMINISTRATOR");
+		}
+		else {
+			dto.setUserRole("HOST");
 		}
 		return dto;
 		

@@ -66,6 +66,10 @@ public class LoginService {
 		UserDAO users = (UserDAO) context.getAttribute("users");
 		User loggedUser = users.findByUsernameAndPassword(user.getUserName(), user.getPassword());
 		
+		if (loggedUser.getBlocked()) {
+			return null;
+		}
+		
 		request.getSession().setAttribute("loggedUser", loggedUser);
 		
 		return loggedUser;	

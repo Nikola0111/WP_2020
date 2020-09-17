@@ -41,6 +41,8 @@
         <md-table-cell md-label="Name" md-sort-by="name">{{ item.name }} {{ item.surname }}</md-table-cell>
         <md-table-cell md-label="User role" md-sort-by="userRole">{{ item.userRole }}</md-table-cell>
         <md-table-cell md-label="Gender" md-sort-by="userGender">{{ item.userGender }}</md-table-cell>
+        <md-table-cell><button v-if="item.userRole != 'ADMINISTRATOR' && !item.blocked" @click="blockUser(item, item.id)" class="btn btn-danger">Block</button></md-table-cell>
+        <md-table-cell><button @click="showDetails(item.userName, item.userRole)" class="btn btn-primary">Account details</button></md-table-cell>
       </md-table-row>
     </md-table>
   </div>
@@ -83,6 +85,17 @@ export default {
     }
   },
   methods: {
+    showDetails(userName){
+      this.$router.push('/userProfile/' + userName);
+    },
+    blockUser(item, id) {
+      http.put('User/blockUser/' + id)
+          .then(response => {
+            if (response.data) {
+              item.blocked = true;
+            }
+          })
+    },
     searchOnTable() {
       this.searched = searchByName(this.users, this.search)
     },

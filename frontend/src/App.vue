@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <nav class="navbar navbar-expand-lg navbar-light bg-light" id="mainNav">
-      <a class="navbar-brand js-scroll-trigger" href=""><img src="./assets/img/logo.png" alt="" style="width:200px;height:50px;"></a>
+      <a class="navbar-brand js-scroll-trigger" href=""><img src="logo.png" alt="" style="width:200px;height:50px;"></a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -98,6 +98,8 @@ import ReservationsFromGuests from "@/components/HostComponents/ReservationsFrom
 import ReservationsByGuest from "@/components/GuestComponents/ReservationsByGuest";
 import UsersThatMadeReservations from "@/components/HostComponents/UsersThatMadeReservations";
 import ApartmentDetails from "@/components/SharedComponents/ApartmentDetails";
+import ChangeAmenityDetails from "@/components/AdministratorComponents/ChangeAmenityDetails";
+import CreateAmenity from "@/components/AdministratorComponents/CreateAmenity";
 
 Vue.use(VueRouter)
 const routes = [
@@ -115,7 +117,9 @@ const routes = [
   {path: '/reservationsFromGuests', component: ReservationsFromGuests},
   {path: '/myReservations', component: ReservationsByGuest},
   {path: '/guests', component: UsersThatMadeReservations},
-  {path: '/apartmentDetails/:id', component: ApartmentDetails}
+  {path: '/apartmentDetails/:id', component: ApartmentDetails},
+  {path: '/changeAmenityDetails/:id', component: ChangeAmenityDetails},
+  {path: '/createAmenity', component: CreateAmenity}
 ]
 
 const router = new VueRouter({

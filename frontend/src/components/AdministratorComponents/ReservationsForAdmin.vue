@@ -24,7 +24,7 @@
         <md-table-cell md-label="Location" md-sort-by="name">{{ item.location.address.country }}, {{item.location.address.city}}</md-table-cell>
         <md-table-cell md-label="Host username" md-sort-by="userRole">{{ item.hostUserName }}</md-table-cell>
         <md-table-cell md-label="Guest username" md-sort-by="userGender">{{ item.guestUserName }}</md-table-cell>
-        <md-table-cell md-label="Starting date" md-sort-by="userGender">{{ item.startingDate }}</md-table-cell>
+        <md-table-cell md-label="Starting date" md-sort-by="userGender">{{ item.date }}</md-table-cell>
         <md-table-cell md-label="Rental duration" md-sort-by="userGender">{{ item.rentalDuration }}</md-table-cell>
         <md-table-cell md-label="Status" md-sort-by="userGender">{{ item.reservationStatus }}</md-table-cell>
       </md-table-row>

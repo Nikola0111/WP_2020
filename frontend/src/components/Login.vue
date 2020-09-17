@@ -17,15 +17,15 @@
     </form>
     <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="showSnackbar1" md-persistent>
       <span>Username or password can't be empty.</span>
-      <md-button class="md-primary" @click="showSnackbar = false">Retry</md-button>
+      <md-button class="md-primary" @click="showSnackbar1 = false">Retry</md-button>
     </md-snackbar>
     <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="showSnackbar2" md-persistent>
       <span>There is no user with that username and password</span>
-      <md-button class="md-primary" @click="showSnackbar = false">Retry</md-button>
+      <md-button class="md-primary" @click="showSnackbar2 = false">Retry</md-button>
     </md-snackbar>
     <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="showSnackbar3" md-persistent>
       <span>Server error.</span>
-      <md-button class="md-primary" @click="showSnackbar = false">Retry</md-button>
+      <md-button class="md-primary" @click="showSnackbar3 = false">Retry</md-button>
     </md-snackbar>
   </div>
 </template>

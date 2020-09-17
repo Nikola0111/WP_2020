@@ -10,18 +10,20 @@ public class Amenity implements Serializable{
 	private String caption;
 	private String description;
 	private String type;
+	private boolean deleted;
 	
 	public Amenity() {
 		super();
 	}
 
-	public Amenity(String caption, String description, String type) {
+	public Amenity(String caption, String description, String type, boolean deleted) {
 		super();
 		UUID uuid = UUID.randomUUID();
 		this.id = uuid.toString();
 		this.caption = caption;
 		this.description = description;
 		this.type = type;
+		this.deleted = deleted;
 	}
 
 	public String getId() {
@@ -54,6 +56,14 @@ public class Amenity implements Serializable{
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 
 	@Override

@@ -20,7 +20,7 @@
       <md-button class="md-primary" @click="showSnackbar1 = false">Retry</md-button>
     </md-snackbar>
     <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="showSnackbar2" md-persistent>
-      <span>There is no user with that username and password</span>
+      <span>There is no user with that username and password or user is blocked.</span>
       <md-button class="md-primary" @click="showSnackbar2 = false">Retry</md-button>
     </md-snackbar>
     <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="showSnackbar3" md-persistent>

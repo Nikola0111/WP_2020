@@ -31,6 +31,10 @@
       <span>You successfully changed your password!</span>
       <md-button class="md-primary" @click="showSnackbar2 = false">Close</md-button>
     </md-snackbar>
+    <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="showSnackbar3" md-persistent>
+      <span>You did not enter the correct password!</span>
+      <md-button class="md-primary" @click="showSnackbar3 = false">Close</md-button>
+    </md-snackbar>
   </div>
 </template>
 
@@ -52,6 +56,7 @@ export default {
       passwordConfirm: '',
       showSnackbar1: false,
       showSnackbar2: false,
+      showSnackbar3: false,
       position: 'center',
       duration: 3000,
       passwordElements: [{type:'password', text:'Show'},{type:'password', text:'Show'},{type:'password', text:'Show'}],
@@ -73,6 +78,8 @@ export default {
         .then(response => {
           if (response.data) {
             this.showSnackbar2 = true;
+          } else {
+            this.showSnackbar3 = true;
           }
         })
       }

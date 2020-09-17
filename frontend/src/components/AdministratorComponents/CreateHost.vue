@@ -38,7 +38,7 @@
           <span style="color: red">Passwords needs to be at least 6 characters long.</span>
         </li>
         <li>
-          <input type="submit" value="Register as guest" />
+          <input type="submit" value="Register host" />
         </li>
       </ul>
     </form>
@@ -68,14 +68,14 @@
 <script>
 
 import Vue from "vue"
-import http from '../http-common';
+import http from '../../http-common';
 import { MdSnackbar, MdButton } from "vue-material/dist/components"
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
 Vue.use(MdSnackbar)
 Vue.use(MdButton)
 export default {
-  name: "Register.vue",
+  name: "CreateHost.vue",
   data() {
     return {
       showValidation1: "",
@@ -124,7 +124,7 @@ export default {
             surname: this.surname,
             password: this.password,
             userGender: this.gender,
-            userRole: "GUEST"
+            userRole: "HOST"
           })
       ).then(response => {
         if (!response.data) {

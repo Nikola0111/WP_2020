@@ -13,10 +13,23 @@ public class UserDetailsDTO implements Serializable{
 	private int availableApartments;
 	private int rentedApartments;
 	private int numberOfReservationsMade;
+	private String userRole;
 	
 	public UserDetailsDTO() {
 		
 	}
+
+	public String getUserRole() {
+		return userRole;
+	}
+
+
+
+	public void setUserRole(String userRole) {
+		this.userRole = userRole;
+	}
+
+
 
 	public String getId() {
 		return id;
@@ -81,6 +94,15 @@ public class UserDetailsDTO implements Serializable{
 	public void setNumberOfReservationsMade(int numberOfReservationsMade) {
 		this.numberOfReservationsMade = numberOfReservationsMade;
 	}
+
+	@Override
+	public String toString() {
+		return "UserDetailsDTO [id=" + id + ", userName=" + userName + ", name=" + name + ", surname=" + surname
+				+ ", userGender=" + userGender + ", availableApartments=" + availableApartments + ", rentedApartments="
+				+ rentedApartments + ", numberOfReservationsMade=" + numberOfReservationsMade + ", userRole=" + userRole
+				+ "]";
+	}
+	
 	
 	
 }

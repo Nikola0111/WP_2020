@@ -1,10 +1,4 @@
-<<<<<<< HEAD
-/model/
-/services/
-/dto/
-=======
-/dto/
 /enumeration/
 /model/
 /services/
->>>>>>> 350a9a365cc80ffa8edabe9f75d764f6d8e7ecd1
+/dto/

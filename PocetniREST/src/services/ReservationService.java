@@ -371,6 +371,11 @@ public class ReservationService {
 		} else {
 			dto.setUserGender("FEMALE");
 		}
+		if (user.getUserRole().equals(UserRole.GUEST)) {
+			dto.setUserRole("GUEST");
+		} else {
+			dto.setUserRole("HOST");
+		}
 		return dto;
 		
 	}

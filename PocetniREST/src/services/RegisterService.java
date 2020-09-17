@@ -92,7 +92,12 @@ public class RegisterService {
 			newUser.setUserGender(UserGender.FEMALE);
 		}
 		
-		newUser.setUserRole(UserRole.GUEST);
+		if (userDTO.getUserRole().equals("GUEST")) {
+			newUser.setUserRole(UserRole.GUEST);
+		} else {
+			newUser.setUserRole(UserRole.HOST);
+		}
+		
 		newUser.setAvailableApartments(0);
 		newUser.setRentedApartments(0);
 		users.getUsers().put(newUser.getId(), newUser);

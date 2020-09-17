@@ -20,6 +20,7 @@
         <md-table-cell md-label="Username" md-sort-by="userName">{{ item.userName }}</md-table-cell>
         <md-table-cell md-label="Name" md-sort-by="name">{{ item.name }} {{ item.surname }}</md-table-cell>
         <md-table-cell md-label="Gender" md-sort-by="userGender">{{ item.userGender }}</md-table-cell>
+        <md-table-cell><button @click="showDetails(item.userName)" class="btn btn-primary">Account details</button></md-table-cell>
       </md-table-row>
     </md-table>
   </div>
@@ -61,9 +62,12 @@ export default {
     }
   },
   methods: {
-    searchOnTable () {
-      this.searched = searchByUserName(this.users, this.search)
-    }
+  showDetails(userName){
+    this.$router.push('/userProfile/' + userName);
+  },
+  searchOnTable () {
+    this.searched = searchByUserName(this.users, this.search)
+  }
   },
   created () {
     this.searched = this.users

@@ -41,8 +41,9 @@
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
                 <router-link to="/Profile" tag="a" class="dropdown-item" href="#">My account</router-link>
                 <router-link to="/apartments" class="dropdown-item" href="#">My apartments</router-link>
+                <router-link to="/commentList" class="dropdown-item" href="#">My comments</router-link>
                 <router-link to="/reservationsFromGuests" class="dropdown-item" href="#"> Reservations</router-link>
-                <router-link to="/apartmentRegistration" class="dropdown-item" href="#">Register apartment</router-link>
+                <router-link to="/apartmentRegistration" class="dropdown-item" href="#">Register<br> apartment</router-link>
                 <router-link to="/guests" class="dropdown-item" href="#">My guests</router-link>
                 <a @click="logout" class="dropdown-item" href="#">Logout</a>
               </div>
@@ -59,6 +60,7 @@
                 <router-link to="/apartments" class="dropdown-item" href="#">Apartments</router-link>
                 <router-link to="/AllReservations" class="dropdown-item" href="#">Reservations</router-link>
                 <router-link to="/AllAmenities" class="dropdown-item" href="#">Amenities</router-link>
+                <router-link to="/commentList" class="dropdown-item" href="#">Comments</router-link>
                 <a @click="logout" class="dropdown-item" href="#">Logout</a>
               </div>
             </div>
@@ -97,6 +99,7 @@ import ApartmentRegistration from "@/components/HostComponents/ApartmentRegistra
 import ReservationsFromGuests from "@/components/HostComponents/ReservationsFromGuests";
 import ReservationsByGuest from "@/components/GuestComponents/ReservationsByGuest";
 import UsersThatMadeReservations from "@/components/HostComponents/UsersThatMadeReservations";
+import CommentList from "@/components/SharedComponents/CommentList";
 import ApartmentDetails from "@/components/SharedComponents/ApartmentDetails";
 import ChangeAmenityDetails from "@/components/AdministratorComponents/ChangeAmenityDetails";
 import CreateAmenity from "@/components/AdministratorComponents/CreateAmenity";
@@ -119,7 +122,9 @@ const routes = [
   {path: '/guests', component: UsersThatMadeReservations},
   {path: '/apartmentDetails/:id', component: ApartmentDetails},
   {path: '/changeAmenityDetails/:id', component: ChangeAmenityDetails},
-  {path: '/createAmenity', component: CreateAmenity}
+  {path: '/createAmenity', component: CreateAmenity},
+  {path: '/commentList', component: CommentList},
+  {path: '/apartmentDetails/:id', component: ApartmentDetails}
 ]
 
 const router = new VueRouter({

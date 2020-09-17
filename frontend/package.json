@@ -24,6 +24,7 @@
     "vue-js-modal": "^2.0.0-rc.6",
     "vue-material": "^1.0.0-beta-15",
     "vue-router": "^3.4.3",
+    "vue-star-rating": "^1.6.1",
     "vue2-timepicker": "^1.1.4",
     "vuejs-datepicker": "^1.6.2",
     "vuelayers": "^0.11.27"

@@ -37,7 +37,7 @@
         <md-table-cell md-label="Price per night" md-sort-by="pricePerNight">{{ item.pricePerNight }}</md-table-cell>
         <md-table-cell md-label="Apartment type" md-sort-by="apartmentType">{{ item.apartmentType }}</md-table-cell>
         <md-table-cell v-if="isAdmin || isHost" md-label="Activity status" md-sort-by="activityStatus">{{ item.activityStatus }}</md-table-cell>
-        <md-table-cell><button class="btn btn-info">Details</button></md-table-cell>
+        <md-table-cell><router-link :to="'/apartmentDetails/' + item.id" tag="button" class="btn btn-info">Details</router-link></md-table-cell>
         <md-table-cell v-if="isAdmin || isHost"><button class="btn btn-danger" @click="deleteApartment(item.id, item)">Delete</button></md-table-cell>
         <md-table-cell v-if="isGuest"><button class="btn btn-success" @click="showDialog(item, item.startDates, item.endDates)">Reserve</button></md-table-cell>
         <md-table-cell v-if="isHost && item.activityStatus === 'Active'"><button class="btn btn-warning" @click="deactivateApartment(item)">Deactivate</button></md-table-cell>

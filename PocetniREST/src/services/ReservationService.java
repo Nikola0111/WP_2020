@@ -194,7 +194,7 @@ public class ReservationService {
 		System.out.println(reservation);
 		
 		apartment.getReservations().add(reservation.getId());
-		reservation.setReservationStatus(ReservationStatus.ACCEPTED);
+		reservation.setReservationStatus(ReservationStatus.CREATED);
 		apartments.getApartments().put(apartment.getId(), apartment);
 		saveApartments(apartments);
 		

@@ -87,6 +87,7 @@ public class ApartmentForFrontDTO implements Serializable{
 	public void setEndDates(ArrayList<Date> endDates) {
 		this.endDates = endDates;
 	}
+	
 
 	@Override
 	public String toString() {

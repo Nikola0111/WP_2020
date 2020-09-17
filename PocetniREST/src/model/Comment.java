@@ -106,10 +106,13 @@ public class Comment implements Serializable{
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-	
-	
-	
-	
+
+	@Override
+	public String toString() {
+		return "Comment [id=" + id + ", caption=" + caption + ", content=" + content + ", userId=" + userId
+				+ ", apartmentId=" + apartmentId + ", reservationId=" + reservationId + ", rating=" + rating
+				+ ", showed=" + showed + ", deleted=" + deleted + "]";
+	}
 	
 	
 }

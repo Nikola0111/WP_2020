@@ -14,17 +14,21 @@ import dao.CommentDAO;
 import dao.ReservationDAO;
 import dao.UserDAO;
 import dto.ApartmentForFrontDTO;
+import dto.CommentForOneApartmentDTO;
 import enumeration.ApartmentType;
 import dto.ApartmentDTO;
+import dto.ApartmentDetailsDTO;
 import dto.FilterApartmentDTO;
 import dto.SearchApartmentDTO;
 import enumeration.UserRole;
 import model.Amenity;
 import model.Apartment;
+import model.Comment;
+import model.Reservation;
 import model.User;
 
 import java.util.List;
-
+import java.util.Map;
 import java.util.ArrayList;
 
 import javax.annotation.PostConstruct;
@@ -94,6 +98,48 @@ public class ApartmentService {
 			apartment.setId(apartments.getApartments().size() + 1 + "");
 			
 			apartments.getApartments().put(apartment.getId(), apartment);
+			saveApartments(apartments);
+			return true;
+		
+	}
+	
+	@POST
+	@Path("editDetails")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public boolean editDetails(@Context HttpServletRequest request, ApartmentDetailsDTO apartmentDTO) {
+			ApartmentDAO apartments = getApartments();
+			UserDAO users = getUsers();
+			Apartment editedApartment = apartments.find(apartmentDTO.getId());
+			User user = users.findByUsername(apartmentDTO.getUserName());
+			///////////////ovde je za slike update///////////////////
+			//editedApartment.setPhotos(apartmentDTO.getPhotos());
+			/////////////////////////////////////////////////////////
+			editedApartment.setLocation(apartmentDTO.getLocation());
+			if(apartmentDTO.getApartmentType().toLowerCase().equals("apartment")) {
+				editedApartment.setApartmentType(ApartmentType.APARTMENT);
+			} else {
+				editedApartment.setApartmentType(ApartmentType.ROOM);
+			}
+			editedApartment.setNumberOfGuests(apartmentDTO.getNumberOfGuests());
+			editedApartment.setNumberOfRooms(apartmentDTO.getNumberOfRooms());
+			editedApartment.setLocation(editedApartment.getLocation());
+			editedApartment.setStartDates(apartmentDTO.getStartDates());
+			editedApartment.setEndDates(apartmentDTO.getEndDates());
+			editedApartment.setHostId(user.getId());
+			for(CommentForOneApartmentDTO comment : apartmentDTO.getComments()) {
+				editedApartment.getCommentIds().add(comment.getId());
+			}
+			editedApartment.setPricePerNight(apartmentDTO.getPricePerNight());
+			if(apartmentDTO.getActivityStatus().toLowerCase().equals("active")) {
+				editedApartment.setActivityStatus(true);
+			} else {
+				editedApartment.setActivityStatus(false);
+			}
+			editedApartment.setCheckInTime(apartmentDTO.getCheckInTime());
+			editedApartment.setCheckOutTime(apartmentDTO.getCheckOutTime());
+			
+			apartments.getApartments().put(editedApartment.getId(), editedApartment);
 			saveApartments(apartments);
 			return true;
 		
@@ -217,6 +263,50 @@ public class ApartmentService {
 	}
 	
 	@GET
+	@Path("apartmentDetails/{apartmentId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ApartmentDetailsDTO getApartmentDetails(@PathParam("apartmentId") String apartmentId, @Context HttpServletRequest request) {
+		
+		ApartmentDAO apartments = getApartments();
+		UserDAO users = getUsers();
+		ReservationDAO reservationsDAO = getReservations();
+		CommentDAO commentDAO = getComments();
+		
+		List<Reservation> apartmentReservations = new ArrayList<Reservation>();
+		
+		for(Map.Entry<String, Reservation> entry : reservationsDAO.getReservations().entrySet()) {
+			if(entry.getValue().getApartmentId().equals(apartmentId) && !entry.getValue().isDeleted()) {
+				apartmentReservations.add(entry.getValue());
+			}
+		}
+		
+		List<CommentForOneApartmentDTO> comments = new ArrayList<CommentForOneApartmentDTO>();
+		
+		for(Map.Entry<String, Comment> entry : commentDAO.getComments().entrySet()) {
+			if(entry.getValue().getApartmentId().equals(apartmentId) && !entry.getValue().isDeleted()) {
+				String username = users.findById(entry.getValue().getUserID()).getUserName();
+				CommentForOneApartmentDTO temp = new CommentForOneApartmentDTO(entry.getValue().getId(), 
+						entry.getValue().getCaption(), entry.getValue().getContent(), username, 
+						entry.getValue().getRating(), entry.getValue().isShowed());
+				
+				comments.add(temp);
+				
+			}
+		}
+		
+		Apartment apartment = apartments.find(apartmentId);
+		User host = users.findById(apartment.getHostId());
+		
+		ApartmentDetailsDTO dto = convertToApartmentDetails(apartment, host);
+		
+		dto.setReservations(apartmentReservations);
+		dto.setComments(comments);
+		
+		return dto;
+	}
+	
+	@GET
 	@Path("HostInactiveApartments/{hostId}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -313,7 +403,33 @@ public class ApartmentService {
 		} else {
 			dto.setActivityStatus("Not active");
 		}
-		System.out.println("TIP JE: " + dto.getApartmentType());
+		return dto;
+	}
+	
+	public ApartmentDetailsDTO convertToApartmentDetails(Apartment apartment, User host) {
+		ApartmentDetailsDTO dto = new ApartmentDetailsDTO();
+		
+		dto.setId(apartment.getId());
+		if (apartment.getApartmentType().equals(ApartmentType.APARTMENT)) {
+			dto.setApartmentType("Apartment");
+		} else {
+			dto.setApartmentType("Room");
+		}
+		dto.setNumberOfRooms(apartment.getNumberOfRooms());
+		dto.setNumberOfGuests(apartment.getNumberOfGuests());
+		dto.setLocation(apartment.getLocation());
+		dto.setStartDates(apartment.getStartDates());
+		dto.setEndDates(apartment.getEndDates());
+		dto.setUserName(host.getUserName());
+		dto.setPhotos(apartment.getPhotos());
+		dto.setPricePerNight(apartment.getPricePerNight());
+		dto.setCheckInTime(apartment.getCheckInTime());
+		dto.setCheckOutTime(apartment.getCheckOutTime());
+		if (apartment.isActivityStatus()) {
+			dto.setActivityStatus("Active");
+		} else {
+			dto.setActivityStatus("Not active");
+		}
 		return dto;
 	}
 	
@@ -323,12 +439,9 @@ public class ApartmentService {
 		
 		if (type.equals(ApartmentType.APARTMENT)) {
 			convertedType = "Apartment";
-			System.out.println("USAO U IF");
 		} else if (type.equals(ApartmentType.ROOM)) {
 			convertedType = "Room";
-			System.out.println("USAO U ELSE IF");
 		} 
-		System.out.println("TIP JE: " + convertedType);
 		return convertedType;
 	}
 	
@@ -353,6 +466,16 @@ public class ApartmentService {
 	
 	public void saveAmenities(AmenityDAO amenities) {
 		amenities.saveAmenities(context.getRealPath(""));
+    }
+	
+	public ReservationDAO getReservations() { 
+		ReservationDAO reservations = (ReservationDAO) context.getAttribute("reservations");
+		return reservations;
+	}
+	
+	public CommentDAO getComments() {
+		CommentDAO comments = (CommentDAO) context.getAttribute("comments");
+        return comments;
     }
 
 }

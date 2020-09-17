@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import model.Location;
-import model.OccupationDate;
 
 @SuppressWarnings("serial")
 public class ApartmentForFrontDTO implements Serializable{
@@ -88,6 +87,7 @@ public class ApartmentForFrontDTO implements Serializable{
 	public void setEndDates(ArrayList<Date> endDates) {
 		this.endDates = endDates;
 	}
+	
 
 	@Override
 	public String toString() {

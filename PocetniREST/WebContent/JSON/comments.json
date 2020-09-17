@@ -4,41 +4,8 @@
     "caption" : "Prvi komentar",
     "content" : "Bas dobar stan, 10/10,aioshfgifhfashioasfhioasf",
     "userId" : "5",
-    "apartmentId" : "1",
-    "reservationId" : "1",
-    "rating" : 3.0,
-    "showed" : true,
-    "deleted" : false
-  },
-  "2" : {
-    "id" : "2",
-    "caption" : "Drugi komentar",
-    "content" : "Bas dobar stan, 10/10,aioshfgifhfashioasfhioasf",
-    "userId" : "6",
     "apartmentId" : "2",
-    "reservationId" : "2",
-    "rating" : 3.0,
-    "showed" : true,
-    "deleted" : false
-  },
-  "3" : {
-    "id" : "3",
-    "caption" : "Treci komentar",
-    "content" : "Bas dobar stan, 10/10,aioshfgifhfashioasfhioasf",
-    "userId" : "6",
-    "apartmentId" : "1",
-    "reservationId" : "3",
-    "rating" : 3.0,
-    "showed" : true,
-    "deleted" : false
-  },
-  "4" : {
-    "id" : "4",
-    "caption" : "Cetvrti komentar",
-    "content" : "Bas dobar stan, 10/10,aioshfgifhfashioasfhioasf",
-    "userId" : "5",
-    "apartmentId" : "2",
-    "reservationId" : "4",
+    "reservationId" : "0",
     "rating" : 3.0,
     "showed" : true,
     "deleted" : false

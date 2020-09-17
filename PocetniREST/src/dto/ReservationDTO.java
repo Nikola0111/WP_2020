@@ -15,6 +15,7 @@ public class ReservationDTO implements Serializable{
 	private String hostUserName;
 	private String guestUserName;
 	private Date startingDate;
+	private String date;
 	private int rentalDuration;
 	private float fullPrice;
 	private String optionalMessage;
@@ -111,6 +112,14 @@ public class ReservationDTO implements Serializable{
 
 	public void setReservationStatus(String reservationStatus) {
 		this.reservationStatus = reservationStatus;
+	}
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
 	}
 	
 	

@@ -1,6 +1,9 @@
 package services;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -382,6 +385,8 @@ public class ReservationService {
 		dto.setLocation(apartment.getLocation());
 		dto.setHostUserName(host.getUserName());
 		dto.setGuestUserName(guest.getUserName());
+		DateFormat df = new SimpleDateFormat("dd.MM.yyyy.");
+		dto.setDate(df.format(reservation.getStartingDate()));
 		dto.setStartingDate(reservation.getStartingDate());
 		dto.setRentalDuration(reservation.getRentalDuration());
 		dto.setFullPrice(reservation.getFullPrice());

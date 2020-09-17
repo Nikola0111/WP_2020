@@ -20,7 +20,7 @@
         <md-table-cell md-label="Apartment type" md-sort-by="apartmentType">{{ item.apartmentType }}</md-table-cell>
         <md-table-cell md-label="Location" md-sort-by="location">{{ item.location.address.country }}, {{item.location.address.city}}</md-table-cell>
         <md-table-cell md-label="Guest username" md-sort-by="guestUserName">{{ item.hostUserName }}</md-table-cell>
-        <md-table-cell md-label="Starting date" md-sort-by="startingDate">{{ item.startingDate }}</md-table-cell>
+        <md-table-cell md-label="Starting date" md-sort-by="startingDate">{{ item.date }}</md-table-cell>
         <md-table-cell md-label="Rental duration" md-sort-by="rentalDuration">{{ item.rentalDuration }}</md-table-cell>
         <md-table-cell md-label="Status" md-sort-by="status">{{ item.reservationStatus }}</md-table-cell>
         <md-table-cell v-if="item.reservationStatus === 'Created' || item.reservationStatus === 'Accepted'"><button @click="cancelReservation(item.id, item)" class="btn btn-danger">Cancel</button></md-table-cell>

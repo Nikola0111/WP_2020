@@ -2,8 +2,10 @@ package dto;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import model.Location;
+import model.Reservation;
 
 public class ApartmentDetailsDTO {
 
@@ -20,6 +22,8 @@ public class ApartmentDetailsDTO {
 	private String checkInTime;
 	private String checkOutTime;
 	private String activityStatus;
+	private List<Reservation> reservations;
+	private List<CommentForOneApartmentDTO> comments;
 	
 	public ApartmentDetailsDTO() {
 		this.startDates = new ArrayList<Date>();
@@ -129,6 +133,22 @@ public class ApartmentDetailsDTO {
 
 	public void setActivityStatus(String activityStatus) {
 		this.activityStatus = activityStatus;
+	}
+
+	public List<Reservation> getReservations() {
+		return reservations;
+	}
+
+	public void setReservations(List<Reservation> reservations) {
+		this.reservations = reservations;
+	}
+
+	public List<CommentForOneApartmentDTO> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<CommentForOneApartmentDTO> comments) {
+		this.comments = comments;
 	}
 
 	@Override

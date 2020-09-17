@@ -16,6 +16,17 @@ public class CommentForOneApartmentDTO implements Serializable{
 		
 	}
 
+	public CommentForOneApartmentDTO(String id, String caption, String content, String guestUserName, double rating,
+			boolean showed) {
+		super();
+		this.id = id;
+		this.caption = caption;
+		this.content = content;
+		this.guestUserName = guestUserName;
+		this.rating = rating;
+		this.showed = showed;
+	}
+
 	public String getId() {
 		return id;
 	}

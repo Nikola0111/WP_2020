@@ -65,6 +65,12 @@ name: "CreateAmenity",
         }
       })
     }
+  },
+  mounted() {
+    let userRole = JSON.parse(localStorage.getItem("loggedUserRole"))
+    if (userRole !== "ADMINISTRATOR") {
+      this.$router.push("/forbidden");
+    }
   }
 }
 </script>

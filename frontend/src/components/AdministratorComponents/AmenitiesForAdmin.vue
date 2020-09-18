@@ -100,6 +100,10 @@ export default {
     this.searched = this.amenities
   },
   mounted() {
+    let userRole = JSON.parse(localStorage.getItem("loggedUserRole"))
+    if (userRole !== "ADMINISTRATOR") {
+      this.$router.push("/forbidden");
+    }
     http.get('Amenity')
         .then(response => {
           this.amenities = response.data;

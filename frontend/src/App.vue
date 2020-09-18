@@ -106,8 +106,17 @@ import ChangeAmenityDetails from "@/components/AdministratorComponents/ChangeAme
 import CreateAmenity from "@/components/AdministratorComponents/CreateAmenity";
 import CreateHost from "@/components/AdministratorComponents/CreateHost";
 import UserProfile from "@/components/SharedComponents/UserProfile";
+import ForbiddenPage from "@/components/SharedComponents/ForbiddenPage";
+import * as VueGoogleMaps from "vue2-google-maps";
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
+
+Vue.use(VueGoogleMaps, {
+  load: {
+    key: "AIzaSyDL4anuQdZ6zzjSGiJKbhZZaEAYKgME72k",
+    libraries: "places" // necessary for places input
+  }
+});
 const routes = [
   {path: '/', component: Home},
   {path: '/login', component: Login},
@@ -129,7 +138,8 @@ const routes = [
   {path: '/commentList', component: CommentList},
   {path: '/apartmentDetails/:id', component: ApartmentDetails},
   {path: '/registerHost', component: CreateHost},
-  {path: '/userProfile/:userName', component: UserProfile}
+  {path: '/userProfile/:userName', component: UserProfile},
+  {path: '/forbidden', component: ForbiddenPage}
 ]
 
 const router = new VueRouter({

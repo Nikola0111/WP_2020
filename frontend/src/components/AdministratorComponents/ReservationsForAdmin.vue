@@ -86,6 +86,11 @@ export default {
     this.searched = this.reservations
   },
   mounted() {
+    let userRole = JSON.parse(localStorage.getItem("loggedUserRole"))
+    if (userRole !== "ADMINISTRATOR") {
+      this.$router.push("/forbidden");
+    }
+
     http.get('Reservation/')
         .then(response => {
           this.reservations = response.data;

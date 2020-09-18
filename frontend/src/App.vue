@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <nav class="navbar navbar-expand-lg navbar-light bg-light" id="mainNav">
-      <a class="navbar-brand js-scroll-trigger" href=""><img src="./assets/img/logo.png" alt="" style="width:200px;height:50px;"></a>
+      <a class="navbar-brand js-scroll-trigger" href=""><img src="logo.png" alt="" style="width:200px;height:50px;"></a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -28,7 +28,7 @@
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                 <router-link to="/Profile" tag="a" class="dropdown-item" href="#">My account</router-link>
-                <a class="dropdown-item" href="#">My reservations</a>
+                <router-link to="/myReservations" class="dropdown-item" href="#">My reservations</router-link>
                 <a @click="logout" class="dropdown-item" href="#">Logout</a>
               </div>
             </div>
@@ -41,7 +41,10 @@
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
                 <router-link to="/Profile" tag="a" class="dropdown-item" href="#">My account</router-link>
                 <router-link to="/apartments" class="dropdown-item" href="#">My apartments</router-link>
-                <router-link to="/apartmentRegistration" class="dropdown-item" href="#">Register apartment</router-link>
+                <router-link to="/commentList" class="dropdown-item" href="#">My comments</router-link>
+                <router-link to="/reservationsFromGuests" class="dropdown-item" href="#"> Reservations</router-link>
+                <router-link to="/apartmentRegistration" class="dropdown-item" href="#">Register<br> apartment</router-link>
+                <router-link to="/guests" class="dropdown-item" href="#">My guests</router-link>
                 <a @click="logout" class="dropdown-item" href="#">Logout</a>
               </div>
             </div>
@@ -52,11 +55,13 @@
                 Profile
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
-                <a class="dropdown-item" href="#">My account</a>
+                <router-link to="/Profile" tag="a" class="dropdown-item" href="#">My account</router-link>
                 <router-link to="/Users" class="dropdown-item" href="#">Users</router-link>
+                <router-link to="/registerHost" class="dropdown-item" href="#">Register host</router-link>
                 <router-link to="/apartments" class="dropdown-item" href="#">Apartments</router-link>
                 <router-link to="/AllReservations" class="dropdown-item" href="#">Reservations</router-link>
                 <router-link to="/AllAmenities" class="dropdown-item" href="#">Amenities</router-link>
+                <router-link to="/commentList" class="dropdown-item" href="#">Comments</router-link>
                 <a @click="logout" class="dropdown-item" href="#">Logout</a>
               </div>
             </div>
@@ -65,8 +70,8 @@
       </div>
     </nav>
     <!-- Masthead-->
-    <header class="masthead">
-      <div class="container h-100">
+    <header style=" overflow-y: scroll !important;" class="masthead" >
+      <div class="container h-100" >
         <router-view></router-view>
       </div>
     </header>
@@ -75,6 +80,7 @@
 </template>
 
 <script>
+import 'jquery/dist/jquery.js'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import 'bootstrap/dist/css/bootstrap.css'
 import Vue from 'vue'
@@ -91,8 +97,26 @@ import ChangePassword from "@/components/SharedComponents/ChangePassword";
 import MyProfile from "@/components/SharedComponents/MyProfile";
 import ChangeUserDetails from "@/components/SharedComponents/ChangeUserDetails";
 import ApartmentRegistration from "@/components/HostComponents/ApartmentRegistration";
+import ReservationsFromGuests from "@/components/HostComponents/ReservationsFromGuests";
+import ReservationsByGuest from "@/components/GuestComponents/ReservationsByGuest";
+import UsersThatMadeReservations from "@/components/HostComponents/UsersThatMadeReservations";
+import CommentList from "@/components/SharedComponents/CommentList";
+import ApartmentDetails from "@/components/SharedComponents/ApartmentDetails";
+import ChangeAmenityDetails from "@/components/AdministratorComponents/ChangeAmenityDetails";
+import CreateAmenity from "@/components/AdministratorComponents/CreateAmenity";
+import CreateHost from "@/components/AdministratorComponents/CreateHost";
+import UserProfile from "@/components/SharedComponents/UserProfile";
+import ForbiddenPage from "@/components/SharedComponents/ForbiddenPage";
+import * as VueGoogleMaps from "vue2-google-maps";
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
+
+Vue.use(VueGoogleMaps, {
+  load: {
+    key: "AIzaSyDL4anuQdZ6zzjSGiJKbhZZaEAYKgME72k",
+    libraries: "places" // necessary for places input
+  }
+});
 const routes = [
   {path: '/', component: Home},
   {path: '/login', component: Login},
@@ -105,6 +129,17 @@ const routes = [
   {path: '/ChangePassword', component: ChangePassword},
   {path: '/ChangeDetails', component: ChangeUserDetails},
   {path: '/apartmentRegistration', component: ApartmentRegistration},
+  {path: '/reservationsFromGuests', component: ReservationsFromGuests},
+  {path: '/myReservations', component: ReservationsByGuest},
+  {path: '/guests', component: UsersThatMadeReservations},
+  {path: '/apartmentDetails/:id', component: ApartmentDetails},
+  {path: '/changeAmenityDetails/:id', component: ChangeAmenityDetails},
+  {path: '/createAmenity', component: CreateAmenity},
+  {path: '/commentList', component: CommentList},
+  {path: '/apartmentDetails/:id', component: ApartmentDetails},
+  {path: '/registerHost', component: CreateHost},
+  {path: '/userProfile/:userName', component: UserProfile},
+  {path: '/forbidden', component: ForbiddenPage}
 ]
 
 const router = new VueRouter({

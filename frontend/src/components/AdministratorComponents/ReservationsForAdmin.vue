@@ -1,13 +1,27 @@
 <template>
-  <div style="width: 80%; margin-top: 5%; margin-left: 10%;">
-    <md-table v-model="searched" md-sort="name" md-sort-order="asc" md-card md-fixed-header>
+  <div style="width: 90%; margin-top: 5%; margin-left: 5%;">
+    <div style="background: white">
+      <input style="margin: 10px" type="text" placeholder="Enter username" v-model="searchUsername"/>
+      <button @click="searchReservationsByUsername">Search</button>
+    </div>
+    <div style="background: white">
+      <select style="margin: 10px" v-model="statusFilter">
+        <option selected value="all">All</option>
+        <option value="0">Created</option>
+        <option value="1">Declined</option>
+        <option value="2">Accepted</option>
+        <option value="3">Finished</option>
+        <option value="4">Canceled</option>
+      </select>
+      <button @click="filterReservations">Filter</button>
+    </div>
+    <md-table v-model="searched" md-sort="name" md-sort-order="asc" class="md-card md-fixed-header" style="padding: 20px">
       <md-table-toolbar>
         <div class="md-toolbar-section-start">
           <h2 class="md-title">Reservations</h2>
         </div>
-
-        <md-field md-clearable class="md-toolbar-section-end">
-          <md-input placeholder="Search by host username..." v-model="search1" @input="searchOnTable1" />
+        <md-field style="margin-right: 15px;" md-clearable class="md-toolbar-section-end">
+          <md-input  placeholder="Search by host username..." v-model="search1" @input="searchOnTable1" />
         </md-field>
         <md-field md-clearable class="md-toolbar-section-end">
           <md-input placeholder="Search by guest username..." v-model="search2" @input="searchOnTable2" />
@@ -24,7 +38,7 @@
         <md-table-cell md-label="Location" md-sort-by="name">{{ item.location.address.country }}, {{item.location.address.city}}</md-table-cell>
         <md-table-cell md-label="Host username" md-sort-by="userRole">{{ item.hostUserName }}</md-table-cell>
         <md-table-cell md-label="Guest username" md-sort-by="userGender">{{ item.guestUserName }}</md-table-cell>
-        <md-table-cell md-label="Starting date" md-sort-by="userGender">{{ item.startingDate }}</md-table-cell>
+        <md-table-cell md-label="Starting date" md-sort-by="userGender">{{ item.date }}</md-table-cell>
         <md-table-cell md-label="Rental duration" md-sort-by="userGender">{{ item.rentalDuration }}</md-table-cell>
         <md-table-cell md-label="Status" md-sort-by="userGender">{{ item.reservationStatus }}</md-table-cell>
       </md-table-row>
@@ -71,7 +85,9 @@ export default {
       search1: null,
       search2: null,
       searched: [],
-      reservations: []
+      reservations: [],
+      statusFilter: '',
+      searchUsername: ''
     }
   },
   methods: {
@@ -80,12 +96,30 @@ export default {
     },
     searchOnTable2 () {
       this.searched = searchByGuestUserName(this.reservations, this.search2)
+    },
+    filterReservations() {
+      http.get(`Reservation/filterReservationsByStatus/${this.statusFilter}`).then(response => {
+          this.searched = response.data
+      })
+    },
+    searchReservationsByUsername(){
+      if(this.searchUsername === ''){
+        this.searchUsername = '-1'
+      }
+      http.get(`Reservation/searchReservations/${this.searchUsername}`).then(response => {
+        this.searched = response.data
+      })
     }
   },
   created () {
     this.searched = this.reservations
   },
   mounted() {
+    let userRole = JSON.parse(localStorage.getItem("loggedUserRole"))
+    if (userRole !== "ADMINISTRATOR") {
+      this.$router.push("/forbidden");
+    }
+
     http.get('Reservation/')
         .then(response => {
           this.reservations = response.data;

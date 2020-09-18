@@ -13,7 +13,8 @@ public class Apartment implements Serializable{
 	private int numberOfRooms;
 	private int numberOfGuests;
 	private Location location;
-	private ArrayList<Date> datesForRent;
+	private ArrayList<Date> startDates;
+	private ArrayList<Date> endDates;
 	private String hostId;
 	private ArrayList<String> commentIds;
 	private ArrayList<String> photos;
@@ -28,7 +29,8 @@ public class Apartment implements Serializable{
 	
 	public Apartment() {
 		super();
-		this.datesForRent = new ArrayList<Date>();
+		this.startDates = new ArrayList<Date>();
+		this.endDates = new ArrayList<Date>();
 		this.commentIds = new ArrayList<String>();
 		this.photos = new ArrayList<String>();
 		this.amenityIds = new ArrayList<String>();
@@ -37,7 +39,7 @@ public class Apartment implements Serializable{
 	}
 
 	public Apartment(ApartmentType apartmentType, int numberOfRooms, int numberOfGuests, Location location,
-			ArrayList<Date> datesForRent, String hostId,
+			ArrayList<Date> startDates, ArrayList<Date> endDates, String hostId,
 			String host, ArrayList<String> comments, ArrayList<String> photos,
 			float pricePerNight, String checkInTime, String checkOutTime, boolean activityStatus,
 			ArrayList<String> amenities, ArrayList<String> reservations, boolean deleted, ArrayList<Double> grades) {
@@ -47,7 +49,8 @@ public class Apartment implements Serializable{
 		this.numberOfRooms = numberOfRooms;
 		this.numberOfGuests = numberOfGuests;
 		this.location = location;
-		this.datesForRent = datesForRent;
+		this.startDates = startDates;
+		this.endDates = endDates;
 		this.hostId = hostId;
 		this.commentIds = comments;
 		this.photos = photos;
@@ -62,7 +65,7 @@ public class Apartment implements Serializable{
 	}
 	
 	public Apartment(ApartmentType apartmentType, int numberOfRooms, int numberOfGuests, Location location,
-			ArrayList<Date> datesForRent, ArrayList<String> photos,
+			ArrayList<Date> startDates, ArrayList<Date> endDates, ArrayList<String> photos,
 			float pricePerNight, String checkInTime, String checkOutTime) {
 		super();
 		 
@@ -70,7 +73,8 @@ public class Apartment implements Serializable{
 		this.numberOfRooms = numberOfRooms;
 		this.numberOfGuests = numberOfGuests;
 		this.location = location;
-		this.datesForRent = datesForRent;
+		this.startDates = startDates;
+		this.endDates = endDates;
 		this.photos = photos;
 		this.pricePerNight = pricePerNight;
 		this.checkInTime = checkInTime;
@@ -125,12 +129,20 @@ public class Apartment implements Serializable{
 		this.location = location;
 	}
 
-	public ArrayList<Date> getDatesForRent() {
-		return datesForRent;
+	public ArrayList<Date> getStartDates() {
+		return startDates;
 	}
 
-	public void setDatesForRent(ArrayList<Date> datesForRent) {
-		this.datesForRent = datesForRent;
+	public void setStartDates(ArrayList<Date> startDates) {
+		this.startDates = startDates;
+	}
+
+	public ArrayList<Date> getEndDates() {
+		return endDates;
+	}
+
+	public void setEndDates(ArrayList<Date> endDates) {
+		this.endDates = endDates;
 	}
 
 	public String getHostId() {
@@ -220,10 +232,16 @@ public class Apartment implements Serializable{
 	public void setGrades(ArrayList<Double> grades) {
 		this.grades = grades;
 	}
-	
+
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return "NumberOfRomms:" + numberOfRooms;
+		return "Apartment [id=" + id + ", apartmentType=" + apartmentType + ", numberOfRooms=" + numberOfRooms
+				+ ", numberOfGuests=" + numberOfGuests + ", location=" + location + ", datesForRent="
+				+ ", hostId=" + hostId + ", commentIds=" + commentIds + ", photos=" + photos + ", pricePerNight="
+				+ pricePerNight + ", checkInTime=" + checkInTime + ", checkOutTime=" + checkOutTime
+				+ ", activityStatus=" + activityStatus + ", amenityIds=" + amenityIds + ", reservationsIds="
+				+ reservationsIds + ", deleted=" + deleted + ", grades=" + grades + "]";
 	}
+	
+	
 }

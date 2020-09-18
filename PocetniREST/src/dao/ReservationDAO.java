@@ -64,13 +64,24 @@ public class ReservationDAO implements Serializable{
 		return reservationsToSend;
 	}
 	
+	public Reservation findById(String id) {
+		return reservations.get(id);
+	}
+	
 	public List<Reservation> findReservationsByUsername(String username, UserDAO userDAO) {
 		List<Reservation> ret = new ArrayList<Reservation>();
 		
 		User user = userDAO.findByUsername(username);
+		System.out.println(username);
 		
+		if(user == null) {
+			System.out.println("User je null");
+			return ret;
+		}
+		
+		System.out.println(user);
 		for(Map.Entry<String, Reservation> entry : getReservations().entrySet()) {
-			if(entry.getValue().getGuestId() == user.getId()) {
+			if(entry.getValue().getGuestId().equals(user.getId())) {
 				ret.add(entry.getValue());
 			}
 		}

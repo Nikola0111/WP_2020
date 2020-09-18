@@ -1,8 +1,8 @@
 <template>
-  <div style="margin-top: 2%" class="container">
+  <div style="margin-top: 2%; background-color: white !important; width: fit-content; padding: 50px" class="container">
     <h2>Change user details</h2>
     <div class="row">
-      <div class="col-sm-4">
+      <div style="flex: 100%; max-width: 100%" class="col-sm-4">
         <label>Username</label>
         <div class="form-group pass_show">
           <input v-model="newUserName" class="form-control" placeholder="Username">
@@ -78,6 +78,13 @@ export default {
         .then(response => {
           if(response.data) {
             this.showSnackbar3 = true;
+
+            let changeUser = JSON.parse(localStorage.getItem("loggedUser"))
+            changeUser.userName = this.newUserName;
+            changeUser.name = this.name;
+            changeUser.surname = this.surname;
+            localStorage.setItem("loggedUser", JSON.stringify(changeUser));
+
           } else {
             this.showSnackbar2 = true;
           }

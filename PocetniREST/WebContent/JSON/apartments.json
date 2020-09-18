@@ -1,7 +1,7 @@
 {
   "1" : {
     "id" : "1",
-    "apartmentType" : "ONE_ROOM",
+    "apartmentType" : "APARTMENT",
     "numberOfRooms" : 1,
     "numberOfGuests" : 1,
     "location" : {
@@ -15,7 +15,8 @@
     		"country" : "Serbia"
     	}
     	},
-    "datesForRent" : [],
+    "startDates" : [],
+    "endDates" : [],
     "hostId" : "3",
     "commentIds" : [],
     "photos" : [],
@@ -24,13 +25,13 @@
     "checkOutTime" : "14:00",
     "activityStatus" : true,
     "amenityIds" :["1"] ,
-    "reservationsIds" :[] ,
+    "reservationsIds" :["2"] ,
     "deleted" : false,
     "grades" : []
     },
   "2" : {
     "id" : "2",
-    "apartmentType" : "TWO_ROOMS",
+    "apartmentType" : "APARTMENT",
     "numberOfRooms" : 2,
     "numberOfGuests" : 3,
     "location" : {
@@ -44,16 +45,17 @@
     		"country" : "Serbia"
     	}
     	},
-    "datesForRent" : [],
+    "startDates" : [],
+    "endDates" : [],
     "hostId" : "4",
-    "commentIds" : [],
+    "commentIds" : ["1"],
     "photos" : [],
     "pricePerNight" : 35,
     "checkInTime" : "8:00",
     "checkOutTime" : "22:00",
     "activityStatus" : true,
     "amenityIds" :["1", "2"] ,
-    "reservationsIds" :[] ,
+    "reservationsIds" :["0", "1"] ,
     "deleted" : false,
     "grades" : []
     }

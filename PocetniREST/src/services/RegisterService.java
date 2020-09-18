@@ -59,7 +59,6 @@ public class RegisterService {
 	}
 
 	@POST
-	@Path("")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public boolean registerUser(RegisterDTO userDTO, @Context HttpServletRequest request) {
@@ -92,7 +91,12 @@ public class RegisterService {
 			newUser.setUserGender(UserGender.FEMALE);
 		}
 		
-		newUser.setUserRole(UserRole.GUEST);
+		if (userDTO.getUserRole().equals("GUEST")) {
+			newUser.setUserRole(UserRole.GUEST);
+		} else {
+			newUser.setUserRole(UserRole.HOST);
+		}
+		
 		newUser.setAvailableApartments(0);
 		newUser.setRentedApartments(0);
 		users.getUsers().put(newUser.getId(), newUser);

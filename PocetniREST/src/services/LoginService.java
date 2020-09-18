@@ -58,13 +58,16 @@ public class LoginService {
 	
 	
 	@POST
-	@Path("")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public User login(User user, @Context HttpServletRequest request) {
 		
 		UserDAO users = (UserDAO) context.getAttribute("users");
 		User loggedUser = users.findByUsernameAndPassword(user.getUserName(), user.getPassword());
+		
+		if (loggedUser.getBlocked()) {
+			return null;
+		}
 		
 		request.getSession().setAttribute("loggedUser", loggedUser);
 		

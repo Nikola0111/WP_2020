@@ -1,0 +1,13 @@
+{
+  "1" : {
+    "id" : "1",
+    "caption" : "Prvi komentar",
+    "content" : "Bas dobar stan, 10/10, poseticu opet sigurno",
+    "userId" : "5",
+    "apartmentId" : "2",
+    "reservationId" : "0",
+    "rating" : 3.0,
+    "showed" : true,
+    "deleted" : false
+  }
+}

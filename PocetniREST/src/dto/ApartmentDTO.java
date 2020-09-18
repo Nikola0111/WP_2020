@@ -12,11 +12,12 @@ import model.Reservation;
 @SuppressWarnings("serial")
 public class ApartmentDTO implements Serializable{
 	private String id;
-	private ApartmentType apartmentType;
+	private String apartmentType;
 	private int numberOfRooms;
 	private int numberOfGuests;
 	private Location location;
-	private ArrayList<Date> datesForRent;
+	private ArrayList<Date> startDates;
+	private ArrayList<Date> endDates;
 	private String hostId;
 	private ArrayList<String> commentIds;
 	private ArrayList<String> photos;
@@ -31,7 +32,8 @@ public class ApartmentDTO implements Serializable{
 	
 	public ApartmentDTO() {
 		super();
-		this.datesForRent = new ArrayList<Date>();
+		this.startDates = new ArrayList<Date>();
+		this.endDates = new ArrayList<Date>();
 		this.commentIds = new ArrayList<String>();
 		this.photos = new ArrayList<String>();
 		this.amenities = new ArrayList<Amenity>();
@@ -39,8 +41,8 @@ public class ApartmentDTO implements Serializable{
 		this.grades = new ArrayList<Double>();
 	}
 
-	public ApartmentDTO(ApartmentType apartmentType, int numberOfRooms, int numberOfGuests, Location location,
-			ArrayList<Date> datesForRent, String host, ArrayList<String> comments, ArrayList<String> photos,
+	public ApartmentDTO(String apartmentType, int numberOfRooms, int numberOfGuests, Location location,
+			ArrayList<Date> startDates, ArrayList<Date> endDates, String host, ArrayList<String> comments, ArrayList<String> photos,
 			float pricePerNight, String checkInTime, String checkOutTime, boolean activityStatus,
 			ArrayList<Amenity> amenities, ArrayList<Reservation> reservations, boolean deleted, ArrayList<Double> grades) {
 		super();
@@ -49,7 +51,8 @@ public class ApartmentDTO implements Serializable{
 		this.numberOfRooms = numberOfRooms;
 		this.numberOfGuests = numberOfGuests;
 		this.location = location;
-		this.datesForRent = datesForRent;
+		this.startDates = startDates;
+		this.endDates = endDates;
 		this.hostId = host;
 		this.commentIds = comments;
 		this.photos = photos;
@@ -71,11 +74,11 @@ public class ApartmentDTO implements Serializable{
 		this.id = id;
 	}
 
-	public ApartmentType getApartmentType() {
+	public String getApartmentType() {
 		return apartmentType;
 	}
 
-	public void setApartmentType(ApartmentType apartmentType) {
+	public void setApartmentType(String apartmentType) {
 		this.apartmentType = apartmentType;
 	}
 
@@ -103,12 +106,22 @@ public class ApartmentDTO implements Serializable{
 		this.location = location;
 	}
 
-	public ArrayList<Date> getDatesForRent() {
-		return datesForRent;
+
+
+	public ArrayList<Date> getStartDates() {
+		return startDates;
 	}
 
-	public void setDatesForRent(ArrayList<Date> datesForRent) {
-		this.datesForRent = datesForRent;
+	public void setStartDates(ArrayList<Date> startDates) {
+		this.startDates = startDates;
+	}
+
+	public ArrayList<Date> getEndDates() {
+		return endDates;
+	}
+
+	public void setEndDates(ArrayList<Date> endDates) {
+		this.endDates = endDates;
 	}
 
 	public String getHostId() {
@@ -202,7 +215,7 @@ public class ApartmentDTO implements Serializable{
 	@Override
 	public String toString() {
 		return "ApartmentDTO [id=" + id + ", apartmentType=" + apartmentType + ", numberOfRooms=" + numberOfRooms
-				+ ", numberOfGuests=" + numberOfGuests + ", location=" + location + ", datesForRent=" + datesForRent
+				+ ", numberOfGuests=" + numberOfGuests + ", location=" + location + ", datesForRent="
 				+ ", hostId=" + hostId + ", commentIds=" + commentIds + ", photos=" + photos + ", pricePerNight="
 				+ pricePerNight + ", checkInTime=" + checkInTime + ", checkOutTime=" + checkOutTime
 				+ ", activityStatus=" + activityStatus + ", amenities=" + amenities + ", reservations=" + reservations

@@ -38,7 +38,7 @@
           <span style="color: red">Passwords needs to be at least 6 characters long.</span>
         </li>
         <li>
-          <input type="submit" value="Register" />
+          <input type="submit" value="Register as guest" />
         </li>
       </ul>
     </form>
@@ -123,7 +123,8 @@ export default {
             name: this.name,
             surname: this.surname,
             password: this.password,
-            userGender: this.gender
+            userGender: this.gender,
+            userRole: "GUEST"
           })
       ).then(response => {
         if (!response.data) {

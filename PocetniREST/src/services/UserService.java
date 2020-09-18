@@ -25,7 +25,9 @@ import dao.UserDAO;
 import dto.ChangePasswordDTO;
 import dto.ChangeUserDTO;
 import dto.UserDetailsDTO;
+import dto.UsersFilterDTO;
 import enumeration.UserGender;
+import enumeration.UserRole;
 import dto.SearchUserDTO;
 import model.User;
 
@@ -66,6 +68,18 @@ public class UserService {
 	}
 	
 	@PUT
+	@Path("blockUser/{id}")
+	public String changePassword(@PathParam("id") String id, @Context HttpServletRequest request) {
+		
+		UserDAO users = getUsers();
+		User currentUser = users.findById(id);
+		currentUser.setBlocked(true);
+		saveUsers(users);
+		
+		return "Korisnik uspesno blokiran!";
+	}
+	
+	@PUT
 	@Path("changePassword")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -91,17 +105,21 @@ public class UserService {
 	public boolean changeUser(ChangeUserDTO userDTO, @Context HttpServletRequest request) {
 		
 		UserDAO users = getUsers();
-		User currentUser = users.findByUsernameAndPassword(userDTO.getPreviousUserName(), userDTO.getPassword());
-		if (currentUser != null) {
-			if (users.findByUsername(userDTO.getNewUserName()) != null) {
-				return false;
-			} else {
+		
+		User currentUser = users.findByUsername(userDTO.getPreviousUserName());
+		
+		User checkForNewUserName = users.findByUsername(userDTO.getNewUserName());
+		
+		if (checkForNewUserName == null) {
+			
 			currentUser.setName(userDTO.getName());
-			currentUser.setUserName(userDTO.getNewUserName());
+			if (!userDTO.getPreviousUserName().equals(userDTO.getNewUserName())) {
+				currentUser.setUserName(userDTO.getNewUserName());
+			}
 			currentUser.setSurname(userDTO.getSurname());
 			saveUsers(users);
+			
 			return true;
-			}
 		} else {
 			return false;
 		}
@@ -118,6 +136,67 @@ public class UserService {
 		return usersToSend;
 	}
 	
+	@POST
+	@Path("FilterUsers")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<User> getFilteredUsers(@Context HttpServletRequest request, UsersFilterDTO dto) {
+		
+		UserDAO users = getUsers();
+		ArrayList<User> allUsers = new ArrayList<User>(users.findAll());
+		ArrayList<User> usersToSend = new ArrayList<User>();
+		
+		
+		if (dto.getUserGender().equals("all")) {
+			UserRole role = getRole(dto.getUserRole());
+			for (User user : allUsers) {
+				if (user.getUserRole().equals(role)) {
+					usersToSend.add(user);
+				}
+			}
+			return usersToSend;
+		}
+		
+		if (dto.getUserRole().equals("all")) {
+			UserGender gender = getGender(dto.getUserGender());
+			for (User user : allUsers) {
+				if (user.getUserGender().equals(gender)) {
+					usersToSend.add(user);
+				}
+			}
+			return usersToSend;
+		}
+		
+		UserRole role = getRole(dto.getUserRole());
+		UserGender gender = getGender(dto.getUserGender());
+		
+		for (User user : allUsers) {
+			if (user.getUserGender().equals(gender) && user.getUserRole().equals(role)) {
+				usersToSend.add(user);
+			}
+		}
+		
+		return usersToSend;
+		
+		}
+		
+	public UserGender getGender(String gender) {
+		if (gender.equals("male")) {
+			return UserGender.MALE;
+		} else {
+			return UserGender.FEMALE;
+		}
+	}
+	
+	public UserRole getRole(String role) {
+		if (role.equals("administrator")) {
+			return UserRole.ADMINISTRATOR;
+		} else if (role.equals("host")) {
+			return UserRole.HOST;
+		} else {
+			return UserRole.GUEST;
+		}
+	}
 
 	@GET
 	@Path("UserDetails/{userName}")
@@ -147,9 +226,20 @@ public class UserService {
 		} else {
 			dto.setUserGender("FEMALE");
 		}
+		if (user.getUserRole().equals(UserRole.GUEST)) {
+			dto.setUserRole("GUEST");
+		} 
+		else if (user.getUserRole().equals(UserRole.ADMINISTRATOR)) {
+			dto.setUserRole("ADMINISTRATOR");
+		}
+		else {
+			dto.setUserRole("HOST");
+		}
 		return dto;
 		
 	}
+	
+
 	@POST
 	@Path("findUsersBySearchUserDTO")
 	@Consumes(MediaType.APPLICATION_JSON)

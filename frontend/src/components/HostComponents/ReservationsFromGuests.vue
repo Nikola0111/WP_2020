@@ -1,5 +1,20 @@
 <template>
   <div style="width: 100%; margin-top: 5%; margin-left: 5%;">
+    <div style="background: white">
+      <input style="margin: 10px" type="text" placeholder="Enter username" v-model="searchUsername"/>
+      <button @click="searchReservationsByUsername">Search</button>
+    </div>
+    <div style="background: white">
+      <select style="margin: 10px" v-model="statusFilter">
+        <option selected value="all">All</option>
+        <option value="0">Created</option>
+        <option value="1">Declined</option>
+        <option value="2">Accepted</option>
+        <option value="3">Finished</option>
+        <option value="4">Canceled</option>
+      </select>
+      <button @click="filterReservations">Filter</button>
+    </div>
     <md-table v-model="searched" md-sort="name" md-sort-order="asc" class="md-card md-fixed-header" style="padding:20px ">
       <md-table-toolbar>
         <div class="md-toolbar-section-start">
@@ -65,7 +80,9 @@ export default {
       search2: null,
       searched: [],
       reservations: [],
-      user: null
+      user: null,
+      statusFilter: '',
+      searchUsername: ''
     }
   },
   methods: {
@@ -96,6 +113,25 @@ export default {
             }
           })
     },
+    filterReservations(){
+      let user = JSON.parse(localStorage.getItem("loggedUser"))
+      console.log('usao')
+      http.post('Reservation/filterReservationsByStatusAndHostID', JSON.stringify({
+        status: this.statusFilter,
+        hostId: user.id
+      })).then(response => {
+        this.searched = response.data
+      })
+    },
+    searchReservationsByUsername(){
+      let user = JSON.parse(localStorage.getItem("loggedUser"))
+      http.post(`Reservation/searchReservationsByHostAndGuestUsername`, JSON.stringify({
+        hostId: user.id,
+        guestUsername: this.searchUsername
+      })).then(response => {
+        this.searched = response.data
+      })
+    }
   },
   created () {
     this.searched = this.reservations

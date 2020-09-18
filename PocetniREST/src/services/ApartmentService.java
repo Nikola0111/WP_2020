@@ -16,6 +16,7 @@ import dao.UserDAO;
 import dto.ApartmentForFrontDTO;
 import dto.CommentForOneApartmentDTO;
 import enumeration.ApartmentType;
+import enumeration.ReservationStatus;
 import dto.ApartmentDTO;
 import dto.ApartmentDetailsDTO;
 import dto.FilterApartmentDTO;
@@ -138,6 +139,10 @@ public class ApartmentService {
 			}
 			editedApartment.setCheckInTime(apartmentDTO.getCheckInTime());
 			editedApartment.setCheckOutTime(apartmentDTO.getCheckOutTime());
+			editedApartment.setAmenityIds(new ArrayList<String>());
+			for(Amenity temp : apartmentDTO.getAmenities()) {
+				editedApartment.getAmenityIds().add(temp.getId());
+			}
 			
 			apartments.getApartments().put(editedApartment.getId(), editedApartment);
 			saveApartments(apartments);
@@ -271,12 +276,13 @@ public class ApartmentService {
 		ApartmentDAO apartments = getApartments();
 		UserDAO users = getUsers();
 		ReservationDAO reservationsDAO = getReservations();
+		AmenityDAO amenities = getAmenities();
 		CommentDAO commentDAO = getComments();
 		
 		List<Reservation> apartmentReservations = new ArrayList<Reservation>();
 		
 		for(Map.Entry<String, Reservation> entry : reservationsDAO.getReservations().entrySet()) {
-			if(entry.getValue().getApartmentId().equals(apartmentId) && !entry.getValue().isDeleted()) {
+			if(entry.getValue().getApartmentId().equals(apartmentId) && !entry.getValue().isDeleted() && entry.getValue().getReservationStatus() == ReservationStatus.ACCEPTED) {
 				apartmentReservations.add(entry.getValue());
 			}
 		}
@@ -296,9 +302,24 @@ public class ApartmentService {
 		}
 		
 		Apartment apartment = apartments.find(apartmentId);
+		
+		List<Amenity> apartmentAmenities = new ArrayList<Amenity>();
+		
+		for(Map.Entry<String, Amenity> entry : amenities.getAmenities().entrySet()) {
+			for(String amenityId : apartment.getAmenityIds()) {
+				if(entry.getValue().getId().equals(amenityId)) {
+					apartmentAmenities.add(entry.getValue());
+					break;
+				}
+			}
+		}
+		
+		
 		User host = users.findById(apartment.getHostId());
 		
 		ApartmentDetailsDTO dto = convertToApartmentDetails(apartment, host);
+		
+		dto.setAmenities(apartmentAmenities);
 		
 		dto.setReservations(apartmentReservations);
 		dto.setComments(comments);

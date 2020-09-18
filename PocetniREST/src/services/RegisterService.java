@@ -59,7 +59,6 @@ public class RegisterService {
 	}
 
 	@POST
-	@Path("")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public boolean registerUser(RegisterDTO userDTO, @Context HttpServletRequest request) {

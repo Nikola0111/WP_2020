@@ -73,7 +73,6 @@ public class ReservationService {
 	}
 	
 	@GET
-	@Path("")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public ArrayList<ReservationDTO> getAllReservations(@Context HttpServletRequest request) {

@@ -61,7 +61,6 @@ public class AmenityService {
 	}
 	
 	@GET
-	@Path("")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public ArrayList<Amenity> getAllAmenities(@Context HttpServletRequest request) {

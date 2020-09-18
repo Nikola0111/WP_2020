@@ -1,5 +1,52 @@
 <template>
   <div style="width: 90%; margin-top: 5%; margin-left: 5%;">
+    <div style="background-color: white !important;padding: 10px">
+    <div style="padding: 20px" class="row">
+      <div class="form-group col-sm-3">
+        <label for="exampleFormControlSelect1">Number of rooms</label>
+        <select v-model="selectedNumberOfRooms" class="form-control" id="exampleFormControlSelect1">
+          <option value="all">All</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5 and more</option>
+        </select>
+      </div>
+      <div class="form-group col-sm-3">
+        <label for="exampleFormControlSelect2">Apartment type</label>
+        <select v-model="selectedApartmentType" class="form-control" id="exampleFormControlSelect2">
+          <option value="all">All</option>
+          <option value="apartment">Apartment</option>
+          <option value="room">Room</option>
+        </select>
+      </div>
+      <div class="form-group col-sm-3">
+        <label for="exampleFormControlSelect3">Number of guests</label>
+        <select v-model="selectedNumberOfGuests" class="form-control" id="exampleFormControlSelect3">
+          <option value="all">All</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5 and more</option>
+        </select>
+      </div>
+      <div class="form-group col-sm-3">
+        <button @click="filterApartments()" style="margin-top: 30px" class="btn btn-info">Filter</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-sm-3">
+        <label>Price from: </label>
+        <input type="number" v-model="priceFrom">
+      </div>
+      <div class="form-group col-sm-3">
+        <label>Price to: </label>
+        <input type="number" v-model="priceTo">
+      </div>
+    </div>
+    </div>
     <md-table v-model="searched" md-sort="name" md-sort-order="asc" class="md-card md-fixed-header" style="padding:20px ">
       <md-table-toolbar>
         <div v-if="!isHost" class="md-toolbar-section-start">
@@ -138,12 +185,39 @@ export default {
       availableDates: [],
 
       showActiveBool: false,
-      showInactiveBool: true
+      showInactiveBool: true,
+
+      selectedNumberOfRooms: "all",
+      selectedApartmentType: "all",
+      selectedNumberOfGuests: "all",
+      priceFrom: 0,
+      priceTo: 200
     }
   },
   components: {
   },
   methods: {
+    filterApartments() {
+      if (this.priceFrom < 0 || this.priceTo <= 0 || this.priceFrom > this.priceTo) {
+        alert("Invalid filter arguments, check price filter")
+        return;
+      }
+
+      http
+      .post('apartments/filterApartments', JSON.stringify({
+        rooms: this.selectedNumberOfRooms,
+        guests: this.selectedNumberOfGuests,
+        type: this.selectedApartmentType,
+        priceFrom: this.priceFrom,
+        priceTo: this.priceTo
+      }))
+      .then(response => {
+        if (response.data) {
+          this.apartments = response.data
+          this.searched = this.apartments;
+        }
+      })
+    },
     cancelReservationCreation(){
       this.$modal.hide('reservationDialog')
       this.clearLists()

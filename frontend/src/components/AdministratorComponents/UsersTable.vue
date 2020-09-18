@@ -122,6 +122,11 @@ export default {
       this.searched = this.users
     },
     mounted() {
+      let userRole = JSON.parse(localStorage.getItem("loggedUserRole"))
+      if (userRole !== "ADMINISTRATOR") {
+        this.$router.push("/forbidden");
+      }
+
       http.get('User/getUsers')
           .then(response => {
             this.users = response.data;

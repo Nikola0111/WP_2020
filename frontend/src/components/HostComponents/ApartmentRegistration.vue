@@ -22,8 +22,10 @@
         <input class="form-control" type="text" style="width: 340px" v-model="country" />
         <label>City:</label>
         <input class="form-control" type="text" style="width: 340px" v-model="city" />
-        <label>Street and number:</label>
-        <input class="form-control" type="text" style="width: 340px" v-model="streetAndNumber" />
+        <label>Street:</label>
+        <input class="form-control" type="text" style="width: 340px" v-model="street" />
+        <label>Number:</label>
+        <input class="form-control" type="number" style="width: 340px" v-model="number" />
       </div>
     </div>
     <div class="column">
@@ -114,7 +116,8 @@ export default {
       numberOfGuests: 1,
       country: "",
       city: '',
-      streetAndNumber: "",
+      street: '',
+      number: '',
       datesForRent: [],
       dateRange: "",
       pricePerNight: 1,
@@ -215,7 +218,7 @@ export default {
         return
       }
 
-      if(this.city === '' || this.country === '' || this.streetAndNumber === ''){
+      if(this.city === '' || this.country === '' || this.street === '' || this.number === '' || this.number <= 0){
         this.adressCheck = true
         return
       }
@@ -225,8 +228,25 @@ export default {
         return
       }
 
-      let street = this.streetAndNumber.split(', ')[0]
-      let number = this.streetAndNumber.split(', ')[1]
+      if(this.checkInTime !== '' && this.checkOutTime !== '') {
+        let checkInTimeElements = this.checkInTime.split(':')
+        let cIHour = parseInt(checkInTimeElements[0])
+
+        let checkOutTimeElements = this.checkOutTime.split(':')
+        let cOHours = parseInt(checkOutTimeElements[0])
+
+        if(cIHour < 14 || cOHours < 10){
+          this.checkInOutTimeCheck = true
+          return
+        }
+      } else {
+        this.checkInOutTimeCheck = true
+        return
+      }
+
+      let street = this.street;
+      let number = this.number;
+
       let loggedUser = JSON.parse(localStorage.getItem("loggedUser"))
 
       console.log(this.datesForRent)

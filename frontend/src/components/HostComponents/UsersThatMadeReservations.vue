@@ -73,6 +73,11 @@ export default {
     this.searched = this.users
   },
   mounted() {
+    let userRole = JSON.parse(localStorage.getItem("loggedUserRole"))
+    if (userRole !== "HOST") {
+      this.$router.push("/forbidden");
+    }
+
     if (localStorage.getItem('loggedUser') !== null) {
       this.user = JSON.parse(localStorage.getItem('loggedUser'))
     }

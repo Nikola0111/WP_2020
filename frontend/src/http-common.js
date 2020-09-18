@@ -2,7 +2,7 @@ import axios from "axios";
 
 
 export default axios.create({
-    baseURL: "/",
+    baseURL: "/PocetniREST/rest",
     headers: {
         "Content-type": "application/json",
     }

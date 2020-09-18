@@ -3,7 +3,6 @@ package services;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +24,9 @@ import dao.ApartmentDAO;
 import dao.CommentDAO;
 import dao.ReservationDAO;
 import dao.UserDAO;
+import dto.FilterReservationsDTO;
 import dto.ReservationDTO;
+import dto.SearchReservationsDTO;
 import dto.UserDetailsDTO;
 import enumeration.ApartmentType;
 import enumeration.ReservationStatus;
@@ -205,26 +206,59 @@ public class ReservationService {
 	@Path("searchReservations/{username}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Reservation> findReservationByGuestUsername(@Context HttpServletRequest request, @PathParam("username") String username) {
-		User loggedUser = (User) request.getSession().getAttribute("loggedUser");
+	public List<ReservationDTO> findReservationByGuestUsername(@Context HttpServletRequest request, @PathParam("username") String username) {
 		UserDAO users = getUsers();
+		ApartmentDAO apartments = getApartments();
 		
 		ReservationDAO reservations = getReservations();
-		List<Reservation> ret = reservations.findReservationsByUsername(username, users);
-		 
-		if(loggedUser.getUserRole() == UserRole.HOST) {
-			ApartmentDAO apartments = getApartments();
-			List<String> hostsApartmentIds = new ArrayList<String>();
-			for(Map.Entry<String, Apartment> entry : apartments.getApartments().entrySet()) {
-				if(entry.getValue().getHostId().equals(loggedUser.getId())) {
-					hostsApartmentIds.add(entry.getValue().getId());
+
+		List<ReservationDTO> ret = new ArrayList<ReservationDTO>();
+		if(username.equals("-1")) {
+			for(Map.Entry<String, Reservation> res : reservations.getReservations().entrySet()) {
+				Apartment temp = apartments.find(res.getValue().getApartmentId());
+				ret.add(convertReservationToDTO(res.getValue(), temp, users.findById(temp.getHostId()), users.findById(res.getValue().getGuestId())));
+			}
+			return ret;
+		}
+		
+		List<Reservation> resses = reservations.findReservationsByUsername(username, users);
+		System.out.println(resses); 
+		
+		for(Reservation res : resses) {
+			System.out.println(res);
+			Apartment temp = apartments.find(res.getApartmentId());
+			ret.add(convertReservationToDTO(res, temp, users.findById(temp.getHostId()), users.findById(res.getGuestId())));
+		}
+		
+		return ret;
+	}
+	
+	@POST
+	@Path("searchReservationsByHostAndGuestUsername")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<ReservationDTO> searchReservationsByHostAndGuestUsername(@Context HttpServletRequest request, SearchReservationsDTO searchItems) {
+		UserDAO users = getUsers();
+		ApartmentDAO apartments = getApartments();
+		ReservationDAO reservations = getReservations();
+		List<ReservationDTO> ret = new ArrayList<ReservationDTO>();
+		if(searchItems.getGuestUsername().equals("")) {
+			for(Map.Entry<String, Reservation> res : reservations.getReservations().entrySet()) {
+				Apartment temp = apartments.find(res.getValue().getApartmentId());
+				if(temp.getHostId().equals(searchItems.getHostId())) {
+					ret.add(convertReservationToDTO(res.getValue(), temp, users.findById(temp.getHostId()), users.findById(res.getValue().getGuestId())));
 				}
 			}
-			
-			for(Reservation temp: ret) {
-				if(!hostsApartmentIds.contains(temp.getApartmentId())) {
-					ret.remove(temp);
-				}
+			return ret;
+		}
+		
+		
+		List<Reservation> resses = reservations.findReservationsByUsername(searchItems.getGuestUsername(), users);
+		 
+		for(Reservation res : resses) {
+			Apartment temp = apartments.find(res.getApartmentId());
+			if(temp.getHostId().equals(searchItems.getHostId())){
+				ret.add(convertReservationToDTO(res, temp, users.findById(temp.getHostId()), users.findById(res.getGuestId())));
 			}
 		}
 		
@@ -235,13 +269,77 @@ public class ReservationService {
 	@Path("filterReservationsByStatus/{status}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Reservation> filterReservationsByStatus(@Context HttpServletRequest request, @PathParam("status") ReservationStatus status) {
+	public List<ReservationDTO> filterReservationsByStatus(@Context HttpServletRequest request, @PathParam("status") String status) {
 		ReservationDAO reservations = getReservations();
+		ApartmentDAO apartments = getApartments();
+		UserDAO users = getUsers();
+		ReservationStatus comp = ReservationStatus.ACCEPTED;
+		List<ReservationDTO> ret = new ArrayList<ReservationDTO>();
+		if(status.equals("0")) {
+			comp = ReservationStatus.CREATED;
+		}else if(status.equals("1")) {
+			comp = ReservationStatus.DECLINED;
+		}else if(status.equals("2")) {
+			comp = ReservationStatus.ACCEPTED;
+		}else if(status.equals("3")) {
+			comp = ReservationStatus.FINISHED;
+		}else if(status.equals("4")) {
+			comp = ReservationStatus.CANCELED;
+		}else {
+			for(Map.Entry<String, Reservation> entry: reservations.getReservations().entrySet()) {
+				Apartment temp = apartments.find(entry.getValue().getApartmentId());
+				ret.add(convertReservationToDTO(entry.getValue(), temp, users.findById(temp.getHostId()), users.findById(entry.getValue().getGuestId())));
+			}
+			return ret;
+		}
 		
-		List<Reservation> ret = new ArrayList<Reservation>();
 		for(Map.Entry<String, Reservation> entry: reservations.getReservations().entrySet()) {
-			if(entry.getValue().getReservationStatus() == status) {
-				ret.add(entry.getValue());
+			if(entry.getValue().getReservationStatus() == comp) {
+				Apartment temp = apartments.find(entry.getValue().getApartmentId());
+				ret.add(convertReservationToDTO(entry.getValue(), temp, users.findById(temp.getHostId()), users.findById(entry.getValue().getGuestId())));
+			}
+		}
+		
+		
+		return ret;
+	}
+	
+	@POST
+	@Path("filterReservationsByStatusAndHostID")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<ReservationDTO> filterReservationsByStatusAndHostID(@Context HttpServletRequest request, FilterReservationsDTO filter) {
+		ReservationDAO reservations = getReservations();
+		ApartmentDAO apartments = getApartments();
+		UserDAO users = getUsers();
+		ReservationStatus comp = ReservationStatus.ACCEPTED;
+		List<ReservationDTO> ret = new ArrayList<ReservationDTO>();
+		if(filter.getStatus().equals("0")) {
+			comp = ReservationStatus.CREATED;
+		}else if(filter.getStatus().equals("1")) {
+			comp = ReservationStatus.DECLINED;
+		}else if(filter.getStatus().equals("2")) {
+			comp = ReservationStatus.ACCEPTED;
+		}else if(filter.getStatus().equals("3")) {
+			comp = ReservationStatus.FINISHED;
+		}else if(filter.getStatus().equals("4")) {
+			comp = ReservationStatus.CANCELED;
+		}else {
+			for(Map.Entry<String, Reservation> entry: reservations.getReservations().entrySet()) {
+				Apartment temp = apartments.find(entry.getValue().getApartmentId());
+				if(temp.getHostId().equals(filter.getHostId())) {
+					ret.add(convertReservationToDTO(entry.getValue(), temp, users.findById(temp.getHostId()), users.findById(entry.getValue().getGuestId())));
+				}
+			}
+			return ret;
+		}
+		
+		for(Map.Entry<String, Reservation> entry: reservations.getReservations().entrySet()) {
+			if(entry.getValue().getReservationStatus() == comp) {
+				Apartment temp = apartments.find(entry.getValue().getApartmentId());
+				if(temp.getHostId().equals(filter.getHostId())) {
+					ret.add(convertReservationToDTO(entry.getValue(), temp, users.findById(temp.getHostId()), users.findById(entry.getValue().getGuestId())));
+				}
 			}
 		}
 		

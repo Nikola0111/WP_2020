@@ -174,7 +174,7 @@ export default {
       position: 'center',
       showReservationDialog: false,
       selectedApartment: "",
-      date: "",
+      date: new Date(),
       numberOfDays: 0,
       bill: 0.0,
       additionalComment: "",
@@ -322,7 +322,16 @@ export default {
       console.log(formatted_date);
     },
     calculateBill(){
-      this.bill = this.selectedApartment.pricePerNight * this.numberOfDays
+      const dateForCalculation = this.date;
+      for(let i = 0; i < this.numberOfDays; i++) {
+        if(dateForCalculation.getDay() === 0 || dateForCalculation.getDay() === 5 || dateForCalculation.getDay() === 6){
+          this.bill = this.bill + this.selectedApartment.pricePerNight - this.selectedApartment.pricePerNight / 10
+        }
+        console.log(dateForCalculation)
+        dateForCalculation.setDate(dateForCalculation.getDate() + 1)
+        console.log(dateForCalculation)
+      }
+
       console.log("This is the bill:" + this.bill)
     },
     registerReservation(){

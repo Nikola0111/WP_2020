@@ -89,10 +89,6 @@
       <md-button class="md-primary" @click="datesForRentCheck = false">Close</md-button>
     </md-snackbar>
     <div id="imgTest"></div>
-    <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="checkInOutTimeCheck" md-persistent>
-      <span>Check in time must be after 14:00(2:00PM) and check out time must be after 10:00(10:00AM)</span>
-      <md-button class="md-primary" @click="checkInOutTimeCheck = false">Close</md-button>
-    </md-snackbar>
   </div>
 </template>
 
@@ -125,8 +121,8 @@ export default {
       datesForRent: [],
       dateRange: "",
       pricePerNight: 1,
-      checkInTime: "",
-      checkOutTime: "",
+      checkInTime: '14:00',
+      checkOutTime: '10:00',
       amenities: [],
       tempAmenities: [],
       checkedAmenities: [],
@@ -250,6 +246,7 @@ export default {
 
       let street = this.street;
       let number = this.number;
+
       let loggedUser = JSON.parse(localStorage.getItem("loggedUser"))
 
       console.log(this.datesForRent)

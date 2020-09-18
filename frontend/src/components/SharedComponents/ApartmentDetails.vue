@@ -35,29 +35,38 @@
           <input style="margin-top: 5px;" type="text" v-model="newApartmentDetails.location.address.number"/><br>
         </div>
       </div>
-
-      <div class="col-sm-2">
-        <div class="row">
-          <label>Price per night: </label>
-        </div>
-        <div class="row">
-          <label style="margin-top: 5px;">Check in time: </label>
-        </div>
-        <div class="row">
-          <label style="margin-top: 5px;">Check out time: </label>
-        </div>
+    <div class="col-sm-2">
+      <div class="row">
+        <label>Price per night: </label>
       </div>
-      <div class="col-sm-2">
-        <div class="row">
-          <input type="number" min="0" style="width: 150px" v-model="newApartmentDetails.pricePerNight">
-        </div>
-        <div class="row">
-          <time-picker style="margin-top: 5px;" v-model="newApartmentDetails.checkInTime"></time-picker>
-        </div>
-        <div class="row">
-          <time-picker style="margin-top: 5px;" v-model="newApartmentDetails.checkOutTime"></time-picker>
-        </div>
+      <div class="row">
+        <label style="margin-top: 5px;">Check in time: </label>
       </div>
+      <div class="row">
+        <label style="margin-top: 5px;">Check out time: </label>
+      </div>
+      <div class="row">
+        <label style="margin-top: 5px;">Amenities: </label>
+      </div>
+    </div>
+    <div class="col-sm-2">
+      <div class="row">
+        <input type="number" min="0" style="width: 150px" v-model="newApartmentDetails.pricePerNight">
+      </div>
+      <div class="row">
+        <time-picker style="margin-top: 5px;" v-model="newApartmentDetails.checkInTime"></time-picker>
+      </div>
+      <div class="row">
+        <time-picker style="margin-top: 5px;" v-model="newApartmentDetails.checkOutTime"></time-picker>
+      </div>
+      <div class="row">
+        <md-field>
+          <md-select multiple v-model="newAmenities">
+            <md-option v-for="(amenity) in amenities" :key="amenity.caption" :value="amenity.id">{{amenity.caption}}</md-option>
+          </md-select>
+        </md-field>
+      </div>
+    </div>
       <div>
         <button v-if="changingDetails" @click="saveDetails(apartmentDetails)" style="width: 76px" class="btn btn-success">Save  </button><br><br>
         <button v-if="changingDetails" @click="changingDetails = false" class="btn btn-secondary">Cancel</button>
@@ -100,22 +109,23 @@
           <label>{{apartmentDetails.userName}}</label>
         </div>
       </div>
-
-
-      <div class="col-sm-2">
-        <div class="row">
-          <label>Price per night: </label>
-        </div>
-        <div class="row">
-          <label>Check in time: </label>
-        </div>
-        <div class="row">
-          <label>Check out time: </label>
-        </div>
-        <div class="row">
-          <label>Activity status: </label>
-        </div>
+    <div class="col-sm-2">
+      <div class="row">
+        <label>Price per night: </label>
       </div>
+      <div class="row">
+        <label>Check in time: </label>
+      </div>
+      <div class="row">
+        <label>Check out time: </label>
+      </div>
+      <div class="row">
+        <label>Activity status: </label>
+      </div>
+      <div class="row">
+        <label>Amenities: </label>
+      </div>
+    </div>
       <div class="col-sm-2">
         <div class="row">
           <label>{{apartmentDetails.pricePerNight}}</label>
@@ -128,6 +138,9 @@
         </div>
         <div class="row">
           <label>{{apartmentDetails.activityStatus}}</label>
+        </div>
+        <div class="row">
+          <label v-for="(amenity, index) in apartmentDetails.amenities" :key="index">{{amenity.caption}}; </label>
         </div>
       </div>
       <div>
@@ -221,6 +234,7 @@ export default {
   data() {
     return {
       apartmentId: '',
+      amenities: [],
       apartmentDetails: '',
       availableDates: [],
       occupiedDates: [],
@@ -236,6 +250,8 @@ export default {
       changingDetails: false,
       newApartmentDetails: {},
       validationChange: false,
+      newAmenities: [],
+      amenityObjects: [],
 
       isGuest: false,
       isAdmin: false,
@@ -269,10 +285,20 @@ export default {
       })
     },
     changeDetails(){
-      this.newApartmentDetails = this.apartmentDetails
-      this.changingDetails = true
+      http.get('Amenity').then(response => {
+        this.amenities = response.data
+        this.newApartmentDetails = this.apartmentDetails
+        this.changingDetails = true
+      })
     },
     saveDetails(apartmentDetails){
+      for(let i = 0; i < this.newAmenities.length; i++){
+        this.amenityObjects.push(
+            this.amenities.find(amenity => amenity.id === this.newAmenities[i])
+        )
+      }
+      this.apartmentDetails.amenities = this.amenityObjects
+      console.log(this.apartmentDetails.amenities)
       http.post('apartments/editDetails', JSON.stringify(apartmentDetails)).then(response => {
         if(response.data){
           this.apartmentDetails = this.newApartmentDetails
@@ -315,7 +341,6 @@ export default {
         .then(response => {
           if (response.data) {
             this.apartmentDetails = response.data;
-
             for(let i = 0;i < this.apartmentDetails.startDates.length; i++){
               this.availableDates.push({start: this.apartmentDetails.startDates[i], end: this.apartmentDetails.endDates[i]})
             }

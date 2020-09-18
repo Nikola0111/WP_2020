@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import model.Amenity;
 import model.Location;
 import model.Reservation;
 
@@ -23,6 +24,7 @@ public class ApartmentDetailsDTO {
 	private String checkOutTime;
 	private String activityStatus;
 	private List<Reservation> reservations;
+	private List<Amenity> amenities;
 	private List<CommentForOneApartmentDTO> comments;
 	
 	public ApartmentDetailsDTO() {
@@ -149,6 +151,16 @@ public class ApartmentDetailsDTO {
 
 	public void setComments(List<CommentForOneApartmentDTO> comments) {
 		this.comments = comments;
+	}
+	
+	
+
+	public List<Amenity> getAmenities() {
+		return amenities;
+	}
+
+	public void setAmenities(List<Amenity> amenities) {
+		this.amenities = amenities;
 	}
 
 	@Override

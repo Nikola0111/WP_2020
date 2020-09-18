@@ -46,6 +46,9 @@
       <div class="row">
         <label style="margin-top: 5px;">Check out time: </label>
       </div>
+      <div class="row">
+        <label style="margin-top: 5px;">Amenities: </label>
+      </div>
     </div>
     <div class="col-sm-2">
       <div class="row">
@@ -56,6 +59,13 @@
       </div>
       <div class="row">
         <time-picker style="margin-top: 5px;" v-model="newApartmentDetails.checkOutTime"></time-picker>
+      </div>
+      <div class="row">
+        <md-field>
+          <md-select multiple v-model="newAmenities">
+            <md-option v-for="(amenity) in amenities" :key="amenity.caption" :value="amenity.id">{{amenity.caption}}</md-option>
+          </md-select>
+        </md-field>
       </div>
     </div>
     <div>
@@ -115,6 +125,9 @@
       <div class="row">
         <label>Activity status: </label>
       </div>
+      <div class="row">
+        <label>Amenities: </label>
+      </div>
     </div>
     <div class="col-sm-2">
       <div class="row">
@@ -128,6 +141,9 @@
       </div>
       <div class="row">
         <label>{{apartmentDetails.activityStatus}}</label>
+      </div>
+      <div class="row">
+        <label v-for="(amenity, index) in apartmentDetails.amenities" :key="index">{{amenity.caption}}; </label>
       </div>
     </div>
     <div>
@@ -218,6 +234,7 @@ name: "ApartmentDetails",
   data() {
     return {
       apartmentId: '',
+      amenities: [],
       apartmentDetails: '',
       availableDates: [],
       occupiedDates: [],
@@ -233,6 +250,8 @@ name: "ApartmentDetails",
       changingDetails: false,
       newApartmentDetails: {},
       validationChange: false,
+      newAmenities: [],
+      amenityObjects: [],
 
       isGuest: false,
       isAdmin: false,
@@ -266,10 +285,20 @@ name: "ApartmentDetails",
       })
     },
     changeDetails(){
-      this.newApartmentDetails = this.apartmentDetails
-      this.changingDetails = true
+      http.get('Amenity').then(response => {
+        this.amenities = response.data
+        this.newApartmentDetails = this.apartmentDetails
+        this.changingDetails = true
+      })
     },
     saveDetails(apartmentDetails){
+      for(let i = 0; i < this.newAmenities.length; i++){
+        this.amenityObjects.push(
+            this.amenities.find(amenity => amenity.id === this.newAmenities[i])
+        )
+      }
+      this.apartmentDetails.amenities = this.amenityObjects
+      console.log(this.apartmentDetails.amenities)
       http.post('apartments/editDetails', JSON.stringify(apartmentDetails)).then(response => {
         if(response.data){
           this.apartmentDetails = this.newApartmentDetails

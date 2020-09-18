@@ -1,11 +1,25 @@
 <template>
   <div style="width: 90%; margin-top: 5%; margin-left: 5%;">
+    <div style="background: white">
+      <input style="margin: 10px" type="text" placeholder="Enter username" v-model="searchUsername"/>
+      <button @click="searchReservationsByUsername">Search</button>
+    </div>
+    <div style="background: white">
+      <select style="margin: 10px" v-model="statusFilter">
+        <option selected value="all">All</option>
+        <option value="0">Created</option>
+        <option value="1">Declined</option>
+        <option value="2">Accepted</option>
+        <option value="3">Finished</option>
+        <option value="4">Canceled</option>
+      </select>
+      <button @click="filterReservations">Filter</button>
+    </div>
     <md-table v-model="searched" md-sort="name" md-sort-order="asc" class="md-card md-fixed-header" style="padding: 20px">
       <md-table-toolbar>
         <div class="md-toolbar-section-start">
           <h2 class="md-title">Reservations</h2>
         </div>
-
         <md-field style="margin-right: 15px;" md-clearable class="md-toolbar-section-end">
           <md-input  placeholder="Search by host username..." v-model="search1" @input="searchOnTable1" />
         </md-field>
@@ -71,7 +85,9 @@ export default {
       search1: null,
       search2: null,
       searched: [],
-      reservations: []
+      reservations: [],
+      statusFilter: '',
+      searchUsername: ''
     }
   },
   methods: {
@@ -80,6 +96,19 @@ export default {
     },
     searchOnTable2 () {
       this.searched = searchByGuestUserName(this.reservations, this.search2)
+    },
+    filterReservations() {
+      http.get(`Reservation/filterReservationsByStatus/${this.statusFilter}`).then(response => {
+          this.searched = response.data
+      })
+    },
+    searchReservationsByUsername(){
+      if(this.searchUsername === ''){
+        this.searchUsername = '-1'
+      }
+      http.get(`Reservation/searchReservations/${this.searchUsername}`).then(response => {
+        this.searched = response.data
+      })
     }
   },
   created () {

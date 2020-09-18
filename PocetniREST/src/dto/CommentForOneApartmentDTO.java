@@ -16,6 +16,8 @@ public class CommentForOneApartmentDTO implements Serializable{
 		
 	}
 
+	
+
 	public CommentForOneApartmentDTO(String id, String caption, String content, String guestUserName, double rating,
 			boolean showed) {
 		super();
@@ -26,6 +28,8 @@ public class CommentForOneApartmentDTO implements Serializable{
 		this.rating = rating;
 		this.showed = showed;
 	}
+
+
 
 	public String getId() {
 		return id;
@@ -74,6 +78,5 @@ public class CommentForOneApartmentDTO implements Serializable{
 	public void setShowed(boolean showed) {
 		this.showed = showed;
 	}
-	
-	
+		
 }

@@ -87,10 +87,6 @@
       <md-button class="md-primary" @click="datesForRentCheck = false">Close</md-button>
     </md-snackbar>
     <div id="imgTest"></div>
-    <md-snackbar :md-position="position" :md-duration="duration" :md-active.sync="checkInOutTimeCheck" md-persistent>
-      <span>Check in time must be after 14:00(2:00PM) and check out time must be after 10:00(10:00AM)</span>
-      <md-button class="md-primary" @click="checkInOutTimeCheck = false">Close</md-button>
-    </md-snackbar>
   </div>
 </template>
 
@@ -122,8 +118,8 @@ export default {
       datesForRent: [],
       dateRange: "",
       pricePerNight: 1,
-      checkInTime: "",
-      checkOutTime: "",
+      checkInTime: '14:00',
+      checkOutTime: '10:00',
       amenities: [],
       tempAmenities: [],
       checkedAmenities: [],
@@ -226,22 +222,6 @@ export default {
 
       if(this.datesForRent.length === 0) {
         this.datesForRentCheck = true;
-        return
-      }
-
-      if(this.checkInTime !== '' && this.checkOutTime !== '') {
-        let checkInTimeElements = this.checkInTime.split(':')
-        let cIHour = parseInt(checkInTimeElements[0])
-
-        let checkOutTimeElements = this.checkOutTime.split(':')
-        let cOHours = parseInt(checkOutTimeElements[0])
-
-        if(cIHour < 14 || cOHours < 10){
-          this.checkInOutTimeCheck = true
-          return
-        }
-      } else {
-        this.checkInOutTimeCheck = true
         return
       }
 

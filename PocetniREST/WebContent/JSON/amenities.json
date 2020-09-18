@@ -10,5 +10,41 @@
 		"caption" : "Internet",
 		"description" : "50/10 mbit/s internet connection",
 		"type" : "Basic"	
+	},
+	"3" : {
+		"id" : "3",
+		"caption" : "Air conditioning",
+		"description" : "Refreshing air",
+		"type" : "Basic"	
+	},
+	"4" : {
+		"id" : "4",
+		"caption" : "Washer",
+		"description" : "Has low and high temperature program program",
+		"type" : "Basic"	
+	},
+	"5" : {
+		"id" : "5",
+		"caption" : "Kitchen",
+		"description" : "SPace where guests can cook their own meals",
+		"type" : "Basic"	
+	},
+	"6" : {
+		"id" : "6",
+		"caption" : "Cookign basics",
+		"description" : "Pots and pans, oil, salt and pepper",
+		"type" : "Basic"	
+	},
+	"7" : {
+		"id" : "7",
+		"caption" : "Hot water",
+		"description" : "Showering",
+		"type" : "Basic"	
+	},
+	"8" : {
+		"id" : "8",
+		"caption" : "Iron",
+		"description" : "Good for smoothening your wrinkled clothes",
+		"type" : "Basic"	
 	}
 }
